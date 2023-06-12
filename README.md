@@ -35,7 +35,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.00/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.01/install.sh )
 ```
 
 <br>
@@ -73,7 +73,7 @@ sudo systemctl enable dipper.service --now
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.00/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.01/uninstall.sh )
 ```
 
 <br>
@@ -91,7 +91,7 @@ sudo systemctl restart dipper.service
 ### ダウンロード及び権限の変更
 
 ```bash
-Ver="1.00"
+Ver="1.01"
 wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
