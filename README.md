@@ -130,5 +130,5 @@ sudo systemctl enable dipper.service --now
 
 言語はシェルスクリプトです。
 
-![dipper：スクリプト構成図 のコピー](https://github.com/smileygames/dipper/assets/134200591/5ed9895d-3301-4236-969f-197fe7e45b29)
+![dipper：スクリプト構成図 のコピー](https://github.com/smileygames/dipper/assets/134200591/c8a209d2-296e-410b-90b7-6589eb494e63)
 
