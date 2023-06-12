@@ -4,11 +4,12 @@
 #
 # dipper
 
-Ver="1.00"
+Ver="1.01"
 
 # 以前のバージョンのアンインストール処理
+sudo rm -rf /usr/local/dipper/bin
 
-# v1.00以降のインストール用
+# v1.01以降のインストール用
 # サービスの停止
 sudo systemctl stop dipper.service
 sudo systemctl disable dipper.service

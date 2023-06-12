@@ -17,23 +17,47 @@ Mode=$1
 # IPv4とIPv6でアクセスURLを変える
 ip_update() {
     if [ "$IPV4" = on ]; then
-        . ./ddns_timer/multi_domain.sh "update" "4"
+        multi_ddns "update" "4"
     fi
     if [ "$IPV6" = on ]; then
-        . ./ddns_timer/multi_domain.sh "update" "6"
+        multi_ddns "update" "6"
     fi
 }
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ip_check() {
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        . ./ddns_timer/multi_domain.sh "check" "4" "A" 
+        multi_ddns "check" "4" "A" 
     fi
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        . ./ddns_timer/multi_domain.sh "check" "6" "AAAA"
+        multi_ddns "check" "6" "AAAA"
     fi
 }
 
+# 複数のDDNSサービス用
+multi_ddns() {
+    ddns_Mode=$1
+    IP_Version=$2
+    DNS_Record=$3
+
+    if [ "$ddns_Mode" = "check" ]; then
+        MyIP=$(dig @ident.me -"$IP_Version" +short)  # 自分のアドレスを読み込む
+        if [[ $MyIP = "" ]]; then
+            ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPアドレスを取得できなかった"
+            return 1
+        fi
+    fi
+
+    # MyDNSのDDNSのための処理
+    if [ ${#MYDNS_ID[@]} != 0 ]; then
+        . ./ddns_timer/mydns_domain.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$MyIP" &
+    fi
+
+    # GoogleのDDNSサービスはIPv4とIPv6が排他制御のための処理
+    if [ ${#GOOGLE_ID[@]} != 0 ]; then
+        . ./ddns_timer/google_domain.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$MyIP" &
+    fi
+}
 
 # 実行スクリプト
 # タイマー処理
