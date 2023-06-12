@@ -15,7 +15,7 @@ bash <( curl -fsSL https://github.com/smileygames/mydns-ip-update/releases/downl
 
 ## 概要
 - このスクリプトは、DDNSへの自動通知を目的としています。
-- 使用する環境はAlmaLinuxで、言語はBashです。
+- 使用する環境はAlmaLinuxで、言語はBashです。（Bashが動く環境なら普通に動くとは思います）
 - スクリプトは複数のファイルで構成されており、それぞれの役割や目的があります。
 - `config`ディレクトリ内の設定ファイルに基づいて動作します。
 - IPアドレスの更新やチェックを定期的に行います。
