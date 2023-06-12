@@ -35,7 +35,7 @@ case ${Mode} in
    "update")
         ;;
    "check") 
-        mydns_multi_domain_check
+        google_multi_domain_check
         ;;
     * )
         echo "[${Mode}] <- 引数エラーです"

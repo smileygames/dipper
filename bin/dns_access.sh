@@ -18,6 +18,7 @@ accsse() {
     if [ $? != 0 ]; then 
         ./err_message.sh "timeout" "${Func_Name}" "${Out_Time}: ログイン情報 curl -u ${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num] URL"
     fi
+    echo "access end"
 }
 
 # 実行スクリプト
