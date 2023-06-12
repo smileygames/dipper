@@ -125,4 +125,5 @@ sudo systemctl enable dipper.service --now
 
 言語はシェルスクリプトです。
 
-![mydns-ip-update：スクリプト構成図 (2)](https://github.com/smileygames/mydns-ip-update/assets/134200591/19b532f9-8e56-4132-a04e-c18ee4430053)
+![dipper：スクリプト構成図 のコピー](https://github.com/smileygames/dipper/assets/134200591/5ed9895d-3301-4236-969f-197fe7e45b29)
+
