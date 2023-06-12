@@ -123,8 +123,6 @@ sudo systemctl enable dipper.service --now
 
 自分なりの解釈のオブジェクト指向もどきで作り直しました。
 
-言語はそのままシェルスクリプトです。
-
-機能は変わりません。
+言語はシェルスクリプトです。
 
 ![mydns-ip-update：スクリプト構成図 (2)](https://github.com/smileygames/mydns-ip-update/assets/134200591/19b532f9-8e56-4132-a04e-c18ee4430053)
