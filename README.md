@@ -6,6 +6,11 @@ multi DDNS & IPv6 & multi domain対応
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
 
+mydns-ip-updateのuninstallコマンド
+```bash
+bash <( curl -fsSL https://github.com/smileygames/mydns-ip-update/releases/download/v2.08/uninstall.sh )
+```
+
 <br>
 
 ## 概要
