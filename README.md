@@ -1,12 +1,9 @@
-# dipper (multi DDNS & IPv6 & multi domain対応)
+# dipper -DDNS IP Upper-
+multi DDNS & IPv6 & multi domain対応
 
 旧名称：mydns-ip-update
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
-
-MyDNS®JP → https://www.mydns.jp/
-
-オブジェクト指向化しました。（独自解釈）→ https://smgjp.com/mydns-ip-update_object/
 
 <br>
 
@@ -16,6 +13,10 @@ MyDNS®JP → https://www.mydns.jp/
 - スクリプトは複数のファイルで構成されており、それぞれの役割や目的があります。
 - `config`ディレクトリ内の設定ファイルに基づいて動作します。
 - IPアドレスの更新やチェックを定期的に行います。
+
+### 現在下記DDNSサービスに対応しています。
+- [MyDNS](https://www.mydns.jp/)
+- [Google Domains](https://domains.google/intl/ja_jp/)
 
 <br>
 
@@ -84,7 +85,7 @@ sudo systemctl restart dipper.service
 ### ダウンロード及び権限の変更
 
 ```bash
-Ver="2.10"
+Ver="1.00"
 wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
