@@ -2,6 +2,8 @@
 
 旧名称：mydns-ip-update
 
+mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
+
 MyDNS®JP → https://www.mydns.jp/
 
 オブジェクト指向化しました。（独自解釈）→ https://smgjp.com/mydns-ip-update_object/
