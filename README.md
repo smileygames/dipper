@@ -44,6 +44,8 @@ installのたびにコンフィグファイルが初期値に戻ってしまう�
 但し、uninstallコマンドを実行すると消えます。
 ```bash
 sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.conf
+```
+```bash
 sudo vim /usr/local/dipper/config/user.conf
 ```
 ```bash
