@@ -6,10 +6,7 @@ multi DDNS & IPv6 & multi domain対応
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
 
-uninstallコマンド
-```bash
-bash <( curl -fsSL https://github.com/smileygames/mydns-ip-update/releases/download/v2.08/uninstall.sh )
-```
+[uninstall方法](https://github.com/smileygames/mydns-ip-update)
 
 <br>
 
@@ -21,7 +18,7 @@ bash <( curl -fsSL https://github.com/smileygames/mydns-ip-update/releases/downl
 - IPアドレスの更新やチェックを定期的に行います。
 
 ### 現在下記DDNSサービスに対応しています。
-- [MyDNS](https://www.mydns.jp/)
+- [MyDNS.JP](https://www.mydns.jp/)
 - [Google Domains](https://domains.google/intl/ja_jp/)
 
 <br>

@@ -11,7 +11,7 @@ User_File="${File_dir}user.conf"
 if [ -e ${User_File} ]; then
     source "${User_File}"
 fi
-
+# 引数を変数に代入
 Mode=$1
 
 # IPv4とIPv6でアクセスURLを変える
@@ -34,7 +34,7 @@ ip_check() {
     fi
 }
 
-# 複数のDDNSサービス用
+# 複数のDDNSサービス用（拡張するときは処理を増やす）
 multi_ddns() {
     ddns_Mode=$1
     IP_Version=$2
@@ -49,29 +49,38 @@ multi_ddns() {
     fi
 
     # MyDNSのDDNSのための処理
-    if [ ${#MYDNS_ID[@]} != 0 ]; then
+    if [[ $mydns != 0 ]]; then
         . ./ddns_timer/mydns_domain.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$MyIP" &
     fi
 
     # GoogleのDDNSサービスはIPv4とIPv6が排他制御のための処理
-    if [ ${#GOOGLE_ID[@]} != 0 ]; then
+    if [[ $google != 0 ]]; then
         . ./ddns_timer/google_domain.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$MyIP" &
     fi
 }
 
 # 実行スクリプト
+
+# 配列の要素数を変数に代入（DDNSのサービスごと）
+mydns=${#MYDNS_ID[@]}
+google=${#GOOGLE_ID[@]}
+
 # タイマー処理
 case ${Mode} in
-   "update")
-        sleep 5m;ip_update  # 起動から少し待って最初の処理を行う
-        while true;do
-            sleep "$UPDATE_TIME";ip_update
-        done
+   "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
+        if [[ $mydns != 0 ]]; then
+            sleep 5m;ip_update  # 起動から少し待って最初の処理を行う
+            while true;do
+                sleep "$UPDATE_TIME";ip_update
+            done
+        fi
         ;;
-   "check") 
-        while true;do
-            sleep "$DDNS_TIME";ip_check
-        done
+   "check")   # アドレス変更時のみ通知する
+        if [[ $mydns != 0 || $google != 0 ]]; then
+            while true;do
+                sleep "$DDNS_TIME";ip_check
+            done
+        fi
         ;;
     * )
         echo "[${Mode}] <- 引数エラーです"
