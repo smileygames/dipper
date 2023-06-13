@@ -2,11 +2,13 @@
 
 multi DDNS & IPv6 & multi domain対応
 
-旧名称：mydns-ip-update
-
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
 
 [uninstall方法](https://github.com/smileygames/mydns-ip-update)
+
+事前に必要なもの
+- digコマンド
+- bash
 
 <br>
 
@@ -32,7 +34,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.01/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.02/install.sh )
 ```
 
 <br>
@@ -44,6 +46,8 @@ installのたびにコンフィグファイルが初期値に戻ってしまう�
 但し、uninstallコマンドを実行すると消えます。
 ```bash
 sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.conf
+```
+```bash
 sudo vim /usr/local/dipper/config/user.conf
 ```
 ```bash
@@ -70,7 +74,7 @@ sudo systemctl enable dipper.service --now
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.01/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.02/uninstall.sh )
 ```
 
 <br>
@@ -88,30 +92,13 @@ sudo systemctl restart dipper.service
 ### ダウンロード及び権限の変更
 
 ```bash
-Ver="1.01"
+Ver="1.02"
 wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
 sudo rm -rf dipper
 sudo chmod -R 755 /usr/local/dipper/bin
-```
-
-### サービス作成
-```bash
-sudo vi /etc/systemd/system/dipper.service
-```
-```bash
-[Unit]
-Description=ddns-ip-upper
-
-[Service]
-Type=simple
-Restart=on-failure
-WorkingDirectory=/usr/local/dipper/bin
-ExecStart=/usr/local/dipper/bin/ip_update.sh
-
-[Install]
-WantedBy=network-online.target
+sudo ln -s /usr/local/dipper/systemd/dipper.service /etc/systemd/system
 ```
 
 ### デーモンリロードをして追加したサービスを読み込ませて起動させる
@@ -128,4 +115,3 @@ sudo systemctl enable dipper.service --now
 言語はシェルスクリプトです。
 
 ![dipper：スクリプト構成図 のコピー](https://github.com/smileygames/dipper/assets/134200591/c8a209d2-296e-410b-90b7-6589eb494e63)
-
