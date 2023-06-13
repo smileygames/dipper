@@ -2,8 +2,6 @@
 
 multi DDNS & IPv6 & multi domain対応
 
-旧名称：mydns-ip-update
-
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
 
 [uninstall方法](https://github.com/smileygames/mydns-ip-update)
