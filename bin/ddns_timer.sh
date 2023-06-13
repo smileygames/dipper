@@ -60,18 +60,23 @@ multi_ddns() {
 }
 
 # 実行スクリプト
+
 # タイマー処理
 case ${Mode} in
-   "update")
-        sleep 5m;ip_update  # 起動から少し待って最初の処理を行う
-        while true;do
-            sleep "$UPDATE_TIME";ip_update
-        done
+   "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
+        if [[ ${#MYDNS_ID[@]} != 0 ]]; then
+            sleep 5m;ip_update  # 起動から少し待って最初の処理を行う
+            while true;do
+                sleep "$UPDATE_TIME";ip_update
+            done
+        fi
         ;;
-   "check") 
-        while true;do
-            sleep "$DDNS_TIME";ip_check
-        done
+   "check")   # アドレス変更時のみ通知する
+        if [[ ${#MYDNS_ID[@]} != 0 || ${#GOOGLE_ID[@]} != 0 ]]; then
+            while true;do
+                sleep "$DDNS_TIME";ip_check
+            done
+        fi
         ;;
     * )
         echo "[${Mode}] <- 引数エラーです"
