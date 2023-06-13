@@ -32,7 +32,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.01/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.02/install.sh )
 ```
 
 <br>
@@ -70,7 +70,7 @@ sudo systemctl enable dipper.service --now
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.01/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.02/uninstall.sh )
 ```
 
 <br>
@@ -88,30 +88,13 @@ sudo systemctl restart dipper.service
 ### ダウンロード及び権限の変更
 
 ```bash
-Ver="1.01"
-wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
-sudo mv -fv dipper-${Ver} dipper
-sudo cp -rv dipper /usr/local/
-sudo rm -rf dipper
+Ver="1.02"
+wget -qO- "https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz" | sudo tar -zxvf - -C /tmp
+sudo mv -fv "/tmp/dipper-${Ver}" "/usr/local/dipper"
+sudo cp -v "/usr/local/dipper/systemd/dipper.service" "/etc/systemd/system/"
+sudo rm -rf "/usr/local/dipper/systemd"
+sudo rm -rf "/tmp/dipper"
 sudo chmod -R 755 /usr/local/dipper/bin
-```
-
-### サービス作成
-```bash
-sudo vi /etc/systemd/system/dipper.service
-```
-```bash
-[Unit]
-Description=ddns-ip-upper
-
-[Service]
-Type=simple
-Restart=on-failure
-WorkingDirectory=/usr/local/dipper/bin
-ExecStart=/usr/local/dipper/bin/ip_update.sh
-
-[Install]
-WantedBy=network-online.target
 ```
 
 ### デーモンリロードをして追加したサービスを読み込ませて起動させる
@@ -128,4 +111,3 @@ sudo systemctl enable dipper.service --now
 言語はシェルスクリプトです。
 
 ![dipper：スクリプト構成図 のコピー](https://github.com/smileygames/dipper/assets/134200591/c8a209d2-296e-410b-90b7-6589eb494e63)
-

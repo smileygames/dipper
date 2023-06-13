@@ -4,38 +4,24 @@
 #
 # dipper
 
-Ver="1.01"
+Ver="1.02"
+
+# サービスの停止
+sudo systemctl stop dipper.service
+sudo systemctl disable dipper.service
 
 # 以前のバージョンのアンインストール処理
 sudo rm -rf /usr/local/dipper/bin
 
 # v1.01以降のインストール用
-# サービスの停止
-sudo systemctl stop dipper.service
-sudo systemctl disable dipper.service
-
 # スクリプトファイルダウンロード＆ファイル属性変更
-wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
-sudo mv -fv dipper-${Ver} dipper
-sudo cp -rv dipper /usr/local/
-sudo rm -rf dipper
+wget -qO- "https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz" | sudo tar -zxvf - -C /tmp
+sudo mv -fv "/tmp/dipper-${Ver}" "/usr/local/dipper"
+sudo cp -v "/usr/local/dipper/systemd/dipper.service" "/etc/systemd/system/"
+sudo rm -rf "/usr/local/dipper/systemd"
+sudo rm -rf "/tmp/dipper"
 
 sudo chmod -R 755 /usr/local/dipper/bin
-
-# サービス作成
-cat << EOS | sudo tee /etc/systemd/system/dipper.service
-[Unit]
-Description=ddns-ip-upper
-
-[Service]
-Type=simple
-Restart=on-failure
-WorkingDirectory=/usr/local/dipper/bin
-ExecStart=/usr/local/dipper/bin/ip_update.sh
-
-[Install]
-WantedBy=network-online.target
-EOS
 
 # デーモンリロードをして追加したサービスを読み込ませる
 sudo systemctl daemon-reload
