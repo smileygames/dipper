@@ -35,7 +35,10 @@ sudo cp -rv dipper /usr/local/
 sudo rm -rf dipper
 
 sudo chmod -R 755 /usr/local/dipper/bin
-sudo ln -s /usr/local/dipper/systemd/dipper.service /etc/systemd/system
+
+if [ ! -e ${User_servce} ]; then
+    sudo ln -s /usr/local/dipper/systemd/dipper.service /etc/systemd/system
+fi
 
 # デーモンリロードをして追加したサービスを読み込ませる
 sudo systemctl daemon-reload
