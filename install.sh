@@ -26,6 +26,7 @@ fi
 
 # 以前のバージョンのアンインストール処理
 sudo rm -rf /usr/local/dipper/bin
+sudo rm -f /etc/systemd/system/dipper.service
 
 # v1.01以降のインストール用
 # スクリプトファイルダウンロード＆ファイル属性変更
