@@ -2,7 +2,7 @@
 #
 # ./ddns_timer/mydns_domain.sh
 #
-# multi_domain.sh
+# multi_domain
 
 Mode=$1
 IP_Version=$2
