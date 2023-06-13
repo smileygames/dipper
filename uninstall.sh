@@ -7,5 +7,8 @@
 # v1.00以降用
 sudo systemctl stop dipper.service
 sudo systemctl disable dipper.service
-sudo systemctl daemon-reload
+ # 以前のバージョン用
+sudo rm -f /etc/systemd/system/dipper.service
+
 sudo rm -rf /usr/local/dipper
+sudo systemctl daemon-reload
