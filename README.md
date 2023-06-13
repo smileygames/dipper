@@ -6,6 +6,10 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 [uninstall方法](https://github.com/smileygames/mydns-ip-update)
 
+事前に必要なもの
+- digコマンド
+- bash
+
 <br>
 
 ## 概要
