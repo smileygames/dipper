@@ -101,6 +101,30 @@ sudo chmod -R 755 /usr/local/dipper/bin
 sudo ln -s /usr/local/dipper/systemd/dipper.service /etc/systemd/system
 ```
 
+▼最初に初期設定を行ってください。
+
+ユーザー側でコンフィグファイルを作成してもらい、上書きインストールでも変更しないようにしました。
+但し、uninstallコマンドを実行すると消えます。
+```bash
+sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.conf
+```
+```bash
+sudo vim /usr/local/dipper/config/user.conf
+```
+```bash
+MYDNS_ID[1]=""
+MYDNS_PASS[1]=""
+MYDNS_DOMAIN[1]=""
+```
+をご自分のMyDNSの情報に書き換えて、先頭の#を削除してください。
+
+編集が終わったら権限を変更しておきます。（IDとPASSを管理したファイルの為）
+```bash
+sudo chmod 600 /usr/local/dipper/config/user.conf
+```
+
+<br>
+
 ### デーモンリロードをして追加したサービスを読み込ませて起動させる
 ```bash
 sudo systemctl daemon-reload
