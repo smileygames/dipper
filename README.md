@@ -89,11 +89,12 @@ sudo systemctl restart dipper.service
 
 ```bash
 Ver="1.02"
-wget -qO- "https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz" | sudo tar -zxvf - -C /tmp
-sudo mv -fv "/tmp/dipper-${Ver}" "/usr/local/dipper"
-sudo cp -v "/usr/local/dipper/systemd/dipper.service" "/etc/systemd/system/"
-sudo rm -rf "/usr/local/dipper/systemd"
-sudo rm -rf "/tmp/dipper"
+wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
+sudo mv -fv dipper-${Ver} dipper
+sudo cp -v dipper/systemd/dipper.service /etc/systemd/system/
+sudo rm -rf dipper/systemd
+sudo cp -rv dipper /usr/local/
+sudo rm -rf dipper
 sudo chmod -R 755 /usr/local/dipper/bin
 ```
 
