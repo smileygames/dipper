@@ -26,7 +26,7 @@ accsse() {
         # curlコマンドのエラーメッセージの抽出（<p>内のテキスト）
         error_message=$(echo "${output}" | grep -o '<p>[^<]*</p>' | sed 's/<[^>]*>//g')
         # curlコマンドのエラー
-        ./err_message.sh "curl" "${Func_Name}" "${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]  curl_error: ${error_title}: ${error_message}"
+        ./err_message.sh "curl" "${Func_Name}" "${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]: ${error_title}: ${error_message}"
     else
         echo "Access successful"
     fi

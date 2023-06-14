@@ -64,7 +64,7 @@ curl_err_message() {
 
 # バックグラウンドプロセスエラー
 process_err_message() {
-    Error_Message="${Caller}: abend error : ${Message}"
+    Error_Message="${Caller}: curl error : ${Message}"
     logger -ip daemon.err -t "${Caller}" "${Error_Message}"
 }
 
