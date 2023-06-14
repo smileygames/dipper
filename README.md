@@ -1,6 +1,6 @@
 # dipper -DDNS IP Upper-
 
-multi DDNS & IPv6 & multi domain対応
+### multi DDNS & IPv6 & multi domain対応
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
 
