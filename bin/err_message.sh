@@ -56,6 +56,12 @@ no_value_err_message() {
     logger -ip authpriv.err -t "${Caller}" "${Error_Message}"
 }
 
+# curlコマンドエラー
+curl_err_message() {
+    Error_Message="${Caller}: abend error : ${Message}"
+    logger -ip authpriv.err -t "${Caller}" "${Error_Message}"
+}
+
 # バックグラウンドプロセスエラー
 process_err_message() {
     Error_Message="${Caller}: abend error : ${Message}"
@@ -69,6 +75,9 @@ case ${Mode} in
         ;;
    "no_value") 
         no_value_err_message
+        ;;
+   "curl")
+        curl_err_message
         ;;
    "process")
         process_err_message
