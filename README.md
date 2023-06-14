@@ -67,7 +67,7 @@ sudo chmod 600 /usr/local/dipper/config/user.conf
 ▼次にサービスの起動です。
 
 ```bash
-sudo systemctl enable dipper.service --now
+sudo systemctl start dipper.service
 ```
 <br>
 
@@ -87,6 +87,13 @@ sudo systemctl restart dipper.service
 ```
 <br>
 
+### サービスがもし消えてしまった場合の対処法
+サービスをdisabledにした場合リンクが消えてしまうので下記で張りなおします。
+"--now"をつけることでついでに起動させます。
+```bash
+sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
+```
+
 ## マニュアルインストール方法
 
 ### ダウンロード及び権限の変更
@@ -98,13 +105,35 @@ sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
 sudo rm -rf dipper
 sudo chmod -R 755 /usr/local/dipper/bin
-sudo ln -s /usr/local/dipper/systemd/dipper.service /etc/systemd/system
 ```
 
-### デーモンリロードをして追加したサービスを読み込ませて起動させる
+▼最初に初期設定を行ってください。
+
+ユーザー側でコンフィグファイルを作成してもらい、上書きインストールでも変更しないようにしました。
+但し、uninstallコマンドを実行すると消えます。
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable dipper.service --now
+sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.conf
+```
+```bash
+sudo vim /usr/local/dipper/config/user.conf
+```
+```bash
+MYDNS_ID[1]=""
+MYDNS_PASS[1]=""
+MYDNS_DOMAIN[1]=""
+```
+をご自分のMyDNSの情報に書き換えて、先頭の#を削除してください。
+
+編集が終わったら権限を変更しておきます。（IDとPASSを管理したファイルの為）
+```bash
+sudo chmod 600 /usr/local/dipper/config/user.conf
+```
+
+<br>
+
+### サービスを読み込ませて起動させる
+```bash
+sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ```
 <br>
 

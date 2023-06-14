@@ -34,13 +34,9 @@ wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O -
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
 sudo rm -rf dipper
-
 sudo chmod -R 755 /usr/local/dipper/bin
 
-if [ ! -e ${User_servce} ]; then
-    sudo ln -s /usr/local/dipper/systemd/dipper.service /etc/systemd/system
-fi
-
+sudo systemctl enable /usr/local/dipper/systemd/dipper.service
 # デーモンリロードをして追加したサービスを読み込ませる
 sudo systemctl daemon-reload
 
