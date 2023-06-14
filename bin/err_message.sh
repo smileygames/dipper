@@ -58,13 +58,13 @@ no_value_err_message() {
 
 # curlコマンドエラー
 curl_err_message() {
-    Error_Message="${Caller}: abend error : ${Message}"
+    Error_Message="${Caller}: curl error : ${Message}"
     logger -ip authpriv.err -t "${Caller}" "${Error_Message}"
 }
 
 # バックグラウンドプロセスエラー
 process_err_message() {
-    Error_Message="${Caller}: curl error : ${Message}"
+    Error_Message="${Caller}: abend error : ${Message}"
     logger -ip daemon.err -t "${Caller}" "${Error_Message}"
 }
 
