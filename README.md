@@ -67,7 +67,7 @@ sudo chmod 600 /usr/local/dipper/config/user.conf
 ▼次にサービスの起動です。
 
 ```bash
-sudo systemctl enable dipper.service --now
+sudo systemctl start dipper.service
 ```
 <br>
 
@@ -98,7 +98,6 @@ sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
 sudo rm -rf dipper
 sudo chmod -R 755 /usr/local/dipper/bin
-sudo ln -s /usr/local/dipper/systemd/dipper.service /etc/systemd/system
 ```
 
 ▼最初に初期設定を行ってください。
@@ -125,10 +124,9 @@ sudo chmod 600 /usr/local/dipper/config/user.conf
 
 <br>
 
-### デーモンリロードをして追加したサービスを読み込ませて起動させる
+### サービスを読み込ませて起動させる(サービスがもし消えてしまった場合もこれで復活します)
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable dipper.service --now
+sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ```
 <br>
 
