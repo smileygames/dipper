@@ -92,6 +92,8 @@ sudo systemctl restart dipper.service
 sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ```
 
+<br>
+
 ## マニュアルインストール方法
 
 ### ダウンロード及び権限の変更
