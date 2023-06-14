@@ -87,6 +87,13 @@ sudo systemctl restart dipper.service
 ```
 <br>
 
+### サービスがもし消えてしまった場合の対処法
+サービスをdisabledにした場合リンクが消えてしまうので下記で張りなおします。
+"--now"をつけることでついでに起動させます。
+```bash
+sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
+```
+
 ## マニュアルインストール方法
 
 ### ダウンロード及び権限の変更
@@ -124,7 +131,7 @@ sudo chmod 600 /usr/local/dipper/config/user.conf
 
 <br>
 
-### サービスを読み込ませて起動させる(サービスがもし消えてしまった場合もこれで復活します)
+### サービスを読み込ませて起動させる
 ```bash
 sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ```
