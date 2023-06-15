@@ -22,9 +22,9 @@ access() {
         ./err_message.sh "timeout" "${Func_Name}" "${Out_Time}: ログイン情報 curl -u ${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]  URL"
     elif [[ "${output}" == *'<p>'* ]]; then
         # curlコマンドのエラーメッセージの抽出（<title>内のテキスト）
-        error_title=$(echo "${output}" | grep -o '<title>[^<]*</title>' | sed 's/<[^>]*>//g')
+        error_title=$(echo "${output}" | grep -oE '<title>([^<]*)</title>' | sed -E 's/<[^>]*>//g')
         # curlコマンドのエラーメッセージの抽出（<p>内のテキスト）
-        error_message=$(echo "${output}" | grep -o '<p>[^<]*</p>' | sed 's/<[^>]*>//g')
+        error_message=$(echo "${output}" | grep -oE '<p>([^<]*)</p>' | sed -E 's/<[^>]*>//g')
         # curlコマンドのエラー
         ./err_message.sh "curl" "${Func_Name}" "${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]: ${error_title}: ${error_message}"
     else
