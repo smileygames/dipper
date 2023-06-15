@@ -9,7 +9,7 @@ Func_Name=$2
 Array_Num=$3
 Access_URL=$4
 
-Max_Time=25
+Max_Time=30
 
 access() {
     # DDNSへアクセスするがIDやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
