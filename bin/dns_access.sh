@@ -20,7 +20,7 @@ access() {
         # curlコマンドのエラー
         ./err_message.sh "curl" "${Func_Name}" "${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]: ${output}"
     else
-        echo "Access successful ${Func_Name}: curl ${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]"
+        echo "Access successful ${output}: ${Func_Name}: curl ${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]"
     fi
 }
 
