@@ -26,13 +26,13 @@ ip_update() {
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ip_check() {
-    local My_ip4=""
-    local My_ip6=""
+    local My_ipv4=""
+    local My_ipv6=""
 
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
         My_ip4=$(dig @ident.me -4 +short)  # 自分のアドレスを読み込む
 
-        if [[ $My_ip4 = "" ]]; then
+        if [[ $My_ipv4 = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
         else
             multi_ddns "check" "4" "A" "$My_ip4"
@@ -41,7 +41,7 @@ ip_check() {
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
         My_ip6=$(dig @ident.me -6 +short)  # 自分のアドレスを読み込む
 
-        if [[ $My_ip6 = "" ]]; then
+        if [[ $My_ipv6 = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
         else
             multi_ddns "check" "6" "AAAA" "$My_ip6"
