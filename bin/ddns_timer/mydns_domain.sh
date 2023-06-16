@@ -9,13 +9,11 @@ IP_Version=$2
 DNS_Record=$3
 IP_New=$4
 
-ip_url_set() {
-    if [ "$IP_Version" = 4 ]; then
-        Login_URL=${MYDNS_IPV4_URL}
-    elif [ "$IP_Version" = 6 ]; then
-        Login_URL=${MYDNS_IPV6_URL}
-    fi
-}
+if [ "$IP_Version" = 4 ]; then
+    Login_URL=${MYDNS_IPV4_URL}
+elif [ "$IP_Version" = 6 ]; then
+    Login_URL=${MYDNS_IPV6_URL}
+fi
 
 # 配列のデータを読み込んでDDNSへアクセス
 mydns_multi_domain_update() {
@@ -46,8 +44,6 @@ mydns_multi_domain_check() {
 }
 
 # 実行スクリプト
-ip_url_set
-
 case ${Mode} in
    "update")
         mydns_multi_domain_update
