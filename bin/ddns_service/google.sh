@@ -44,3 +44,9 @@ case ${Mode} in
         echo "[${Mode}] <- 引数エラーです"
     ;; 
 esac
+# バックグラウンドプロセスを監視して通常終了以外の時、エラメッセージを通知
+wait
+exit_code=$?
+if [ $exit_code != 0 ]; then
+    ./err_message.sh "process" "${FUNCNAME[0]}" "endcode=$exit_code  バックグラウンドプロセスが異常終了した。"
+fi

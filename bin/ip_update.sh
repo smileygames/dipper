@@ -31,9 +31,9 @@ timer_select
 # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
 while true;do
     wait -n
-    End_code=$?
-    if [ $End_code != 0 ]; then
-        ./err_message.sh "process" "ip_update.sh" "endcode=$End_code  プロセスのどれかが異常終了した為、強制終了しました。"
+    exit_code=$?
+    if [ $exit_code != 0 ]; then
+        ./err_message.sh "process" "ip_update.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
         exit 1
     fi
 done
