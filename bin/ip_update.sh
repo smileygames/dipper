@@ -15,14 +15,14 @@ fi
 # タイマーイベントを選択し、実行する
 timer_select() {
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
-        ./ddns_timer.sh "update" &  # MyDNSのアップデートタイマーを開始
+        ./ddns_service.sh "update" &  # MyDNSのアップデートタイマーを開始
     fi
 
     if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        ./ddns_timer.sh "check" &  # IPv4のDDNSチェックタイマーを開始
+        ./ddns_service.sh "check" &  # IPv4のDDNSチェックタイマーを開始
 
     elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        ./ddns_timer.sh "check" &  # IPv6のDDNSチェックタイマーを開始
+        ./ddns_service.sh "check" &  # IPv6のDDNSチェックタイマーを開始
     fi
 }
 
