@@ -9,17 +9,20 @@ Func_Name=$2
 Array_Num=$3
 Access_URL=$4
 
-Out_Time=25s
-Max_Time=21
+Max_Time=30
 
-accsse() {
-    # DDNSへアクセスするがIDやパスワードがおかしい場合、対話式モードになってスタックするのでタイムアウト処理を入れている
-    timeout ${Out_Time} curl --max-time ${Max_Time} -sSu ${Access_URL}
-    if [ $? != 0 ]; then 
-        ./err_message.sh "timeout" "${Func_Name}" "${Out_Time}: ログイン情報 curl -u ${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num] URL"
+access() {
+    # DDNSへアクセスするがIDやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
+    output=$(curl --max-time ${Max_Time} -sSfu ${Access_URL} 2>&1)
+    exit_code=$?
+
+    if [ "${exit_code}" != 0 ]; then
+        # curlコマンドのエラー
+        ./err_message.sh "curl" "${Func_Name}" "${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]: ${output}"
+    else
+        echo "Access successful ${output}: ${Func_Name}: curl ${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]"
     fi
-    echo "access end"
 }
 
 # 実行スクリプト
-accsse
+access
