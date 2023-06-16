@@ -29,6 +29,8 @@ mydns_multi_domain_update() {
 
 # 配列のデータを読み込んでアドレスをチェックし変更があった場合のみ、DDNSへアクセス
 mydns_multi_domain_check() {
+    local IP_old=""
+
     for i in "${!MYDNS_ID[@]}"; do
         if [[ ${MYDNS_ID[$i]} = "" ]] || [[ ${MYDNS_PASS[$i]} = "" ]] || [[ ${MYDNS_DOMAIN[$i]} = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "MYDNS_ID[$i] or MYDNS_PASS[$i] or MYDNS_DOMAIN[$i]"

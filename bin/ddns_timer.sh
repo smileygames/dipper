@@ -26,6 +26,9 @@ ip_update() {
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ip_check() {
+    local My_ip4=""
+    local My_ip6=""
+
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
         My_ip4=$(dig @ident.me -4 +short)  # 自分のアドレスを読み込む
 

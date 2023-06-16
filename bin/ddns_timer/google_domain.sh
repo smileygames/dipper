@@ -11,6 +11,8 @@ IP_New=$4
 
 # Googleの場合用のDDNSアクセス
 google_multi_domain_check() {
+    local IP_old=""
+
     for i in "${!GOOGLE_ID[@]}"; do
         if [[ ${GOOGLE_ID[$i]} = "" ]] || [[ ${GOOGLE_PASS[$i]} = "" ]] || [[ ${GOOGLE_DOMAIN[$i]} = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "GOOGLE_ID[$i] or GOOGLE_PASS[$i] or GOOGLE_DOMAIN[$i]"
