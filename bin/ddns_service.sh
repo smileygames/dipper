@@ -30,21 +30,21 @@ ip_check() {
     local My_ipv6=""
 
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        My_ip4=$(dig @ident.me -4 +short)  # 自分のアドレスを読み込む
+        My_ipv4=$(dig @ident.me -4 +short)  # 自分のアドレスを読み込む
 
         if [[ $My_ipv4 = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
         else
-            multi_ddns "check" "4" "A" "$My_ip4"
+            multi_ddns "check" "4" "A" "$My_ipv4"
         fi
     fi
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        My_ip6=$(dig @ident.me -6 +short)  # 自分のアドレスを読み込む
+        My_ipv6=$(dig @ident.me -6 +short)  # 自分のアドレスを読み込む
 
         if [[ $My_ipv6 = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
         else
-            multi_ddns "check" "6" "AAAA" "$My_ip6"
+            multi_ddns "check" "6" "AAAA" "$My_ipv6"
         fi
     fi
 }
