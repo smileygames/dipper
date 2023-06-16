@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./ddns_timer/mydns_domain.sh
+# ./ddns_service/mydns.sh
 #
 # multi_domain
 

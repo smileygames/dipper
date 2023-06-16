@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./ddns_timer/google_domain.sh
+# ./ddns_service/google.sh
 #
 # multi_domain
 

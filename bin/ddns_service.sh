@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./ddns_timer.sh
+# ./ddns_service.sh
 #
 # shellcheck source=/dev/null
 
@@ -58,12 +58,12 @@ multi_ddns() {
 
     # MyDNSのDDNSのための処理
     if (( "$mydns" )); then
-        . ./ddns_timer/mydns_domain.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$My_ip"
+        . ./ddns_service/mydns.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$My_ip"
     fi
 
     # GoogleのDDNSサービスはIPv4とIPv6が排他制御のための処理
     if (( "$google" )); then
-        . ./ddns_timer/google_domain.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$My_ip"
+        . ./ddns_service/google.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$My_ip"
     fi
 }
 
