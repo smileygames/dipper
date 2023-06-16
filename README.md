@@ -8,7 +8,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 事前に必要なもの
 - digコマンド
-- bash version2.0以降
+- bash version4.3以降
 
 ## 概要
 - このスクリプトは、DDNSへの自動通知を目的としています。
