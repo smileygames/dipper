@@ -24,7 +24,8 @@ google_multi_domain_check() {
         IP_old=$(dig "${GOOGLE_DOMAIN[$i]}" "$DNS_Record" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$IP_New" != "$IP_old" ]]; then
-            ./dns_access.sh "GOOGLE" "${FUNCNAME[0]}" "$i" "${GOOGLE_ID[$i]}:${GOOGLE_PASS[$i]} ${GOOGLE_URL}?hostname=${GOOGLE_DOMAIN[$i]}&myip=${IP_New}"
+            # バックグラウンドプロセスで実行
+            ./dns_access.sh "GOOGLE" "${FUNCNAME[0]}" "$i" "${GOOGLE_ID[$i]}:${GOOGLE_PASS[$i]} ${GOOGLE_URL}?hostname=${GOOGLE_DOMAIN[$i]}&myip=${IP_New}" &
         fi
     done
 }
