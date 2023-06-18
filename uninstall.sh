@@ -21,6 +21,10 @@ if [ -e ${User_servce} ]; then
     if [ "$enabled" = "enabled" ]; then
         sudo systemctl disable "$SERVICE_NAME"
     fi
+
+    if [ -e ${User_servce} ]; then
+        sudo rm -f /etc/systemd/system/dipper.service
+    fi
 fi
 
  # 以前のバージョン用
