@@ -7,8 +7,8 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 [uninstall方法](https://github.com/smileygames/mydns-ip-update)
 
 事前に必要なもの
-- digコマンド
-- bash
+- [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
+- [bash version4.3以降](https://github.com/smileygames/dipper/wiki/Bash-Install)
 
 ## 概要
 - このスクリプトは、DDNSへの自動通知を目的としています。
@@ -32,7 +32,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.03/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.04/install.sh )
 ```
 
 <br>
@@ -72,7 +72,7 @@ sudo systemctl start dipper.service
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.03/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.04/uninstall.sh )
 ```
 
 <br>
@@ -99,7 +99,7 @@ sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ### ダウンロード及び権限の変更
 
 ```bash
-Ver="1.03"
+Ver="1.04"
 wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/

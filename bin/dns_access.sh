@@ -12,6 +12,7 @@ Access_URL=$4
 Max_Time=30
 
 access() {
+    local output=""
     # DDNSへアクセスするがIDやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
     output=$(curl --max-time ${Max_Time} -sSfu ${Access_URL} 2>&1)
     exit_code=$?

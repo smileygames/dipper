@@ -15,14 +15,14 @@ fi
 # タイマーイベントを選択し、実行する
 timer_select() {
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
-        ./ddns_timer.sh "update" &  # MyDNSのアップデートタイマーを開始
+        ./ddns_service.sh "update" &  # DDNSアップデートタイマーを開始
     fi
 
     if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        ./ddns_timer.sh "check" &  # IPv4のDDNSチェックタイマーを開始
+        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
 
     elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        ./ddns_timer.sh "check" &  # IPv6のDDNSチェックタイマーを開始
+        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
     fi
 }
 
@@ -31,9 +31,10 @@ timer_select
 # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
 while true;do
     wait -n
-    End_code=$?
-    if [ $End_code != 0 ]; then
-        ./err_message.sh "process" "ip_update.sh" "endcode=$End_code  プロセスのどれかが異常終了した為、強制終了しました。"
+    exit_code=$?
+    if [ $exit_code != 0 ]; then
+        ./err_message.sh "process" "ip_update.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
         exit 1
     fi
+    sleep 1
 done

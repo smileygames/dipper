@@ -4,7 +4,7 @@
 #
 # dipper
 
-Ver="1.03"
+Ver="1.04"
 SERVICE_NAME="dipper.service"
 User_servce="/etc/systemd/system/$SERVICE_NAME"
 
@@ -22,11 +22,16 @@ if [ -e ${User_servce} ]; then
     if [ "$enabled" = "enabled" ]; then
         sudo systemctl disable "$SERVICE_NAME"
     fi
+
+    if [ -e ${User_servce} ]; then
+        sudo rm -f /etc/systemd/system/dipper.service
+    fi
+    # デーモンリロードをして追加したサービスを読み込ませる
+    sudo systemctl daemon-reload
 fi
 
 # 以前のバージョンのアンインストール処理
 sudo rm -rf /usr/local/dipper/bin
-sudo rm -f /etc/systemd/system/dipper.service
 
 # v1.01以降のインストール用
 # スクリプトファイルダウンロード＆ファイル属性変更
