@@ -8,7 +8,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 事前に必要なもの
 - [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
-- [bash version4.3以降](https://github.com/smileygames/dipper/wiki/Install-Bash-version-4.3-or-later)
+- [bash version4.3以降](https://github.com/smileygames/dipper/wiki/Bash-Install)
 
 ## 概要
 - このスクリプトは、DDNSへの自動通知を目的としています。
