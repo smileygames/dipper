@@ -25,10 +25,7 @@ if [ -e ${User_servce} ]; then
     if [ -e ${User_servce} ]; then
         sudo rm -f /etc/systemd/system/dipper.service
     fi
+    sudo systemctl daemon-reload
 fi
 
- # 以前のバージョン用
-sudo rm -f /etc/systemd/system/dipper.service
-
 sudo rm -rf /usr/local/dipper
-sudo systemctl daemon-reload

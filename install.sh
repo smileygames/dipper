@@ -26,6 +26,8 @@ if [ -e ${User_servce} ]; then
     if [ -e ${User_servce} ]; then
         sudo rm -f /etc/systemd/system/dipper.service
     fi
+    # デーモンリロードをして追加したサービスを読み込ませる
+    sudo systemctl daemon-reload
 fi
 
 # 以前のバージョンのアンインストール処理
