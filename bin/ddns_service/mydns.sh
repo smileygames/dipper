@@ -22,6 +22,11 @@ mydns_multi_domain_update() {
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "MYDNS_ID[$i] or MYDNS_PASS[$i]"
             continue
         fi
+        if [ "$IP_Version" = 4 ] && [[ ${MYDNS_IPV4[$i]} != on ]]; then
+            continue
+        elif [ "$IP_Version" = 6 ] && [[ ${MYDNS_IPV6[$i]} != on ]]; then
+            continue
+        fi
         # バックグラウンドプロセスで実行
         ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "${MYDNS_ID[$i]}:${MYDNS_PASS[$i]} ${Login_URL}" &
     done
@@ -36,6 +41,11 @@ mydns_multi_domain_check() {
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "MYDNS_ID[$i] or MYDNS_PASS[$i] or MYDNS_DOMAIN[$i]"
             continue
         fi 
+        if [ "$IP_Version" = 4 ] && [[ ${MYDNS_IPV4[$i]} != on ]]; then
+            continue
+        elif [ "$IP_Version" = 6 ] && [[ ${MYDNS_IPV6[$i]} != on ]]; then
+            continue
+        fi
         IP_old=$(dig "${MYDNS_DOMAIN[$i]}" "$DNS_Record" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$IP_New" != "$IP_old" ]]; then

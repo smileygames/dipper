@@ -17,10 +17,10 @@ google_multi_domain_check() {
         if [[ ${GOOGLE_ID[$i]} = "" ]] || [[ ${GOOGLE_PASS[$i]} = "" ]] || [[ ${GOOGLE_DOMAIN[$i]} = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "GOOGLE_ID[$i] or GOOGLE_PASS[$i] or GOOGLE_DOMAIN[$i]"
             continue
-        fi 
+        fi
         if [ "$IP_Version" = 4 ] && [[ ${GOOGLE_IPV6[$i]} = on ]]; then
             continue
-        elif [ "$IP_Version" = 6 ] && [[ ${GOOGLE_IPV6[$i]} = off ]]; then
+        elif [ "$IP_Version" = 6 ] && [[ ${GOOGLE_IPV6[$i]} != on ]]; then
             continue
         fi
         IP_old=$(dig "${GOOGLE_DOMAIN[$i]}" "$DNS_Record" +short)  # ドメインのアドレスを読み込む
