@@ -53,6 +53,9 @@ while true;do
     if [ $exit_code != 0 ]; then
         ./err_message.sh "process" "ip_update.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
         exit 1
+    elif [ $exit_code = 127 ]; then
+        ./err_message.sh "process" "ip_update.sh" "endcode=$exit_code  プロセスが全て終了しました。"
+        exit 0
     fi
     sleep 1
 done
