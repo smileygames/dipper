@@ -57,5 +57,5 @@ while true;do
         ./err_message.sh "process" "ip_update.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
         exit 1
     fi
-    sleep 1
+    sleep 3s
 done
