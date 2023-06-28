@@ -77,7 +77,7 @@ google=${#GOOGLE_ID[@]}
 case ${Mode} in
    "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
         if (( "$mydns" )); then
-            sleep 5m;ip_update  # 起動から少し待って最初の処理を行う
+            sleep 1m;ip_update  # 起動から少し待って最初の処理を行う
             while true;do
                 # IP更新用の処理を設定値に基づいて実行する
                 sleep "$UPDATE_TIME";ip_update
