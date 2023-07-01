@@ -14,7 +14,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - このスクリプトは、DDNSへの自動通知を目的としています。
 - 使用する環境はAlmaLinuxで、言語はBashです。（Bashが動く環境なら普通に動くとは思います）
 - `config`ディレクトリ内の設定ファイルに基づいて動作します。
-- IPアドレスを定期的に更新。（既定値は6時間に1回、設定で変更可能）
+- IPアドレスを定期的に更新、初回のみ1分後。（既定値は6時間に1回、設定で変更可能）
 - IPアドレスを定期的にチェックし変更があれば更新。（既定値は3分に1回チェック、設定で変更可能）
 
 ### 現在下記DDNSサービスに対応しています。
@@ -32,7 +32,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.06/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.07/install.sh )
 ```
 
 <br>
@@ -74,7 +74,7 @@ sudo systemctl start dipper.service
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.06/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.07/uninstall.sh )
 ```
 
 <br>
@@ -101,7 +101,7 @@ sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ### ダウンロード及び権限の変更
 
 ```bash
-Ver="1.06"
+Ver="1.07"
 wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/

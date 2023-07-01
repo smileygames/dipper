@@ -1,5 +1,6 @@
 [Unit]
 Description=ddns-ip-upper
+After=nss-lookup.target
 
 [Service]
 Type=simple
