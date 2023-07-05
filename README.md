@@ -54,6 +54,8 @@ sudo vim /usr/local/dipper/config/user.conf
 MYDNS_ID[1]=""
 MYDNS_PASS[1]=""
 MYDNS_DOMAIN[1]=""
+MYDNS_IPV4[1]=on
+MYDNS_IPV6[1]=off
 ```
 をご自分のMyDNSの情報に書き換えて、先頭の#を削除してください。
 
