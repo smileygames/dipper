@@ -13,13 +13,14 @@ Max_Time=30
 
 access() {
     # DDNSへアクセスするがIDやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
-    curl --max-time ${Max_Time} -sSfu ${Access_URL}
-    exit_code=$?
+    output=$(curl --max-time ${Max_Time} -sSfu ${Access_URL} 2>&1)
+    local exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
         # curlコマンドのエラー
         ./err_message.sh "curl" "${Func_Name}" "${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]: ${output}"
     else
+        echo "${output}"
         echo "Access successful ${Func_Name}: curl ${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]"
     fi
 }
