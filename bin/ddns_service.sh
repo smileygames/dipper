@@ -17,20 +17,10 @@ Mode=$1
 # IPv4とIPv6でアクセスURLを変える
 ip_update() {
     if [ "$IPV4" = on ]; then
-        My_ipv4=$(dig @ident.me -4 +short)  # 自分のアドレスを読み込む
-        if [[ $My_ipv4 = "" ]]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
-        else
-            multi_ddns "update" "4"
-        fi
+        multi_ddns "update" "4"
     fi
     if [ "$IPV6" = on ]; then
-        My_ipv6=$(dig @ident.me -6 +short)  # 自分のアドレスを読み込む
-        if [[ $My_ipv6 = "" ]]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
-        else
-            multi_ddns "update" "6"
-        fi
+        multi_ddns "update" "6"
     fi
 }
 
@@ -41,6 +31,7 @@ ip_check() {
 
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
         My_ipv4=$(dig @ident.me -4 +short)  # 自分のアドレスを読み込む
+
         if [[ $My_ipv4 = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
         else
@@ -49,6 +40,7 @@ ip_check() {
     fi
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
         My_ipv6=$(dig @ident.me -6 +short)  # 自分のアドレスを読み込む
+
         if [[ $My_ipv6 = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
         else
