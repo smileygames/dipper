@@ -38,9 +38,9 @@ timer_select() {
 
 # 実行スクリプト
 # config fileの必要になる変数だけを逐次的に読み込む
-load_config "$default_File" "IPV4" "IPV6"
+load_config "$default_File" "IPV4" "IPV6" "IPV4_DDNS" "IPV6_DDNS"
 if [ -e "$User_File" ]; then
-    load_config "$User_File" "IPV4" "IPV6"
+    load_config "$User_File" "IPV4" "IPV6" "IPV4_DDNS" "IPV6_DDNS"
 fi
 
 timer_select
