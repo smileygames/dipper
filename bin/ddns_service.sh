@@ -39,6 +39,7 @@ ip_check() {
         fi
     fi
     if [ "$IPV6" = on ] ; then
+    if [ "$IPV6" = on ] ; then
         My_ipv6=$(dig @ident.me -6 +short)  # 自分のアドレスを読み込む
 
         if [[ $My_ipv6 = "" ]]; then
@@ -90,6 +91,7 @@ case ${Mode} in
         fi
         ;;
    "check")   # アドレス変更時のみ通知する
+        if (( "$mydns" || "$google" || "$cloudflare" )); then
         if (( "$mydns" || "$google" || "$cloudflare" )); then
             while true;do
                 # IPチェック用の処理を設定値に基づいて実行する
