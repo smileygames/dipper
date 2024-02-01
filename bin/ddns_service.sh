@@ -65,6 +65,11 @@ multi_ddns() {
     if (( "$google" )); then
         . ./ddns_service/google.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$My_ip"
     fi
+
+    # CloudFlareのDDNSサービスはIPv4とIPv6が排他制御のための処理
+    if (( "$cloudflare" )); then
+        . ./ddns_service/cloudflare.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$My_ip"
+    fi
 }
 
 # 実行スクリプト
@@ -72,6 +77,7 @@ multi_ddns() {
 # 配列の要素数を変数に代入（DDNSのサービスごと）
 mydns=${#MYDNS_ID[@]}
 google=${#GOOGLE_ID[@]}
+cloudflare=${#CLOUDFLARE_ID[@]}
 
 # タイマー処理
 case ${Mode} in
@@ -85,7 +91,7 @@ case ${Mode} in
         fi
         ;;
    "check")   # アドレス変更時のみ通知する
-        if (( "$mydns" || "$google" )); then
+        if (( "$mydns" || "$google" || "$cloudflare" )); then
             while true;do
                 # IPチェック用の処理を設定値に基づいて実行する
                 sleep "$DDNS_TIME";ip_check
