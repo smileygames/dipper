@@ -13,7 +13,6 @@ IP=$6
 IPv6=$7
  
 cloudflare_zone_id() {
-cloudflare_zone_id() {
     ZONE_ID=`curl -H "x-Auth-Key: ${API_KEY}" \
                 -H "x-Auth-Email: ${EMAIL}" \
                 "https://api.cloudflare.com/client/v4/zones?name=${ZONE}" |\
@@ -56,9 +55,7 @@ access_v4() {
         -H "Content-Type: application/json" \
         -d "$(generate_body_ipv4)" \
         "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records/${DOMAIN_ID_IPV4}"
-        "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records/${DOMAIN_ID_IPV4}"
 
-    echo "success to update address ipv4"
     echo "success to update address ipv4"
 }
 
@@ -77,14 +74,11 @@ access_v6() {
         -H "Content-Type: application/json" \
         -d "$(generate_body_ipv6)" \
         "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records/${DOMAIN_ID_IPV6}"
-        "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records/${DOMAIN_ID_IPV6}"
 
-    echo "success to update address ipv6"
     echo "success to update address ipv6"
 }
 
 # 実行スクリプト
-cloudflare_zone_id
 cloudflare_zone_id
 case ${Mode} in
    "ipv4") 
