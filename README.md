@@ -1,5 +1,6 @@
 # dipper -DDNS IP Upper-
 
+### CloudFlare対応(α版)
 ### multi DDNS & IPv6 & multi domain対応
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
@@ -20,6 +21,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
 - [Google Domains](https://domains.google/intl/ja_jp/)
+- [CloudFlare](https://www.cloudflare.com/) <- テスト版
 
 <br>
 
@@ -103,7 +105,7 @@ sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ### ダウンロード及び権限の変更
 
 ```bash
-Ver="1.08"
+Ver="1.09"
 wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
