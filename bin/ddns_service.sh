@@ -29,7 +29,7 @@ ip_check() {
     local My_ipv4=""
     local My_ipv6=""
 
-    if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
+    if [ "$IPV4" = on ] ; then
         My_ipv4=$(dig @ident.me -4 +short)  # 自分のアドレスを読み込む
 
         if [[ $My_ipv4 = "" ]]; then
@@ -38,7 +38,7 @@ ip_check() {
             multi_ddns "check" "4" "A" "$My_ipv4"
         fi
     fi
-    if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
+    if [ "$IPV6" = on ] ; then
         My_ipv6=$(dig @ident.me -6 +short)  # 自分のアドレスを読み込む
 
         if [[ $My_ipv6 = "" ]]; then
@@ -47,11 +47,10 @@ ip_check() {
             multi_ddns "check" "6" "AAAA" "$My_ipv6"
         fi
     fi
-}
 
-# 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
-cloudflare_v4_v6() {
-    . ./ddns_service/cloudflare.sh 
+    if (( "$cloudflare" )); then
+        . ./ddns_service/cloudflare.sh "check" "$My_ipv4" "$My_ipv6"
+    fi
 }
 
 # 複数のDDNSサービス用（拡張するときは処理を増やす）
@@ -69,11 +68,6 @@ multi_ddns() {
     # GoogleのDDNSサービスはIPv4とIPv6が排他制御のための処理
     if (( "$google" )); then
         . ./ddns_service/google.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$My_ip"
-    fi
-
-    # CloudFlareのDDNSサービスはIPv4とIPv6が排他制御のための処理
-    if (( "$cloudflare" )); then
-        . ./ddns_service/cloudflare.sh "$ddns_Mode" "$IP_Version" "$DNS_Record" "$My_ip"
     fi
 }
 
@@ -96,17 +90,10 @@ case ${Mode} in
         fi
         ;;
    "check")   # アドレス変更時のみ通知する
-        if (( "$mydns" || "$google" || )); then
+        if (( "$mydns" || "$google" || "$cloudflare" )); then
             while true;do
                 # IPチェック用の処理を設定値に基づいて実行する
                 sleep "$DDNS_TIME";ip_check
-            done
-        fi
-
-        if (( "$cloudflare" )); then
-            while true;do
-                # IPチェック用の処理を設定値に基づいて実行する
-                sleep "$DDNS_TIME";cloudflare_v4_v6
             done
         fi
         ;;
