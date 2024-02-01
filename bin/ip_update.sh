@@ -31,19 +31,16 @@ timer_select() {
         fi
     fi
 
-    if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
-
-    elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
+    if [  "$IPV4" = on ] || [ "$IPV6" = on ]; then
         ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
     fi
 }
 
 # 実行スクリプト
 # config fileの必要になる変数だけを逐次的に読み込む
-load_config "$default_File" "IPV4" "IPV6" "IPV4_DDNS" "IPV6_DDNS"
+load_config "$default_File" "IPV4" "IPV6"
 if [ -e "$User_File" ]; then
-    load_config "$User_File" "IPV4" "IPV6" "IPV4_DDNS" "IPV6_DDNS"
+    load_config "$User_File" "IPV4" "IPV6"
 fi
 
 timer_select

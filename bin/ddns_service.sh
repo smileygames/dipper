@@ -49,6 +49,11 @@ ip_check() {
     fi
 }
 
+# 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
+cloudflare_v4_v6() {
+    . ./ddns_service/cloudflare.sh 
+}
+
 # 複数のDDNSサービス用（拡張するときは処理を増やす）
 multi_ddns() {
     local ddns_Mode=$1
@@ -91,10 +96,17 @@ case ${Mode} in
         fi
         ;;
    "check")   # アドレス変更時のみ通知する
-        if (( "$mydns" || "$google" || "$cloudflare" )); then
+        if (( "$mydns" || "$google" || )); then
             while true;do
                 # IPチェック用の処理を設定値に基づいて実行する
                 sleep "$DDNS_TIME";ip_check
+            done
+        fi
+
+        if (( "$cloudflare" )); then
+            while true;do
+                # IPチェック用の処理を設定値に基づいて実行する
+                sleep "$DDNS_TIME";cloudflare_v4_v6
             done
         fi
         ;;
