@@ -77,7 +77,7 @@ multi_ddns() {
 # 配列の要素数を変数に代入（DDNSのサービスごと）
 mydns=${#MYDNS_ID[@]}
 google=${#GOOGLE_ID[@]}
-cloudflare=${#CLOUDFLARE_ID[@]}
+cloudflare=${#CLOUDFLARE_MAIL[@]}
 
 # タイマー処理
 case ${Mode} in
