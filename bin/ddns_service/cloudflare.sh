@@ -10,21 +10,21 @@ My_ipv6=$3
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ip_check_api() {
-    IPv4_ddns=$1
-    IPv6_ddns=$2
+    v4_ddns=$1
+    v6_ddns=$2
     api=$3
     mail=$4
     zone=$5
     domain=$6
 
-    if [ "$IPv4_ddns" = on ]; then
+    if [ "$v4_ddns" = on ]; then
         IPv4_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "A" +short)  # ドメインのアドレスを読み込む
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
             ./dns_api_access.sh "A" "$api" "$mail" "$zone" "$domain" "$My_ipv4" &
         fi
     fi
-    if [ "$IPv6_ddns" = on ]; then
+    if [ "$v6_ddns" = on ]; then
         IPv6_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "AAAA" +short)  # ドメインのアドレスを読み込む
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行

@@ -35,7 +35,7 @@ api_access() {
          -d "{\"name\":\"$Domain\",\"type\":\"$Mode\",\"content\":\"$IP_adr\"}" \
          -sS "https://api.cloudflare.com/client/v4/zones/${Zone_ID}/dns_records/${Domain_ID}"
 
-    echo "success to update address domain=${Domain} type=${Mode}"
+    echo "success to cloudflare update address domain=${Domain} type=${Mode} IP=${IP_adr}"
 }
 
 # 実行スクリプト
