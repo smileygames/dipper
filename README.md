@@ -1,6 +1,6 @@
 # dipper -DDNS IP Upper-
 
-### CloudFlare対応(α版)
+### CloudFlare対応(NEW)
 ### multi DDNS & IPv6 & multi domain対応
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
@@ -20,8 +20,8 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
-- [Google Domains](https://domains.google/intl/ja_jp/)
-- [CloudFlare](https://www.cloudflare.com/) <- テスト版
+- [Google Domains](https://domains.google/intl/ja_jp/) <--サービス終了予定
+- [CloudFlare](https://www.cloudflare.com/)
 
 <br>
 

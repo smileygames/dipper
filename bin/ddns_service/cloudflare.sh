@@ -8,15 +8,6 @@ Mode=$1
 My_ipv4=$2
 My_ipv6=$3
 
-zone_id_accese() {
-    zone_id=`curl -H "x-Auth-Key: ${api}" \
-                  -H "x-Auth-Email: ${mail}" \
-                  "https://api.cloudflare.com/client/v4/zones?name=${zone}" |\
-                  jq -r .result[0].id`
-
-    echo "success to fetch zone id: ${zone_id}"
-}
-
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ip_check_api() {
     IPv4_ddns=$1
@@ -26,21 +17,18 @@ ip_check_api() {
     zone=$5
     domain=$6
 
-    if [ "$IPv4_ddns" = on ] || [ "$IPv6_ddns" = on ]; then
-        zone_id_accese
-    fi
     if [ "$IPv4_ddns" = on ]; then
         IPv4_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "A" +short)  # ドメインのアドレスを読み込む
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_api_access.sh "A" "$api" "$mail" "$zone" "$domain" "$My_ipv4" "$zone_id" &
+            ./dns_api_access.sh "A" "$api" "$mail" "$zone" "$domain" "$My_ipv4" &
         fi
     fi
     if [ "$IPv6_ddns" = on ]; then
         IPv6_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "AAAA" +short)  # ドメインのアドレスを読み込む
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_api_access.sh "AAAA" "$api" "$mail" "$zone" "$domain" "$My_ipv6" "$zone_id" &
+            ./dns_api_access.sh "AAAA" "$api" "$mail" "$zone" "$domain" "$My_ipv6" &
         fi
     fi
 }
