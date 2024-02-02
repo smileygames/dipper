@@ -9,7 +9,8 @@ API_Key=$2
 Email=$3
 Zone=$4
 Domain=$5
-IP_adr=$6
+Record=$6
+IP_adr=$7
  
 id_accese() {
     Zone_ID=`curl -H "x-Auth-Key: ${API_Key}" \
@@ -21,7 +22,7 @@ id_accese() {
 
     Domain_ID=`curl -H "x-Auth-Key: ${API_Key}" \
                     -H "x-Auth-Email: ${Email}" \
-                    -sS "https://api.cloudflare.com/client/v4/zones/${Zone_ID}/dns_records?type=${Mode}&name=${Domain}" |\
+                    -sS "https://api.cloudflare.com/client/v4/zones/${Zone_ID}/dns_records?type=${Record}&name=${Domain}" |\
                     jq -r .result[0].id`
 
 #    echo "success to fetch domain id type=${Mode}: ${Domain_ID} domain=${Zone}"
@@ -32,10 +33,10 @@ api_access() {
          -H "x-Auth-Key: ${API_Key}" \
          -H "x-Auth-Email: ${Email}" \
          -H "Content-Type: application/json" \
-         -d "{\"name\":\"$Domain\",\"type\":\"$Mode\",\"content\":\"$IP_adr\"}" \
+         -d "{\"name\":\"$Domain\",\"type\":\"$Record\",\"content\":\"$IP_adr\"}" \
          -sS "https://api.cloudflare.com/client/v4/zones/${Zone_ID}/dns_records/${Domain_ID}"
 
-    echo "success to cloudflare update address domain=${Domain} type=${Mode} IP=${IP_adr}"
+    echo "success to ${Mode} update address : domain=${Domain} type=${Record} IP=${IP_adr}"
 }
 
 # 実行スクリプト
