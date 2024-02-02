@@ -25,13 +25,18 @@ load_config() {
 
 # タイマーイベントを選択し、実行する
 timer_select() {
-    if [ "$MYDNS" = on ]; then
+    mydns=${#MYDNS_ID[@]}
+
+    if (( "$mydns" )); then
         if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
             ./ddns_service.sh "update" &  # DDNSアップデートタイマーを開始
         fi
     fi
 
-    if [  "$IPV4" = on ] || [ "$IPV6" = on ]; then
+    if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
+        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
+
+    elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
         ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
     fi
 }
