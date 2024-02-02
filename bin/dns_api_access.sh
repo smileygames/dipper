@@ -4,13 +4,14 @@
 #
 # cloudflare DNS
 
-Mode=$1 # DNS_Record IPv4 or IPv6
-API_Key=$2
-Email=$3
-Zone=$4
-Domain=$5
-Record=$6
-IP_adr=$7
+Mode=$1
+Array_Num=$2
+API_Key=$3
+Email=$4
+Zone=$5
+Domain=$6
+Record=$7
+IP_adr=$8
  
 id_accese() {
     Zone_ID=`curl -H "x-Auth-Key: ${API_Key}" \
@@ -29,14 +30,20 @@ id_accese() {
 }
 
 api_access() {
-    curl -X PATCH \
+    output=`curl -X PATCH \
          -H "x-Auth-Key: ${API_Key}" \
          -H "x-Auth-Email: ${Email}" \
          -H "Content-Type: application/json" \
          -d "{\"name\":\"$Domain\",\"type\":\"$Record\",\"content\":\"$IP_adr\"}" \
-         -sS "https://api.cloudflare.com/client/v4/zones/${Zone_ID}/dns_records/${Domain_ID}"
+         -sS "https://api.cloudflare.com/client/v4/zones/${Zone_ID}/dns_records/${Domain_ID}"`
 
-    echo "success to ${Mode} update address : domain=${Domain} type=${Record} IP=${IP_adr}"
+    local exit_code=$?
+    if [ "${exit_code}" != 0 ]; then
+        # curlコマンドのエラー
+        ./err_message.sh "curl" "api_access" "${Mode}_MAIL[$Array_Num]:${Mode}_DOMAIN[$Array_Num]: ${output}"
+    else
+        echo "success to ${Mode} update address : domain=${Domain} type=${Record} IP=${IP_adr}"
+    fi
 }
 
 # 実行スクリプト
