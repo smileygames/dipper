@@ -21,14 +21,14 @@ ip_check_api() {
         IPv4_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "A" +short)  # ドメインのアドレスを読み込む
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_api_access.sh "CLOUDFLARE" "$api" "$mail" "$zone" "$domain" "A" "$My_ipv4" &
+            ./dns_api_access.sh "CLOUDFLARE" "$i" "$api" "$mail" "$zone" "$domain" "A" "$My_ipv4" &
         fi
     fi
     if [ "$v6_ddns" = on ]; then
         IPv6_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "AAAA" +short)  # ドメインのアドレスを読み込む
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_api_access.sh "CLOUDFLARE" "" "$api" "$mail" "$zone" "$domain" "AAAA"  "$My_ipv6" &
+            ./dns_api_access.sh "CLOUDFLARE" "$i" "$api" "$mail" "$zone" "$domain" "AAAA" "$My_ipv6" &
         fi
     fi
 }

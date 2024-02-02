@@ -24,7 +24,7 @@ access() {
         ./err_message.sh "curl" "${Func_Name}" "${Mode}_ID[$Array_Num]:${Mode}_PASS[$Array_Num]: ${output}"
     else
         # echo "${output}"
-        echo "Access successful ${Mode} domain = ${Domain} : IPv${IP_Ver} = ${IP_Adr}"
+        echo "Access successful ${Mode} : domain=${Domain} IPv${IP_Ver}=${IP_Adr}"
     fi
 }
 

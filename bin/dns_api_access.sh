@@ -40,9 +40,9 @@ api_access() {
     local exit_code=$?
     if [ "${exit_code}" != 0 ]; then
         # curlコマンドのエラー
-        ./err_message.sh "curl" "api_access" "${Mode}_MAIL[$Array_Num]:${Mode}_DOMAIN[$Array_Num]: ${output}"
+        ./err_message.sh "curl" "api_access" "${Mode}_MAIL[$Array_Num]:${Mode}_API[$Array_Num]: ${output}"
     else
-        echo "success to ${Mode} update address : domain=${Domain} type=${Record} IP=${IP_adr}"
+        echo "Access successful ${Mode} : domain=${Domain} type=${Record} IP=${IP_adr}"
     fi
 }
 
