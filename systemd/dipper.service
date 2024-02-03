@@ -5,7 +5,7 @@ After=nss-lookup.target
 [Service]
 Type=simple
 Restart=on-failure
-WorkingDirectory=/usr/local/dipper
+WorkingDirectory=/usr/local/dipper/bin
 ExecStart=/usr/local/dipper/bin/ip_update.sh
 
 [Install]

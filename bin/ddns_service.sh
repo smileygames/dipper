@@ -5,7 +5,7 @@
 # shellcheck source=/dev/null
 
 # include file
-File_dir="/config/"
+File_dir="../config/"
 source "${File_dir}default.conf"
 User_File="${File_dir}user.conf"
 if [ -e ${User_File} ]; then
