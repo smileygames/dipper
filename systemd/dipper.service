@@ -6,7 +6,7 @@ After=nss-lookup.target
 Type=simple
 Restart=on-failure
 WorkingDirectory=/usr/local/dipper
-ExecStart=/bin/ip_update.sh
+ExecStart=/usr/local/dipper/bin/ip_update.sh
 
 [Install]
 WantedBy=network-online.target
