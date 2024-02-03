@@ -14,16 +14,16 @@ ip_update_mydns() {
     ipv6_select=$2
     Array_Num=$3
     ID=$4
-    PASS=$5
-    DOMAIN=$6
+    Pass=$5
+    domain=$6
 
     if [ "$ipv4_select" = on ]; then
         # バックグラウンドプロセスで実行
-        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$PASS ${MYDNS_IPV4_URL}" "$DOMAIN" "4" "update!" &
+        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV4_URL}" "$domain" "4" "update!" &
     fi
     if [ "$ipv6_select" = on ]; then
         # バックグラウンドプロセスで実行
-        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$PASS ${MYDNS_IPV6_URL}" "$DOMAIN" "6" "update!" &
+        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV6_URL}" "$domain" "6" "update!" &
     fi
 }
 
@@ -33,8 +33,8 @@ ip_check_mydns() {
     ipv6_select=$2
     Array_Num=$3
     ID=$4
-    PASS=$5
-    DOMAIN=$6
+    Pass=$5
+    domain=$6
 
     if [[ $My_ipv4 = "" ]]; then
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
@@ -44,7 +44,7 @@ ip_check_mydns() {
 
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$PASS ${MYDNS_IPV4_URL}" "$DOMAIN" "4" "$My_ipv4" &
+            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV4_URL}" "$DOMAIN" "4" "$My_ipv4" &
         fi
     fi
 
@@ -56,7 +56,7 @@ ip_check_mydns() {
 
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$PASS ${MYDNS_IPV6_URL}" "$DOMAIN" "6" "$My_ipv6" &
+            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV6_URL}" "$DOMAIN" "6" "$My_ipv6" &
         fi
     fi
 }
