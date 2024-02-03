@@ -10,8 +10,8 @@ My_ipv6=$3
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ip_check_api() {
-    v4_ddns=$1
-    v6_ddns=$2
+    ipv4_select=$1
+    ipv6_select=$2
     api=$3
     mail=$4
     zone=$5
@@ -20,7 +20,7 @@ ip_check_api() {
     if [[ $My_ipv4 = "" ]]; then
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
 
-    elif [ "$v4_ddns" = on ]; then
+    elif [ "$ipv4_select" = on ]; then
         IPv4_old=$(dig "$domain" "A" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
@@ -32,7 +32,7 @@ ip_check_api() {
     if [[ $My_ipv6 = "" ]]; then
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
 
-    elif [ "$v6_ddns" = on ]; then
+    elif [ "$ipv6_select" = on ]; then
         IPv6_old=$(dig "$domain" "AAAA" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
@@ -44,8 +44,6 @@ ip_check_api() {
 
 # CloudFlareの場合用のDDNSアクセス
 cloudflare_multi_domain() {
-    local IP_old=""
-
     for i in "${!CLOUDFLARE_MAIL[@]}"; do
         if [[ ${CLOUDFLARE_MAIL[$i]} = "" ]] || [[ ${CLOUDFLARE_API[$i]} = "" ]] || [[ ${CLOUDFLARE_ZONE[$i]} = "" ]] || [[ ${CLOUDFLARE_DOMAIN[$i]} = "" ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "CLOUDFLARE_MAIL[$i] or CLOUDFLARE_API[$i] or CLOUDFLARE_DOMAIN[$i]"

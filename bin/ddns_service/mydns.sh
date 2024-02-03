@@ -10,18 +10,18 @@ My_ipv6=$3
 
 # IPv4,IPv6を判断して、それぞれのURLでDDNSへアクセス
 ip_update_mydns() {
-    v4_Mydns=$1
-    v6_Mydns=$2
+    ipv4_select=$1
+    ipv6_select=$2
     Array_Num=$3
     ID=$4
     PASS=$5
     DOMAIN=$6
 
-    if [ "$v4_Mydns" = on ]; then
+    if [ "$ipv4_select" = on ]; then
         # バックグラウンドプロセスで実行
         ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$PASS ${MYDNS_IPV4_URL}" "$DOMAIN" "4" "update!" &
     fi
-    if [ "$v6_Mydns" = on ]; then
+    if [ "$ipv6_select" = on ]; then
         # バックグラウンドプロセスで実行
         ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$PASS ${MYDNS_IPV6_URL}" "$DOMAIN" "6" "update!" &
     fi
@@ -29,19 +29,17 @@ ip_update_mydns() {
 
 # アドレスをチェックし変更があった場合のみ、DDNSへアクセス
 ip_check_mydns() {
-    v4_Mydns=$1
-    v6_Mydns=$2
+    ipv4_select=$1
+    ipv6_select=$2
     Array_Num=$3
     ID=$4
     PASS=$5
     DOMAIN=$6
 
-    local IP_old=""
-
     if [[ $My_ipv4 = "" ]]; then
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
 
-    elif [ "$v4_Mydns" = on ]; then
+    elif [ "$ipv4_select" = on ]; then
         IPv4_old=$(dig "$domain" "A" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
@@ -53,7 +51,7 @@ ip_check_mydns() {
     if [[ $My_ipv6 = "" ]]; then
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
 
-    elif [ "$v6_Mydns" = on ]; then
+    elif [ "$ipv6_select" = on ]; then
         IPv6_old=$(dig "$domain" "AAAA" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
