@@ -17,10 +17,10 @@ Mode=$1
 # IPv4とIPv6でアクセスURLを変える
 ip_update() {
     if [ "$IPV4" = on ]; then
-        multi_ddns "update" "4"
+        multi_ddns "update" "4" "A" "update!"
     fi
     if [ "$IPV6" = on ]; then
-        multi_ddns "update" "6"
+        multi_ddns "update" "6" "AAAA" "update!"
     fi
 }
 
