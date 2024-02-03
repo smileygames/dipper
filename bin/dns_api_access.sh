@@ -5,54 +5,48 @@
 # cloudflare DNS
 
 Mode=$1
-API_KEY=$2
-EMAIL=$3
-ZONE=$4
-DOMAIN=$5
-IP=$6
+Array_Num=$2
+API_Key=$3
+Email=$4
+Zone=$5
+Domain=$6
+Record=$7
+IP_adr=$8
  
-generate_body() {
-    cat << EOS
-{
-    "type": "$DNS_Record",
-    "name": "$DOMAIN",
-    "content": "$IP"
+id_accese() {
+    Zone_ID=`curl -H "x-Auth-Key: ${API_Key}" \
+                  -H "x-Auth-Email: ${Email}" \
+                  -sS "https://api.cloudflare.com/client/v4/zones?name=${Zone}" |\
+                  jq -r .result[0].id`
+
+#    echo "success to fetch zone id: ${ZONE_ID} domain=${Zone}"
+
+    Domain_ID=`curl -H "x-Auth-Key: ${API_Key}" \
+                    -H "x-Auth-Email: ${Email}" \
+                    -sS "https://api.cloudflare.com/client/v4/zones/${Zone_ID}/dns_records?type=${Record}&name=${Domain}" |\
+                    jq -r .result[0].id`
+
+#    echo "success to fetch domain id type=${Mode}: ${Domain_ID} domain=${Zone}"
 }
-EOS
-}
 
-cloudflare_access() {
-    ZONE_ID=`curl -H "x-Auth-Key: ${API_KEY}" \
-                -H "x-Auth-Email: ${EMAIL}" \
-                "https://api.cloudflare.com/client/v4/zones?name=${ZONE}" |\
-            jq -r .result[0].id`
+api_access() {
+    output=`curl -X PATCH \
+         -H "x-Auth-Key: ${API_Key}" \
+         -H "x-Auth-Email: ${Email}" \
+         -H "Content-Type: application/json" \
+         -d "{\"name\":\"$Domain\",\"type\":\"$Record\",\"content\":\"$IP_adr\"}" \
+         -sS "https://api.cloudflare.com/client/v4/zones/${Zone_ID}/dns_records/${Domain_ID}"`
 
-    echo "success to fetch zone id: ${ZONE_ID}"
-
-    DOMAIN_ID=`curl -H "x-Auth-Key: ${API_KEY}" \
-                    -H "x-Auth-Email: ${EMAIL}" \
-                    "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records?type=AAAA&name=${DOMAIN}" |\
-            jq -r .result[0].id`
-
-    echo "success to fetch domain id: ${DOMAIN_ID}"
-
-    curl -X PATCH \
-        -H "x-Auth-Key: ${API_KEY}" \
-        -H "x-Auth-Email: ${EMAIL}" \
-        -H "Content-Type: application/json" \
-        -d "$(generate_body)" \
-        "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records/${DOMAIN_ID}"
-
-    echo "success to update address"
+    local exit_code=$?
+    if [ "${exit_code}" != 0 ]; then
+        # curlコマンドのエラー
+        ./err_message.sh "curl" "api_access" "${Mode}_MAIL[$Array_Num]:${Mode}_API[$Array_Num]: ${output}"
+    else
+        echo "Access successful ${Mode} : domain=${Domain} type=${Record} IP=${IP_adr}"
+    fi
 }
 
 # 実行スクリプト
-case ${Mode} in
-   "cloudflare") 
-        cloudflare_access
-        ;;
-    * )
-        echo "[${Mode}] <- 引数エラーです"
-    ;; 
-esac
+id_accese
+api_access
 

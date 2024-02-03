@@ -1,6 +1,6 @@
 # dipper -DDNS IP Upper-
 
-### CloudFlare対応(α版)
+### CloudFlare対応(NEW)
 ### multi DDNS & IPv6 & multi domain対応
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
@@ -20,8 +20,8 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
-- [Google Domains](https://domains.google/intl/ja_jp/)
-- [CloudFlare](https://www.cloudflare.com/) <- テスト版
+- [Google Domains](https://domains.google/intl/ja_jp/) <--サービス終了予定
+- [CloudFlare](https://www.cloudflare.com/)
 
 <br>
 
@@ -53,11 +53,12 @@ sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.c
 sudo vim /usr/local/dipper/config/user.conf
 ```
 ```bash
-MYDNS_ID[1]=""
-MYDNS_PASS[1]=""
-MYDNS_DOMAIN[1]=""
-MYDNS_IPV4[1]=on
-MYDNS_IPV6[1]=off
+#Num=1
+#MYDNS_ID[$Num]=""
+#MYDNS_PASS[$Num]=""
+#MYDNS_DOMAIN[$Num]=""
+#MYDNS_IPV4[$Num]=on
+#MYDNS_IPV6[$Num]=off
 ```
 をご自分のMyDNSの情報に書き換えて、先頭の#を削除してください。
 
@@ -124,11 +125,12 @@ sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.c
 sudo vim /usr/local/dipper/config/user.conf
 ```
 ```bash
-MYDNS_ID[1]=""
-MYDNS_PASS[1]=""
-MYDNS_DOMAIN[1]=""
-MYDNS_IPV4[1]=on
-MYDNS_IPV6[1]=off
+Num=1
+MYDNS_ID[$Num]=""
+MYDNS_PASS[$Num]=""
+MYDNS_DOMAIN[$Num]=""
+MYDNS_IPV4[$Num]=on
+MYDNS_IPV6[$Num]=off
 ```
 をご自分のMyDNSの情報に書き換えて、先頭の#を削除してください。
 

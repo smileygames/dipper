@@ -4,7 +4,36 @@
 #
 # multi_domain
 
-# Googleの場合用のDDNSアクセス
+Mode=$1
+My_ipv4=$2
+My_ipv6=$3
+
+# 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
+ip_check_api() {
+    v4_ddns=$1
+    v6_ddns=$2
+    api=$3
+    mail=$4
+    zone=$5
+    domain=$6
+
+    if [ "$My_ipv4" != "" ] && [ "$v4_ddns" = on ]; then
+        IPv4_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "A" +short)  # ドメインのアドレスを読み込む
+        if [[ "$My_ipv4" != "$IPv4_old" ]]; then
+            # バックグラウンドプロセスで実行
+            ./dns_api_access.sh "CLOUDFLARE" "$i" "$api" "$mail" "$zone" "$domain" "A" "$My_ipv4" &
+        fi
+    fi
+    if [ "$My_ipv6" != "" ] && [ "$v6_ddns" = on ]; then
+        IPv6_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "AAAA" +short)  # ドメインのアドレスを読み込む
+        if [[ "$My_ipv6" != "$IPv6_old" ]]; then
+            # バックグラウンドプロセスで実行
+            ./dns_api_access.sh "CLOUDFLARE" "$i" "$api" "$mail" "$zone" "$domain" "AAAA" "$My_ipv6" &
+        fi
+    fi
+}
+
+# CloudFlareの場合用のDDNSアクセス
 cloudflare_multi_domain_check() {
     local IP_old=""
 
@@ -13,17 +42,11 @@ cloudflare_multi_domain_check() {
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "CLOUDFLARE_MAIL[$i] or CLOUDFLARE_API[$i] or CLOUDFLARE_DOMAIN[$i]"
             continue
         fi
-        if [ "$IP_Version" = 4 ] && [[ ${CLOUDFLARE_IPV6[$i]} = on ]]; then
-            continue
-        elif [ "$IP_Version" = 6 ] && [[ ${CLOUDFLARE_IPV6[$i]} != on ]]; then
-            continue
-        fi
-        IP_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "$DNS_Record" +short)  # ドメインのアドレスを読み込む
 
-        if [[ "$IP_New" != "$IP_old" ]]; then
-            # バックグラウンドプロセスで実行
-            ./dns_api_access.sh "cloudflare" "${CLOUDFLARE_API[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_ZONE[$i]}" "${CLOUDFLARE_DOMAIN[$i]}" "${$IP_New}" &
+        if [[ ${CLOUDFLARE_IPV4[$i]} != on ]] && [[ ${CLOUDFLARE_IPV6[$i]} != on ]]; then
+            continue
         fi
+        ip_check_api "${CLOUDFLARE_IPV4[$i]}" "${CLOUDFLARE_IPV6[$i]}" "${CLOUDFLARE_API[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_ZONE[$i]}" "${CLOUDFLARE_DOMAIN[$i]}"
     done
 }
 

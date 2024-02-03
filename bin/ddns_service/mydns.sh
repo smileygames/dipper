@@ -28,7 +28,7 @@ mydns_multi_domain_update() {
             continue
         fi
         # バックグラウンドプロセスで実行
-        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "${MYDNS_ID[$i]}:${MYDNS_PASS[$i]} ${Login_URL}" &
+        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "${MYDNS_ID[$i]}:${MYDNS_PASS[$i]} ${Login_URL}" "${MYDNS_DOMAIN[$i]}" "${IP_Version}" "${IP_New}" &
     done
 }
 
@@ -50,7 +50,7 @@ mydns_multi_domain_check() {
 
         if [[ "$IP_New" != "$IP_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "${MYDNS_ID[$i]}:${MYDNS_PASS[$i]} ${Login_URL}" &
+            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "${MYDNS_ID[$i]}:${MYDNS_PASS[$i]} ${Login_URL}" "${MYDNS_DOMAIN[$i]}" "${IP_Version}" "${IP_New}" &
         fi
     done
 }
