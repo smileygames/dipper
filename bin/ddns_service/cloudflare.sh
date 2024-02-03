@@ -12,10 +12,10 @@ My_ipv6=$3
 ip_check_api() {
     ipv4_select=$1
     ipv6_select=$2
-    api=$3
-    mail=$4
-    zone=$5
-    domain=$6
+    mail=$3
+    api=$4
+    domain=$5
+    zone=$6
 
     if [[ $My_ipv4 = "" ]]; then
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
@@ -55,7 +55,7 @@ cloudflare_multi_domain() {
         fi
 
         if [ "$Mode" = "check" ]; then
-            ip_check_api "${CLOUDFLARE_IPV4[$i]}" "${CLOUDFLARE_IPV6[$i]}" "${CLOUDFLARE_API[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_ZONE[$i]}" "${CLOUDFLARE_DOMAIN[$i]}"
+            ip_check_api "${CLOUDFLARE_IPV4[$i]}" "${CLOUDFLARE_IPV6[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_API[$i]}" "${CLOUDFLARE_DOMAIN[$i]}" "${CLOUDFLARE_ZONE[$i]}"
         fi
     done
 }

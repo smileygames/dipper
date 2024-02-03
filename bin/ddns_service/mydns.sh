@@ -12,18 +12,17 @@ My_ipv6=$3
 ip_update_mydns() {
     ipv4_select=$1
     ipv6_select=$2
-    Array_Num=$3
-    ID=$4
-    Pass=$5
-    domain=$6
+    ID=$3
+    Pass=$4
+    domain=$5
 
     if [ "$ipv4_select" = on ]; then
         # バックグラウンドプロセスで実行
-        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV4_URL}" "$domain" "4" "update!" &
+        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "$ID:$Pass ${MYDNS_IPV4_URL}" "$domain" "4" "update!" &
     fi
     if [ "$ipv6_select" = on ]; then
         # バックグラウンドプロセスで実行
-        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV6_URL}" "$domain" "6" "update!" &
+        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "$ID:$Pass ${MYDNS_IPV6_URL}" "$domain" "6" "update!" &
     fi
 }
 
@@ -31,10 +30,9 @@ ip_update_mydns() {
 ip_check_mydns() {
     ipv4_select=$1
     ipv6_select=$2
-    Array_Num=$3
-    ID=$4
-    Pass=$5
-    domain=$6
+    ID=$3
+    Pass=$4
+    domain=$5
 
     if [[ $My_ipv4 = "" ]]; then
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
@@ -44,7 +42,7 @@ ip_check_mydns() {
 
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV4_URL}" "$domain" "4" "$My_ipv4" &
+            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "$ID:$Pass ${MYDNS_IPV4_URL}" "$domain" "4" "$My_ipv4" &
         fi
     fi
 
@@ -56,7 +54,7 @@ ip_check_mydns() {
 
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV6_URL}" "$domain" "6" "$My_ipv6" &
+            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "$ID:$Pass ${MYDNS_IPV6_URL}" "$domain" "6" "$My_ipv6" &
         fi
     fi
 }
@@ -73,9 +71,9 @@ mydns_multi_domain() {
         fi
 
         if [ "$Mode" = "update" ]; then
-            ip_update_mydns "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "$i" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${MYDNS_DOMAIN[$i]}"
+            ip_update_mydns "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${MYDNS_DOMAIN[$i]}"
         elif [ "$Mode" = "check" ]; then
-            ip_check_mydns "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "$i" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${MYDNS_DOMAIN[$i]}"
+            ip_check_mydns "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${MYDNS_DOMAIN[$i]}"
         fi
     done
 }
