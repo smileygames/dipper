@@ -17,15 +17,24 @@ ip_check_api() {
     zone=$5
     domain=$6
 
-    if [ "$My_ipv4" != "" ] && [ "$v4_ddns" = on ]; then
-        IPv4_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "A" +short)  # ドメインのアドレスを読み込む
+    if [[ $My_ipv4 = "" ]]; then
+        ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
+
+    elif [ "$v4_ddns" = on ]; then
+        IPv4_old=$(dig "$domain" "A" +short)  # ドメインのアドレスを読み込む
+
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
             ./dns_api_access.sh "CLOUDFLARE" "$i" "$api" "$mail" "$zone" "$domain" "A" "$My_ipv4" &
         fi
     fi
-    if [ "$My_ipv6" != "" ] && [ "$v6_ddns" = on ]; then
-        IPv6_old=$(dig "${CLOUDFLARE_DOMAIN[$i]}" "AAAA" +short)  # ドメインのアドレスを読み込む
+
+    if [[ $My_ipv6 = "" ]]; then
+        ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
+
+    elif [ "$v6_ddns" = on ]; then
+        IPv6_old=$(dig "$domain" "AAAA" +short)  # ドメインのアドレスを読み込む
+
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行
             ./dns_api_access.sh "CLOUDFLARE" "$i" "$api" "$mail" "$zone" "$domain" "AAAA" "$My_ipv6" &
@@ -34,7 +43,7 @@ ip_check_api() {
 }
 
 # CloudFlareの場合用のDDNSアクセス
-cloudflare_multi_domain_check() {
+cloudflare_multi_domain() {
     local IP_old=""
 
     for i in "${!CLOUDFLARE_MAIL[@]}"; do
@@ -46,18 +55,12 @@ cloudflare_multi_domain_check() {
         if [[ ${CLOUDFLARE_IPV4[$i]} != on ]] && [[ ${CLOUDFLARE_IPV6[$i]} != on ]]; then
             continue
         fi
-        ip_check_api "${CLOUDFLARE_IPV4[$i]}" "${CLOUDFLARE_IPV6[$i]}" "${CLOUDFLARE_API[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_ZONE[$i]}" "${CLOUDFLARE_DOMAIN[$i]}"
+
+        if [ "$Mode" = "check" ]; then
+            ip_check_api "${CLOUDFLARE_IPV4[$i]}" "${CLOUDFLARE_IPV6[$i]}" "${CLOUDFLARE_API[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_ZONE[$i]}" "${CLOUDFLARE_DOMAIN[$i]}"
+        fi
     done
 }
 
 # 実行スクリプト
-case ${Mode} in
-   "update")
-        ;;
-   "check") 
-        cloudflare_multi_domain_check
-        ;;
-    * )
-        echo "[${Mode}] <- 引数エラーです"
-    ;; 
-esac
+cloudflare_multi_domain

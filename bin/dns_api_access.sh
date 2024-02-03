@@ -30,6 +30,8 @@ id_accese() {
 }
 
 api_access() {
+    id_accese
+
     output=`curl -X PATCH \
          -H "x-Auth-Key: ${API_Key}" \
          -H "x-Auth-Email: ${Email}" \
@@ -47,6 +49,6 @@ api_access() {
 }
 
 # 実行スクリプト
-id_accese
+
 api_access
 
