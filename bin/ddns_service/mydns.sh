@@ -44,7 +44,7 @@ ip_check_mydns() {
 
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV4_URL}" "$DOMAIN" "4" "$My_ipv4" &
+            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV4_URL}" "$domain" "4" "$My_ipv4" &
         fi
     fi
 
@@ -56,7 +56,7 @@ ip_check_mydns() {
 
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV6_URL}" "$DOMAIN" "6" "$My_ipv6" &
+            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$Array_Num" "$ID:$Pass ${MYDNS_IPV6_URL}" "$domain" "6" "$My_ipv6" &
         fi
     fi
 }
