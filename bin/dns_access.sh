@@ -31,10 +31,7 @@ ipv_update() {
 
 # アドレスをチェックし変更があった場合のみ、DDNSへアクセス
 ipv_check() {
-    if [[ $My_ipv4 = "" ]]; then
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
-
-    elif [ "$ipv4_select" = on ]; then
+    if [[ $My_ipv4 != "" ]] && [ "$ipv4_select" = on ]; then
         IPv4_old=$(dig "$Domain" "A" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
@@ -43,10 +40,7 @@ ipv_check() {
         fi
     fi
 
-    if [[ $My_ipv6 = "" ]]; then
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
-
-    elif [ "$ipv6_select" = on ]; then
+    if [[ $My_ipv6 != "" ]] && [ "$ipv6_select" = on ]; then
         IPv6_old=$(dig "$Domain" "AAAA" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
