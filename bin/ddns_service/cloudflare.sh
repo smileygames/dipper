@@ -18,8 +18,8 @@ cloudflare_multi_domain() {
         if [[ ${CLOUDFLARE_IPV4[$i]} != on ]] && [[ ${CLOUDFLARE_IPV6[$i]} != on ]]; then
             continue
         fi
-        # バックグランドで実行
-        ./dns_api_access.sh "$Mode" "CLOUDFLARE" "$i" "${My_ipv4}" "${My_ipv6}"  "${CLOUDFLARE_IPV4[$i]}" "${CLOUDFLARE_IPV6[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_API[$i]}" "${CLOUDFLARE_DOMAIN[$i]}" "${CLOUDFLARE_ZONE[$i]}" "$CLOUDFLARE_URL" &
+
+        ./dns_api_access.sh "$Mode" "CLOUDFLARE" "$i" "${My_ipv4}" "${My_ipv6}"  "${CLOUDFLARE_IPV4[$i]}" "${CLOUDFLARE_IPV6[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_API[$i]}" "${CLOUDFLARE_DOMAIN[$i]}" "${CLOUDFLARE_ZONE[$i]}" "$CLOUDFLARE_URL"
     done
 }
 

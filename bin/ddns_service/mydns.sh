@@ -18,8 +18,8 @@ mydns_multi_domain() {
         if [[ ${MYDNS_IPV4[$i]} != on ]] && [[ ${MYDNS_IPV6[$i]} != on ]]; then
             continue
         fi
-        # バックグランドで実行
-        ./dns_access.sh "$Mode" "MYDNS" "$i" "${My_ipv4}" "${My_ipv6}" "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${MYDNS_DOMAIN[$i]}" "$MYDNS_IPV4_URL" "$MYDNS_IPV6_URL" &
+
+        ./dns_access.sh "$Mode" "MYDNS" "$i" "${My_ipv4}" "${My_ipv6}" "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${MYDNS_DOMAIN[$i]}" "$MYDNS_IPV4_URL" "$MYDNS_IPV6_URL"
     done
 }
 
