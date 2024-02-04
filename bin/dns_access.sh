@@ -19,11 +19,12 @@ IPv6_url=${12}
 
 # IPv4,IPv6を判断して、それぞれのURLでDDNSへアクセス
 ipv_update() {
-    if [ "$ipv4_select" = on ]; then
+    if [ "$My_ipv4" = on ] && [ "$ipv4_select" = on ]; then
         # バックグラウンドプロセスで実行
         access "${FUNCNAME[0]}" "$ID:$Pass ${IPv4_url}" "4" "update!"
     fi
-    if [ "$ipv6_select" = on ]; then
+
+    if [ "$My_ipv6" = on ] && [ "$ipv6_select" = on ]; then
         # バックグラウンドプロセスで実行
         access "${FUNCNAME[0]}" "$ID:$Pass ${IPv6_url}" "6" "update!"
     fi

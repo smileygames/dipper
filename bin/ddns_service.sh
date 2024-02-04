@@ -19,7 +19,7 @@ ip_update() {
 
      # MyDNSのDDNSのための処理
     if (( "$mydns" )); then
-        . ./ddns_service/mydns.sh "update"
+        . ./ddns_service/mydns.sh "update" "$IPV4" "$IPV6"
     fi
 }
 
