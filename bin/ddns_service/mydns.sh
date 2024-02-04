@@ -10,18 +10,16 @@ My_ipv6=$3
 
 # 配列のデータを読み込む
 mydns_multi_domain() {
-    Name="MYDNS"
-
-    for i in "${!${Name}_ID[@]}"; do
-        if [[ ${${Name}_ID[$i]} = "" ]] || [[ ${${Name}_PASS[$i]} = "" ]] || [[ ${${Name}_DOMAIN[$i]} = "" ]]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "${${Name}_ID[$i]} or ${${Name}_PASS[$i]} or ${${Name}_DOMAIN[$i]}"
+    for i in "${!MYDNS_ID[@]}"; do
+        if [[ ${MYDNS_ID[$i]} = "" ]] || [[ ${MYDNS_PASS[$i]} = "" ]] || [[ ${MYDNS_DOMAIN[$i]} = "" ]]; then
+            ./err_message.sh "no_value" "${FUNCNAME[0]}" "MYDNS_ID[$i] or MYDNS_PASS[$i] or MYDNS_DOMAIN[$i]"
             continue
         fi 
-        if [[ ${${Name}_IPV4[$i]} != on ]] && [[ ${${Name}_IPV6[$i]} != on ]]; then
+        if [[ ${MYDNS_IPV4[$i]} != on ]] && [[ ${MYDNS_IPV6[$i]} != on ]]; then
             continue
         fi
-        # バックグランドで実行 "&"
-        .dns_access.sh "$Mode" "${Name}" "$i" "$My_ipv4" "$My_ipv6" "${${Name}_IPV4[$i]}" "${${Name}_IPV6[$i]}" "${${Name}_ID[$i]}" "${${Name}_PASS[$i]}" "${${Name}_DOMAIN[$i]}" "${${Name}_IPV4_URL}" "${${Name}_IPV6_URL}" &
+        # バックグランドで実行
+        ./dns_access.sh "$Mode" "MYDNS" "$i" "${My_ipv4}" "${My_ipv6}" "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${MYDNS_DOMAIN[$i]}" "$MYDNS_IPV4_URL" "$MYDNS_IPV6_URL" &
     done
 }
 

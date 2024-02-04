@@ -36,20 +36,22 @@ ip_check() {
         My_ipv6=$(dig -6 @resolver1.opendns.com myip.opendns.com AAAA +short)  # 自分のアドレスを読み込む
     fi
 
-    multi_ddns
+    multi_ddns "$My_ipv4" "$My_ipv6"
 }
 
 # 複数のDDNSサービス用（拡張するときは処理を増やす）
+# $1 = My_ipv4
+# $2 = My_ipv6
 multi_ddns() {
 
     # MyDNSのDDNSのための処理
     if (( "$mydns" )); then
-        . ./ddns_service/mydns.sh "check" "$My_ipv4" "$My_ipv6"
+        . ./ddns_service/mydns.sh "check" "$1" "$2"
     fi
 
     # MyDNSのDDNSのための処理
     if (( "$cloudflare" )); then
-        . ./ddns_service/cloudflare.sh "check" "$My_ipv4" "$My_ipv6"
+        . ./ddns_service/cloudflare.sh "check" "$1" "$2"
     fi
 }
 

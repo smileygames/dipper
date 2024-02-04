@@ -13,19 +13,19 @@ ipv4_select=$6
 ipv6_select=$7
 ID=$8
 Pass=$9
-Domain=$10
-IPv4_url=$11
-IPv6_url=$12
+Domain=${10}
+IPv4_url=${11}
+IPv6_url=${12}
 
 # IPv4,IPv6を判断して、それぞれのURLでDDNSへアクセス
 ipv_update() {
     if [ "$ipv4_select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "$i" "$ID:$Pass ${IPv4_url}" "4" "update!"
+        access "${FUNCNAME[0]}" "$ID:$Pass ${IPv4_url}" "4" "update!"
     fi
     if [ "$ipv6_select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "$i" "$ID:$Pass ${IPv6_url}" "6" "update!"
+        access "${FUNCNAME[0]}" "$ID:$Pass ${IPv6_url}" "6" "update!"
     fi
 }
 
@@ -39,7 +39,7 @@ ipv_check() {
 
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "$i" "$ID:$Pass ${IPv4_url}" "4" "$My_ipv4"
+            access "${FUNCNAME[0]}" "$ID:$Pass ${IPv4_url}" "4" "$My_ipv4"
         fi
     fi
 
@@ -51,7 +51,7 @@ ipv_check() {
 
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "$i" "$ID:$Pass ${IPv6_url}" "6" "$My_ipv6"
+            access "${FUNCNAME[0]}" "$ID:$Pass ${IPv6_url}" "6" "$My_ipv6"
         fi
     fi
 }

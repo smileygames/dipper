@@ -7,15 +7,15 @@
 Mode=$1
 service=$2
 Array_Num=$3
-my_ipv4=$4
-my_ipv6=$5
+My_ipv4=$4
+My_ipv6=$5
 ipv4_select=$6
 ipv6_select=$7
 Email=$8
 API_Key=$9
-Domain=$10
-Zone=$11
-url=$12
+Domain=${10}
+Zone=${11}
+url=${12}
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ipv_check_api() {
@@ -27,7 +27,7 @@ ipv_check_api() {
 
         if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            api_access "${FUNCNAME[0]}" "A" "$my_ipv4"
+            api_access "${FUNCNAME[0]}" "A" "$My_ipv4"
         fi
     fi
 
@@ -39,7 +39,7 @@ ipv_check_api() {
 
         if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            api_access "${FUNCNAME[0]}" "AAAA" "$my_ipv6"
+            api_access "${FUNCNAME[0]}" "AAAA" "$My_ipv6"
         fi
     fi
 }
