@@ -8,73 +8,20 @@ Mode=$1
 My_ipv4=$2
 My_ipv6=$3
 
-# IPv4,IPv6を判断して、それぞれのURLでDDNSへアクセス
-ip_update_mydns() {
-    ipv4_select=$1
-    ipv6_select=$2
-    ID=$3
-    Pass=$4
-    domain=$5
-
-    if [ "$ipv4_select" = on ]; then
-        # バックグラウンドプロセスで実行
-        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "$ID:$Pass ${MYDNS_IPV4_URL}" "$domain" "4" "update!" &
-    fi
-    if [ "$ipv6_select" = on ]; then
-        # バックグラウンドプロセスで実行
-        ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "$ID:$Pass ${MYDNS_IPV6_URL}" "$domain" "6" "update!" &
-    fi
-}
-
-# アドレスをチェックし変更があった場合のみ、DDNSへアクセス
-ip_check_mydns() {
-    ipv4_select=$1
-    ipv6_select=$2
-    ID=$3
-    Pass=$4
-    domain=$5
-
-    if [[ $My_ipv4 = "" ]]; then
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
-
-    elif [ "$ipv4_select" = on ]; then
-        IPv4_old=$(dig "$domain" "A" +short)  # ドメインのアドレスを読み込む
-
-        if [[ "$My_ipv4" != "$IPv4_old" ]]; then
-            # バックグラウンドプロセスで実行
-            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "$ID:$Pass ${MYDNS_IPV4_URL}" "$domain" "4" "$My_ipv4" &
-        fi
-    fi
-
-    if [[ $My_ipv6 = "" ]]; then
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
-
-    elif [ "$ipv6_select" = on ]; then
-        IPv6_old=$(dig "$domain" "AAAA" +short)  # ドメインのアドレスを読み込む
-
-        if [[ "$My_ipv6" != "$IPv6_old" ]]; then
-            # バックグラウンドプロセスで実行
-            ./dns_access.sh "MYDNS" "${FUNCNAME[0]}" "$i" "$ID:$Pass ${MYDNS_IPV6_URL}" "$domain" "6" "$My_ipv6" &
-        fi
-    fi
-}
-
 # 配列のデータを読み込む
 mydns_multi_domain() {
-    for i in "${!MYDNS_ID[@]}"; do
-        if [[ ${MYDNS_ID[$i]} = "" ]] || [[ ${MYDNS_PASS[$i]} = "" ]] || [[ ${MYDNS_DOMAIN[$i]} = "" ]]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "MYDNS_ID[$i] or MYDNS_PASS[$i] or MYDNS_DOMAIN[$i]"
+    Name="MYDNS"
+
+    for i in "${!${Name}_ID[@]}"; do
+        if [[ ${${Name}_ID[$i]} = "" ]] || [[ ${${Name}_PASS[$i]} = "" ]] || [[ ${${Name}_DOMAIN[$i]} = "" ]]; then
+            ./err_message.sh "no_value" "${FUNCNAME[0]}" "${${Name}_ID[$i]} or ${${Name}_PASS[$i]} or ${${Name}_DOMAIN[$i]}"
             continue
         fi 
-        if [[ ${MYDNS_IPV4[$i]} != on ]] && [[ ${MYDNS_IPV6[$i]} != on ]]; then
+        if [[ ${${Name}_IPV4[$i]} != on ]] && [[ ${${Name}_IPV6[$i]} != on ]]; then
             continue
         fi
-
-        if [ "$Mode" = "update" ]; then
-            ip_update_mydns "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${MYDNS_DOMAIN[$i]}"
-        elif [ "$Mode" = "check" ]; then
-            ip_check_mydns "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${MYDNS_DOMAIN[$i]}"
-        fi
+        # バックグランドで実行 "&"
+        .dns_access.sh "$Mode" "${Name}" "$i" "$My_ipv4" "$My_ipv6" "${${Name}_IPV4[$i]}" "${${Name}_IPV6[$i]}" "${${Name}_ID[$i]}" "${${Name}_PASS[$i]}" "${${Name}_DOMAIN[$i]}" "${${Name}_IPV4_URL}" "${${Name}_IPV6_URL}" &
     done
 }
 
