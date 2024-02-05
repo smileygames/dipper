@@ -79,6 +79,7 @@ case ${Mode} in
         ;;
    "check")   # アドレス変更時のみ通知する
         if (( "$mydns" || "$cloudflare" )); then
+            ip_update  # 起動から最初の処理を行う
             while true;do
                 # IPチェック用の処理を設定値に基づいて実行する
                 sleep "$DDNS_TIME";ip_check
