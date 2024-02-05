@@ -1,7 +1,8 @@
 # dipper -DDNS IP Upper-
 
-### CloudFlare対応(NEW)
+### CloudFlare対応
 ### multi DDNS & IPv6 & multi domain対応
+#### GoogleDomainのDDNSサービス終了に伴い処理を削除、まだ使いたい場合はv1.09以前のバージョンをお使いください。
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
 
@@ -15,17 +16,15 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - このスクリプトは、DDNSへの自動通知を目的としています。
 - 使用する環境はAlmaLinuxで、言語はBashです。（Bashが動く環境なら普通に動くとは思います）
 - `config`ディレクトリ内の設定ファイルに基づいて動作します。
-- IPアドレスを定期的に更新、既定値は6時間に1回、設定で変更可能。（初回のみ1分後）
+- MyDNSの時のみ、IPアドレスを定期的に更新、既定値は1日に1回、設定で変更可能。（初回のみ1分後）
 - IPアドレスを定期的にチェックし変更があれば更新。（既定値は3分に1回チェック、設定で変更可能）
+- キャッシュを使わない為、DNSサーバー側のIPが不測の事態で変わった場合もアドレスUPdateが可能。
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
-- [Google Domains](https://domains.google/intl/ja_jp/) <--サービス終了予定
 - [CloudFlare](https://www.cloudflare.com/)
 
 <br>
-
-動作に関しては、簡易デバッグテストしかしてないので、ご了承ください。
 
 MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及びIPV6_DDNSを「off」にしておいてください。（余計な処理をしなくなる）
 
@@ -34,7 +33,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.09/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.10/install.sh )
 ```
 
 <br>
@@ -79,7 +78,7 @@ sudo systemctl start dipper.service
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.09/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.10/uninstall.sh )
 ```
 
 <br>
@@ -106,7 +105,7 @@ sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ### ダウンロード及び権限の変更
 
 ```bash
-Ver="1.09"
+Ver="1.10"
 wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
