@@ -26,8 +26,6 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 <br>
 
-動作に関しては、簡易デバッグテストしかしてないので、ご了承ください。
-
 MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及びIPV6_DDNSを「off」にしておいてください。（余計な処理をしなくなる）
 
 <br>
