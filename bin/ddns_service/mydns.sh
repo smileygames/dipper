@@ -19,7 +19,7 @@ mydns_multi_domain() {
             continue
         fi
         # MYDNS_DOMAIN[]に入っている変数に”,”があった場合、空白にしてtrコマンドで区切ってdomainの配列に入れる
-        domain=( `echo ${CLOUDFLARE_DOMAIN[$i]} | tr -s ',' ' '`)
+        domain=( `echo ${MYDNS_DOMAIN[$i]} | tr -s ',' ' '`)
         for j in "${!domain[@]}"; do
             ./dns_access.sh "$Mode" "MYDNS" "$i" "${My_ipv4}" "${My_ipv6}" "${MYDNS_IPV4[$i]}" "${MYDNS_IPV6[$i]}" "${MYDNS_ID[$i]}" "${MYDNS_PASS[$i]}" "${domain[$j]}" "$MYDNS_IPV4_URL" "$MYDNS_IPV6_URL"
         done
