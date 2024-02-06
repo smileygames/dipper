@@ -9,7 +9,6 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 [uninstall方法](https://github.com/smileygames/mydns-ip-update)
 
 事前に必要なもの
-- [curlコマンド](https://github.com/smileygames/dipper/wiki/curl-command-install)
 - [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
 - [bash version4.3以降](https://github.com/smileygames/dipper/wiki/Bash-Install)
 
@@ -19,7 +18,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - `config`ディレクトリ内の設定ファイルに基づいて動作します。
 - MyDNSの時のみ、IPアドレスを定期的に更新、既定値は1日に1回、設定で変更可能。（初回のみ1分後）
 - IPアドレスを定期的にチェックし変更があれば更新。（既定値は3分に1回チェック、設定で変更可能）
-- キャッシュを使わない為、DNSサーバー側のIPが不測の事態で変わった場合でもアドレスUPdateが可能。
+- キャッシュを使わない為、DNSサーバー側のIPが不測の事態で変わった場合もアドレスUPdateが可能。
 - ログはsyslogに記載し、システムで一元管理させている。（dipper.sh の名前でログに書きこまれます）
 
 ### 現在下記DDNSサービスに対応しています。
@@ -54,10 +53,10 @@ sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.c
 sudo vim /usr/local/dipper/config/user.conf
 ```
 ```bash
-#Num=1
-#MYDNS_ID[$Num]=""
-#MYDNS_PASS[$Num]=""
-#MYDNS_DOMAIN[$Num]=""
+#Num=1  # Number 1個目のドメイン
+#MYDNS_ID[$Num]="mydnsxxxx1"
+#MYDNS_PASS[$Num]="Password1"
+#MYDNS_DOMAIN[$Num]="example.com,www.example.com"
 #MYDNS_IPV4[$Num]=on
 #MYDNS_IPV6[$Num]=off
 ```
@@ -126,10 +125,10 @@ sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.c
 sudo vim /usr/local/dipper/config/user.conf
 ```
 ```bash
-Num=1
-MYDNS_ID[$Num]=""
-MYDNS_PASS[$Num]=""
-MYDNS_DOMAIN[$Num]=""
+Num=1  # Number 1個目のドメイン
+MYDNS_ID[$Num]="mydnsxxxx1"
+MYDNS_PASS[$Num]="Password1"
+MYDNS_DOMAIN[$Num]="example.com,www.example.com"
 MYDNS_IPV4[$Num]=on
 MYDNS_IPV6[$Num]=off
 ```
