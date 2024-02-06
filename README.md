@@ -9,6 +9,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 [uninstall方法](https://github.com/smileygames/mydns-ip-update)
 
 事前に必要なもの
+- [curlコマンド](https://github.com/smileygames/dipper/wiki/curl-command-install)
 - [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
 - [bash version4.3以降](https://github.com/smileygames/dipper/wiki/Bash-Install)
 
@@ -18,7 +19,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - `config`ディレクトリ内の設定ファイルに基づいて動作します。
 - MyDNSの時のみ、IPアドレスを定期的に更新、既定値は1日に1回、設定で変更可能。（初回のみ1分後）
 - IPアドレスを定期的にチェックし変更があれば更新。（既定値は3分に1回チェック、設定で変更可能）
-- キャッシュを使わない為、DNSサーバー側のIPが不測の事態で変わった場合もアドレスUPdateが可能。
+- キャッシュを使わない為、DNSサーバー側のIPが不測の事態で変わった場合でもアドレスUPdateが可能。
 - ログはsyslogに記載し、システムで一元管理させている。（dipper.sh の名前でログに書きこまれます）
 
 ### 現在下記DDNSサービスに対応しています。
