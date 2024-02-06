@@ -23,7 +23,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
-- [CloudFlare](https://www.cloudflare.com/)  【 [インストールの簡単な説明](https://smgjp.com/cloudflare-dipper/) 】
+- [CloudFlare](https://www.cloudflare.com/)  【 [インストールの簡単な説明(v1.10用だが基本は同じ)](https://smgjp.com/cloudflare-dipper/) 】
 
 <br>
 
