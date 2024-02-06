@@ -34,14 +34,14 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.10/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.11/install.sh )
 ```
 
 <br>
 
 ▼最初に初期設定を行ってください。
 
-(v1.05より設定項目が追加されたので古いユーザーコンフィグはそのまま使わないでください)
+(v1.10より設定項目が追加されたので古いユーザーコンフィグはそのまま使わないでください)
 
 installのたびにコンフィグファイルが初期値に戻ってしまうのも面倒なので
 ユーザー側でコンフィグファイルを作成してもらい、上書きインストールでも変更しないようにしました。
@@ -79,7 +79,7 @@ sudo systemctl start dipper.service
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.10/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.11/uninstall.sh )
 ```
 
 <br>
@@ -106,7 +106,7 @@ sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ### ダウンロード及び権限の変更
 
 ```bash
-Ver="1.10"
+Ver="1.11"
 wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/

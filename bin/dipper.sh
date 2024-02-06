@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./ip_update.sh
+# ./dipper.sh
 #
 # shellcheck source=/dev/null
 
