@@ -18,8 +18,11 @@ cloudflare_multi_domain() {
         if [[ ${CLOUDFLARE_IPV4[$i]} != on ]] && [[ ${CLOUDFLARE_IPV6[$i]} != on ]]; then
             continue
         fi
-
-        ./dns_api_access.sh "$Mode" "CLOUDFLARE" "$i" "${My_ipv4}" "${My_ipv6}"  "${CLOUDFLARE_IPV4[$i]}" "${CLOUDFLARE_IPV6[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_API[$i]}" "${CLOUDFLARE_DOMAIN[$i]}" "${CLOUDFLARE_ZONE[$i]}" "$CLOUDFLARE_URL"
+        # CLOUDFLARE_DOMAIN[]に入っている変数に”,”があった場合、空白にしてtrコマンドで区切ってdomainの配列に入れる
+        domain=( `echo ${CLOUDFLARE_DOMAIN[$i]} | tr -s ',' ' '`)
+        for j in "${!domain[@]}"; do
+            ./dns_api_access.sh "$Mode" "CLOUDFLARE" "$i" "${My_ipv4}" "${My_ipv6}"  "${CLOUDFLARE_IPV4[$i]}" "${CLOUDFLARE_IPV6[$i]}" "${CLOUDFLARE_MAIL[$i]}" "${CLOUDFLARE_API[$i]}" "${domain[$j]}" "${CLOUDFLARE_ZONE[$i]}" "$CLOUDFLARE_URL"
+        done
     done
 }
 
