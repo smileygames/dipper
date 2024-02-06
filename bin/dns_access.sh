@@ -35,10 +35,7 @@ ipv_check() {
     if [[ $My_ipv4 != "" ]] && [ "$ipv4_select" = on ]; then
         IPv4_old=$(dig "$Domain" "A" +short)  # ドメインのアドレスを読み込む
 
-        if [[ ${IPv4_old[$i]} = "" ]]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "ドメインのIPv4アドレスを取得できなかった"
-
-        elif [[ "$My_ipv4" != "$IPv4_old" ]]; then
+        if [[ "$My_ipv4" != "$IPv4_old" ]]; then
             # バックグラウンドプロセスで実行
             access "${FUNCNAME[0]}" "$ID:$Pass ${IPv4_url}" "4" "$My_ipv4"
         fi
@@ -47,10 +44,7 @@ ipv_check() {
     if [[ $My_ipv6 != "" ]] && [ "$ipv6_select" = on ]; then
         IPv6_old=$(dig "$Domain" "AAAA" +short)  # ドメインのアドレスを読み込む
 
-        if [[ ${IPv6_old[$i]} = "" ]]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "ドメインのIPv6アドレスを取得できなかった"
-
-        elif [[ "$My_ipv6" != "$IPv6_old" ]]; then
+        if [[ "$My_ipv6" != "$IPv6_old" ]]; then
             # バックグラウンドプロセスで実行
             access "${FUNCNAME[0]}" "$ID:$Pass ${IPv6_url}" "6" "$My_ipv6"
         fi
