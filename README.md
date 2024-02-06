@@ -2,7 +2,7 @@
 
 ### CloudFlare対応
 ### multi DDNS & IPv6 & multi domain対応
-#### GoogleDomainのDDNSサービス終了に伴い処理を削除、まだ使いたい場合はv1.09以前のバージョンをお使いください。
+#### GoogleDomainsのDDNSサービス終了に伴い処理を削除、まだ使いたい場合はv1.09以前のバージョンをお使いください。
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
 
