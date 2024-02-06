@@ -53,10 +53,10 @@ sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.c
 sudo vim /usr/local/dipper/config/user.conf
 ```
 ```bash
-#Num=1
-#MYDNS_ID[$Num]=""
-#MYDNS_PASS[$Num]=""
-#MYDNS_DOMAIN[$Num]=""
+#Num=1  # Number 1個目のドメイン
+#MYDNS_ID[$Num]="mydnsxxxx1"
+#MYDNS_PASS[$Num]="Password1"
+#MYDNS_DOMAIN[$Num]="example.com,www.example.com"
 #MYDNS_IPV4[$Num]=on
 #MYDNS_IPV6[$Num]=off
 ```
@@ -125,10 +125,10 @@ sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.c
 sudo vim /usr/local/dipper/config/user.conf
 ```
 ```bash
-Num=1
-MYDNS_ID[$Num]=""
-MYDNS_PASS[$Num]=""
-MYDNS_DOMAIN[$Num]=""
+Num=1  # Number 1個目のドメイン
+MYDNS_ID[$Num]="mydnsxxxx1"
+MYDNS_PASS[$Num]="Password1"
+MYDNS_DOMAIN[$Num]="example.com,www.example.com"
 MYDNS_IPV4[$Num]=on
 MYDNS_IPV6[$Num]=off
 ```
