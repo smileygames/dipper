@@ -71,6 +71,8 @@ case ${Mode} in
    "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
         if (( "$mydns" )); then
             sleep 1m;ip_update  # 起動から少し待って最初の処理を行う
+
+            . ./ddns_service/time_check.sh "$Mode" "$UPDATE_TIME"
             while true;do
                 # IP更新用の処理を設定値に基づいて実行する
                 sleep "$UPDATE_TIME";ip_update
@@ -79,6 +81,8 @@ case ${Mode} in
         ;;
    "check")   # アドレス変更時のみ通知する
         if (( "$mydns" || "$cloudflare" )); then
+
+            . ./ddns_service/time_check.sh "$Mode" "$DDNS_TIME"
             while true;do
                 # IPチェック用の処理を設定値に基づいて実行する
                 sleep "$DDNS_TIME";ip_check
