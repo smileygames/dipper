@@ -32,22 +32,18 @@ time_sec() {
 
 time_check_update() {
     time_sec "$Time"
-    echo "UPDATE_TIME=${wait_sec}"
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
-        echo "UPDATE_TIME lt =${wait_sec}"
         UPDATE_TIME=1m
+        ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[UPDATE_TIME=1m] に変更しました"
     fi
-    echo "UPDATE_TIME end =${UPDATE_TIME}"
 }
 
 time_check_ddns() {
     time_sec "$Time"
-    echo "DDNS_TIME=${wait_sec}"
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
-        echo "DDNS_TIME lt=${wait_sec}"
         DDNS_TIME=1m
+        ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[DDNS_TIME=1m] に変更しました"
     fi
-    echo "DDNS_TIME end =${DDNS_TIME}"
 }
 
 # 実行スクリプト
@@ -62,4 +58,3 @@ case ${Mode} in
         echo "[${Mode}] <- 引数エラーです"
     ;; 
 esac
-
