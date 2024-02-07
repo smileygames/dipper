@@ -102,54 +102,6 @@ sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 
 <br>
 
-## マニュアルインストール方法
-
-### ダウンロード及び権限の変更
-
-```bash
-Ver="1.12"
-wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
-sudo mv -fv dipper-${Ver} dipper
-sudo cp -rv dipper /usr/local/
-sudo rm -rf dipper
-sudo chmod -R 755 /usr/local/dipper/bin
-```
-
-▼最初に初期設定を行ってください。
-
-ユーザー側でコンフィグファイルを作成してもらい、上書きインストールでも変更しないようにしました。
-但し、uninstallコマンドを実行すると消えます。
-```bash
-sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.conf
-```
-```bash
-sudo vim /usr/local/dipper/config/user.conf
-```
-```bash
-Num=1  # Number 1個目のドメイン
-MYDNS_ID[$Num]="mydnsxxxx1"
-MYDNS_PASS[$Num]="Password1"
-MYDNS_DOMAIN[$Num]="example.com,www.example.com"
-MYDNS_IPV4[$Num]=on
-MYDNS_IPV6[$Num]=off
-```
-をご自分のMyDNSの情報に書き換えて、先頭の#を削除してください。
-
-編集が終わったら権限を変更しておきます。（IDとPASSを管理したファイルの為）
-```bash
-sudo chmod 600 /usr/local/dipper/config/user.conf
-```
-
-<br>
-
-### サービスを読み込ませて起動させる
-```bash
-sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
-```
-<br>
-
 ## スクリプト構成
 
 自分なりの解釈のオブジェクト指向もどきで作り直しました。
-
-言語はシェルスクリプトです。
