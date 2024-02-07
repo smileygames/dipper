@@ -13,25 +13,22 @@ time_sec() {
     fi
     case "$1" in
         *d )
-            wait_sec=""
             ;;
         *h )
-            wait_sec=""
             ;;
         *m )
-            wait_sec=""
             ;;
         *s )
-            wait_sec="$target_time"
+            echo "$target_time"
             ;;
         *  )
-            wait_sec="$1"
+            echo "$1"
             ;;
     esac
 }
 
 time_check_update() {
-    time_sec "$Time"
+    wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
         UPDATE_TIME=1m
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[UPDATE_TIME=1m] に変更しました"
@@ -39,7 +36,7 @@ time_check_update() {
 }
 
 time_check_ddns() {
-    time_sec "$Time"
+    wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
         DDNS_TIME=1m
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[DDNS_TIME=1m] に変更しました"
