@@ -23,7 +23,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
-- [CloudFlare](https://www.cloudflare.com/)  【 [インストールの簡単な説明(v1.11用だが基本は同じ)](https://smgjp.com/cloudflare-dipper/) 】
+- [CloudFlare](https://www.cloudflare.com/)  【 [インストールの簡単な説明(v1.12用だが基本は同じ)](https://smgjp.com/cloudflare-dipper/) 】
 
 <br>
 
@@ -41,7 +41,7 @@ bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.12
 
 ▼最初に初期設定を行ってください。
 
-(v1.10より設定項目が変更されたので古いユーザーコンフィグはそのまま使わないでください)
+(v1.12より設定項目が変更されたので古いユーザーコンフィグはそのまま使わないでください)
 
 installのたびにコンフィグファイルが初期値に戻ってしまうのも面倒なので
 ユーザー側でコンフィグファイルを作成してもらい、上書きインストールでも変更しないようにしました。
