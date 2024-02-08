@@ -1,6 +1,6 @@
 [Unit]
 Description=ddns-ip-upper
-After=nss-lookup.target
+After=multi-user.target
 
 [Service]
 Type=simple
@@ -9,4 +9,4 @@ WorkingDirectory=/usr/local/dipper/bin
 ExecStart=/usr/local/dipper/bin/dipper.sh
 
 [Install]
-WantedBy=network-online.target
+WantedBy=multi-user.target
