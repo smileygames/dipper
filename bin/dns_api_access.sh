@@ -5,23 +5,23 @@
 # multi_accece
 
 Mode=$1
-service=$2
+Service=$2
 Array_Num=$3
 My_ipv4=$4
 My_ipv6=$5
-ipv4_select=$6
-ipv6_select=$7
+IPv4_Select=$6
+IPv6_Select=$7
 Email=$8
 API_Key=$9
 Domain=${10}
 Zone=${11}
-url=${12}
+Url=${12}
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ipv_check_api() {
     local ipv4_old ipv6_old
 
-    if [[ $My_ipv4 != "" ]] && [ "$ipv4_select" = on ]; then
+    if [[ $My_ipv4 != "" ]] && [ "$IPv4_Select" = on ]; then
         ipv4_old=$(dig "$Domain" "A" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv4" != "$ipv4_old" ]]; then
@@ -30,7 +30,7 @@ ipv_check_api() {
         fi
     fi
 
-    if [[ $My_ipv6 != "" ]] && [ "$ipv6_select" = on ]; then
+    if [[ $My_ipv6 != "" ]] && [ "$IPv6_Select" = on ]; then
         ipv6_old=$(dig "$Domain" "AAAA" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv6" != "$ipv6_old" ]]; then
@@ -43,14 +43,14 @@ ipv_check_api() {
 id_accese() {
     Zone_ID=`curl -H "x-Auth-Key: ${API_Key}" \
                   -H "x-Auth-Email: ${Email}" \
-                  -sS "$url?name=${Zone}" |\
+                  -sS "$Url?name=${Zone}" |\
                   jq -r .result[0].id`
 
 #    echo "success to fetch zone id: ${ZONE_ID} domain=${Zone}"
 
     Domain_ID=`curl -H "x-Auth-Key: ${API_Key}" \
                     -H "x-Auth-Email: ${Email}" \
-                    -sS "$url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |\
+                    -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |\
                     jq -r .result[0].id`
 
 #    echo "success to fetch domain id type=${Mode}: ${Domain_ID} domain=${Zone}"
@@ -69,14 +69,14 @@ api_access() {
          -H "x-Auth-Email: ${Email}" \
          -H "Content-Type: application/json" \
          -d "{\"name\":\"$Domain\",\"type\":\"$record\",\"content\":\"$ip_adr\"}" \
-         -sS "$url/${Zone_ID}/dns_records/${Domain_ID}"`
+         -sS "$Url/${Zone_ID}/dns_records/${Domain_ID}"`
 
     exit_code=$?
     if [ "${exit_code}" != 0 ]; then
         # curlコマンドのエラー
-        ./err_message.sh "curl" "$func_name" "${service}_MAIL[$Array_Num]:${service}_API[$Array_Num]: ${output}"
+        ./err_message.sh "curl" "$func_name" "${Service}_MAIL[$Array_Num]:${Service}_API[$Array_Num]: ${output}"
     else
-        echo "Access successful ${service} : domain=${Domain} type=${record} IP=${ip_adr}"
+        echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
     fi
 }
 

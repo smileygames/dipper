@@ -68,7 +68,7 @@ access() {
 
     if [ "${exit_code}" != 0 ]; then
         # curlコマンドのエラー
-        ./err_message.sh "curl" "${func_name}" "${Service}_Id[$Array_Num]:${Service}_PASS[$Array_Num]: ${output}"
+        ./err_message.sh "curl" "${func_name}" "${Service}_ID[$Array_Num]:${Service}_PASS[$Array_Num]: ${output}"
     else
         # echo "${output}"
         echo "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
