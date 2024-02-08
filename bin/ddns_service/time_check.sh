@@ -29,7 +29,7 @@ time_sec() {
             ;;
     esac
 
-    echo "$wait_sec"
+    echo "$time_sec"
 }
 
 time_check_update() {
