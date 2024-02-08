@@ -13,23 +13,23 @@ time_sec() {
     fi
     case "$1" in
         *d )
-            time_sec=`expr $target_time \* 86400`
+            work_sec=`expr $target_time \* 86400`
             ;;
         *h )
-            time_sec=`expr $target_time \* 3600`
+            work_sec=`expr $target_time \* 3600`
             ;;
         *m )
-            time_sec=`expr $target_time \* 60`
+            work_sec=`expr $target_time \* 60`
             ;;
         *s )
-            time_sec="$target_time"
+            work_sec="$target_time"
             ;;
         *  )
-            time_sec="$1"
+            work_sec="$1"
             ;;
     esac
 
-    echo "$time_sec"
+    echo "$work_sec"
 }
 
 time_check_update() {
