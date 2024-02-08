@@ -13,25 +13,30 @@ time_sec() {
     fi
     case "$1" in
         *d )
+            time_sec=`expr $target_time \* 86400`
             ;;
         *h )
+            time_sec=`expr $target_time \* 3600`
             ;;
         *m )
+            time_sec=`expr $target_time \* 60`
             ;;
         *s )
-            echo "$target_time"
+            time_sec="$target_time"
             ;;
         *  )
-            echo "$1"
+            time_sec="$1"
             ;;
     esac
+
+    echo "$wait_sec"
 }
 
 time_check_update() {
     wait_sec=$(time_sec "$Time")
-    if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
-        UPDATE_TIME=1m
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[UPDATE_TIME=1m] に変更しました"
+    if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 180 ]; then
+        UPDATE_TIME=3m
+        ./err_message.sh "no_value" "${FUNCNAME[0]}" "3分以下の値[${wait_sec}s]が入力された為、[UPDATE_TIME=3m] に変更しました"
     fi
 }
 
