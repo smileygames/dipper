@@ -5,13 +5,13 @@
 # multi_accece
 
 Mode=$1
-service=$2
+Service=$2
 Array_Num=$3
 My_ipv4=$4
 My_ipv6=$5
-ipv4_select=$6
-ipv6_select=$7
-ID=$8
+IPv4_Select=$6
+IPv6_Select=$7
+Id=$8
 Pass=$9
 Domain=${10}
 IPv4_url=${11}
@@ -19,56 +19,59 @@ IPv6_url=${12}
 
 # IPv4,IPv6を判断して、それぞれのURLでDDNSへアクセス
 ipv_update() {
-    if [ "$My_ipv4" = on ] && [ "$ipv4_select" = on ]; then
+    if [ "$My_ipv4" = on ] && [ "$IPv4_Select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "$ID:$Pass ${IPv4_url}" "4" "update!"
+        access "${FUNCNAME[0]}" "$Id:$Pass ${IPv4_url}" "4" "update!"
     fi
 
-    if [ "$My_ipv6" = on ] && [ "$ipv6_select" = on ]; then
+    if [ "$My_ipv6" = on ] && [ "$IPv6_Select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "$ID:$Pass ${IPv6_url}" "6" "update!"
+        access "${FUNCNAME[0]}" "$Id:$Pass ${IPv6_url}" "6" "update!"
     fi
 }
 
 # アドレスをチェックし変更があった場合のみ、DDNSへアクセス
 ipv_check() {
-    if [[ $My_ipv4 != "" ]] && [ "$ipv4_select" = on ]; then
-        IPv4_old=$(dig "$Domain" "A" +short)  # ドメインのアドレスを読み込む
+    local ipv4_old ipv6_old
 
-        if [[ "$My_ipv4" != "$IPv4_old" ]]; then
+    if [[ $My_ipv4 != "" ]] && [ "$IPv4_Select" = on ]; then
+        ipv4_old=$(dig "$Domain" "A" +short)  # ドメインのアドレスを読み込む
+
+        if [[ "$My_ipv4" != "$ipv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "$ID:$Pass ${IPv4_url}" "4" "$My_ipv4"
+            access "${FUNCNAME[0]}" "$Id:$Pass ${IPv4_url}" "4" "$My_ipv4"
         fi
     fi
 
-    if [[ $My_ipv6 != "" ]] && [ "$ipv6_select" = on ]; then
-        IPv6_old=$(dig "$Domain" "AAAA" +short)  # ドメインのアドレスを読み込む
+    if [[ $My_ipv6 != "" ]] && [ "$IPv6_Select" = on ]; then
+        ipv6_old=$(dig "$Domain" "AAAA" +short)  # ドメインのアドレスを読み込む
 
-        if [[ "$My_ipv6" != "$IPv6_old" ]]; then
+        if [[ "$My_ipv6" != "$ipv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "$ID:$Pass ${IPv6_url}" "6" "$My_ipv6"
+            access "${FUNCNAME[0]}" "$Id:$Pass ${IPv6_url}" "6" "$My_ipv6"
         fi
     fi
 }
 
 access() {
-    Func_Name=$1
-    Access_URL=$2
-    IP_Ver=$3
-    IP_Adr=$4
+    local func_name=$1
+    local access_url=$2
+    local ip_ver=$3
+    local ip_adr=$4
 
-    Max_Time=30
+    local output exit_code
+    local max_time=30
 
-    # DDNSへアクセスするがIDやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
-    output=$(curl --max-time ${Max_Time} -sSfu ${Access_URL} 2>&1)
-    local exit_code=$?
+    # DDNSへアクセスするがIdやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
+    output=$(curl --max-time ${max_time} -sSfu ${access_url} 2>&1)
+    exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
         # curlコマンドのエラー
-        ./err_message.sh "curl" "${Func_Name}" "${service}_ID[$Array_Num]:${service}_PASS[$Array_Num]: ${output}"
+        ./err_message.sh "curl" "${func_name}" "${Service}_Id[$Array_Num]:${Service}_PASS[$Array_Num]: ${output}"
     else
         # echo "${output}"
-        echo "Access successful ${service} : domain=${Domain} IPv${IP_Ver}=${IP_Adr}"
+        echo "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
     fi
 }
 
