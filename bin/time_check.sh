@@ -4,6 +4,9 @@
 #
 # タイマー時間に制限を付ける
 
+Mode=$1
+Time=$2
+
 time_sec() {
     local target_time work_sec
 
@@ -32,25 +35,35 @@ time_sec() {
 }
 
 time_check_update() {
-    local update_time=$1
     local wait_sec
 
-    wait_sec=$(time_sec "$update_time")
+    wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 180 ]; then
-        wait_sec=3m
+        Time=3m
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "3分以下の値[${wait_sec}s]が入力された為、[UPDATE_TIME=3m] に変更しました"
     fi
-    echo "$wait_sec"
 }
 
 time_check_ddns() {
-    local ddns_time=$1
     local wait_sec
     
-    wait_sec=$(time_sec "$ddns_time")
+    wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
-        wait_sec=1m
+        Time=1m
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[DDNS_TIME=1m] に変更しました"
     fi
-    echo "$wait_sec"
 }
+
+# 実行スクリプト
+case ${Mode} in
+   "update")  # アドレス定期通知
+        time_check_update
+        echo "$Time"
+        ;;
+   "check")   # アドレス変更時のみ通知する
+        time_check_ddns
+        echo "$Time"
+        ;;
+    * )
+        ;; 
+esac

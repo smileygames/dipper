@@ -4,6 +4,13 @@
 #
 # shellcheck source=/dev/null
 
+## include file
+File_dir="../config/"
+source "${File_dir}default.conf"
+User_File="${File_dir}user.conf"
+if [ -e ${User_File} ]; then
+    source "${User_File}"
+fi
 # 引数を変数に代入
 Mode=$1
 
@@ -62,8 +69,7 @@ CloudFlare=${#CLOUDFLARE_MAIL[@]}
 case ${Mode} in
    "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
         if (( "$Mydns" )); then
-            ./time_check.sh
-            wait_time=$(time_check_update "$UPDATE_TIME")
+            wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
 
             sleep 1m;ip_update  # 起動から少し待って最初の処理を行う
             while true;do
@@ -74,8 +80,7 @@ case ${Mode} in
         ;;
    "check")   # アドレス変更時のみ通知する
         if (( "$Mydns" || "$CloudFlare" )); then
-            ./time_check.sh
-            wait_time=$(time_check_update "$DDNS_TIME")
+            wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
 
             while true;do
                 # IPチェック用の処理を設定値に基づいて実行する
