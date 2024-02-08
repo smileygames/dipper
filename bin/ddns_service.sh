@@ -71,7 +71,7 @@ case ${Mode} in
         if (( "$Mydns" )); then
             . ./ddns_service/time_check.sh "$Mode" "$UPDATE_TIME"
 
-            sleep 1m;ip_update  # 起動から少し待って最初の処理を行う
+            ip_update  # 最初の処理を行う
             while true;do
                 # IP更新用の処理を設定値に基づいて実行する
                 sleep "$UPDATE_TIME";ip_update
