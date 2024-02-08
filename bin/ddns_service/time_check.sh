@@ -8,6 +8,8 @@ Mode=$1
 Time=$2
 
 time_sec() {
+    local target_time work_sec
+
     if [ ${#1} -ge 2 ]; then
         target_time=`echo "$1" | cut -c 1-\`expr ${#1} - 1\``
     fi
@@ -33,6 +35,8 @@ time_sec() {
 }
 
 time_check_update() {
+    local wait_sec
+
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 180 ]; then
         UPDATE_TIME=3m
@@ -41,6 +45,8 @@ time_check_update() {
 }
 
 time_check_ddns() {
+    local wait_sec
+    
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
         DDNS_TIME=1m
