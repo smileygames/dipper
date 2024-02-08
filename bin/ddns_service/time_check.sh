@@ -35,8 +35,9 @@ time_sec() {
 }
 
 time_check_update() {
-    local wait_sec=$(time_sec "$Time")
+    local wait_sec
 
+    wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 180 ]; then
         UPDATE_TIME=3m
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "3分以下の値[${wait_sec}s]が入力された為、[UPDATE_TIME=3m] に変更しました"
@@ -44,8 +45,9 @@ time_check_update() {
 }
 
 time_check_ddns() {
-    local wait_sec=$(time_sec "$Time")
-
+    local wait_sec
+    
+    wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
         DDNS_TIME=1m
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[DDNS_TIME=1m] に変更しました"

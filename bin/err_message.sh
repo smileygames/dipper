@@ -45,25 +45,29 @@ Message=$3
 
 # タイムアウトエラー
 timeout_err_message() {
-    local error_message="${Caller}: Failed Timeout: ${Message}"
+    local error_message
+    error_message="${Caller}: Failed Timeout: ${Message}"
     logger -ip authpriv.err -t "dipper.sh" "${error_message}"
 }
 
 # データがないエラー
 no_value_err_message() {
-    local error_message="${Caller}: no value: ${Message}"
+    local error_message
+    error_message="${Caller}: no value: ${Message}"
     logger -ip authpriv.err -t "dipper.sh" "${error_message}"
 }
 
 # curlコマンドエラー
 curl_err_message() {
-    local error_message="${Caller}: curl error : ${Message}"
+    local error_message
+    error_message="${Caller}: curl error : ${Message}"
     logger -ip authpriv.err -t "dipper.sh" "${error_message}"
 }
 
 # バックグラウンドプロセスエラー
 process_err_message() {
-    local error_message="${Caller}: abend error : ${Message}"
+    local error_message
+    error_message="${Caller}: abend error : ${Message}"
     logger -ip daemon.err -t "dipper.sh" "${error_message}"
 }
 
