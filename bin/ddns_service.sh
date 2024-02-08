@@ -19,7 +19,7 @@ ip_update() {
 
      # MyDNSのDDNSのための処理
     if (( "$Mydns" )); then
-        . ./ddns_service/Mydns.sh "update" "$IPV4" "$IPV6"
+        . ./ddns_service/mydns.sh "update" "$IPV4" "$IPV6"
     fi
 }
 
@@ -50,12 +50,12 @@ multi_ddns() {
 
     # MyDNSのDDNSのための処理
     if (( "$Mydns" )); then
-        . ./ddns_service/Mydns.sh "check" "$1" "$2"
+        . ./ddns_service/mydns.sh "check" "$1" "$2"
     fi
 
     # MyDNSのDDNSのための処理
     if (( "$CloudFlare" )); then
-        . ./ddns_service/CloudFlare.sh "check" "$1" "$2"
+        . ./ddns_service/cloudflare.sh "check" "$1" "$2"
     fi
 }
 
