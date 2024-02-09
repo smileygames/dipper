@@ -19,7 +19,7 @@ Url=${12}
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ipv_check_api() {
-    local ipv4_old ipv6_old
+    local ipv4_old="" ipv6_old=""
 
     if [[ $My_ipv4 != "" ]] && [ "$IPv4_Select" = on ]; then
         ipv4_old=$(dig "$Domain" "A" +short)  # ドメインのアドレスを読み込む
@@ -41,17 +41,17 @@ ipv_check_api() {
 }
  
 id_accese() {
-    Zone_ID=`curl -H "x-Auth-Key: ${API_Key}" \
-                  -H "x-Auth-Email: ${Email}" \
-                  -sS "$Url?name=${Zone}" |\
-                  jq -r .result[0].id`
+    Zone_ID=$(curl -H "x-Auth-Key: ${API_Key}" \
+                   -H "x-Auth-Email: ${Email}" \
+                   -sS "$Url?name=${Zone}" |\
+                   jq -r .result[0].id)
 
 #    echo "success to fetch zone id: ${ZONE_ID} domain=${Zone}"
 
-    Domain_ID=`curl -H "x-Auth-Key: ${API_Key}" \
-                    -H "x-Auth-Email: ${Email}" \
-                    -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |\
-                    jq -r .result[0].id`
+    Domain_ID=$(curl -H "x-Auth-Key: ${API_Key}" \
+                     -H "x-Auth-Email: ${Email}" \
+                     -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |\
+                     jq -r .result[0].id)
 
 #    echo "success to fetch domain id type=${Mode}: ${Domain_ID} domain=${Zone}"
 }
@@ -64,12 +64,12 @@ api_access() {
 
     id_accese
 
-    output=`curl -X PATCH \
-         -H "x-Auth-Key: ${API_Key}" \
-         -H "x-Auth-Email: ${Email}" \
-         -H "Content-Type: application/json" \
-         -d "{\"name\":\"$Domain\",\"type\":\"$record\",\"content\":\"$ip_adr\"}" \
-         -sS "$Url/${Zone_ID}/dns_records/${Domain_ID}"`
+    output=$(curl -X PATCH \
+                  -H "x-Auth-Key: ${API_Key}" \
+                  -H "x-Auth-Email: ${Email}" \
+                  -H "Content-Type: application/json" \
+                  -d "{\"name\":\"$Domain\",\"type\":\"$record\",\"content\":\"$ip_adr\"}" \
+                  -sS "$Url/${Zone_ID}/dns_records/${Domain_ID}")
 
     exit_code=$?
     if [ "${exit_code}" != 0 ]; then

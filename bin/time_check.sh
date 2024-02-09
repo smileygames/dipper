@@ -8,20 +8,21 @@ Mode=$1
 Time=$2
 
 time_sec() {
-    local target_time work_sec
+    local target_time=""
+    local work_sec
 
     if [ ${#1} -ge 2 ]; then
-        target_time=`echo "$1" | cut -c 1-\`expr ${#1} - 1\``
+        target_time=${1%?}  # 末尾の文字を削除
     fi
     case "$1" in
         *d )
-            work_sec=`expr $target_time \* 86400`
+            work_sec=$((target_time * 86400))
             ;;
         *h )
-            work_sec=`expr $target_time \* 3600`
+            work_sec=$((target_time * 3600))
             ;;
         *m )
-            work_sec=`expr $target_time \* 60`
+            work_sec=$((target_time * 60))
             ;;
         *s )
             work_sec="$target_time"
@@ -30,7 +31,6 @@ time_sec() {
             work_sec="$1"
             ;;
     esac
-
     echo "$work_sec"
 }
 
