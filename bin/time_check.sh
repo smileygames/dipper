@@ -64,6 +64,7 @@ case ${Mode} in
         time_check_ddns
         echo "$Time"
         ;;
-    * )
+    * )     # エラーの場合は1時間の値を返す
+        echo "1h"
         ;; 
 esac
