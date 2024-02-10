@@ -4,7 +4,7 @@
 #
 # shellcheck source=/dev/null
 
-# include file
+## include file
 File_dir="../config/"
 source "${File_dir}default.conf"
 User_File="${File_dir}user.conf"
@@ -25,7 +25,7 @@ ip_update() {
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ip_check() {
-    local my_ipv4 my_ipv6
+    local my_ipv4="" my_ipv6=""
 
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
         my_ipv4=$(dig -4 @resolver1.opendns.com myip.opendns.com A +short)  # 自分のアドレスを読み込む
@@ -69,22 +69,22 @@ CloudFlare=${#CLOUDFLARE_MAIL[@]}
 case ${Mode} in
    "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
         if (( "$Mydns" )); then
-            . ./ddns_service/time_check.sh "$Mode" "$UPDATE_TIME"
+            wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
 
             sleep 1m;ip_update  # 起動から少し待って最初の処理を行う
             while true;do
                 # IP更新用の処理を設定値に基づいて実行する
-                sleep "$UPDATE_TIME";ip_update
+                sleep "$wait_time";ip_update
             done
         fi
         ;;
    "check")   # アドレス変更時のみ通知する
         if (( "$Mydns" || "$CloudFlare" )); then
-            . ./ddns_service/time_check.sh "$Mode" "$DDNS_TIME"
+            wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
 
             while true;do
                 # IPチェック用の処理を設定値に基づいて実行する
-                sleep "$DDNS_TIME";ip_check
+                sleep "$wait_time";ip_check
             done
         fi
         ;;

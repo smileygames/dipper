@@ -4,24 +4,13 @@
 #
 # shellcheck source=/dev/null
 
-# include file
+## include file
 File_dir="../config/"
-default_File="${File_dir}default.conf"
+source "${File_dir}default.conf"
 User_File="${File_dir}user.conf"
-
-# 変数を逐次的に読み込む関数
-load_config() {
-    local file="$1"
-    shift
-    local variables=("$@")
-
-    while IFS= read -r line; do
-        local var_name="${line%%=*}"
-        if [[ " ${variables[*]} " == *" $var_name "* ]]; then
-            eval "$line"
-        fi
-    done < "$file"
-}
+if [ -e ${User_File} ]; then
+    source "${User_File}"
+fi
 
 # タイマーイベントを選択し、実行する
 timer_select() {
@@ -38,12 +27,6 @@ timer_select() {
 }
 
 # 実行スクリプト
-# config fileの必要になる変数だけを逐次的に読み込む
-load_config "$default_File" "IPV4" "IPV6" "IPV4_DDNS" "IPV6_DDNS"
-if [ -e "$User_File" ]; then
-    load_config "$User_File" "IPV4" "IPV6" "IPV4_DDNS" "IPV6_DDNS"
-fi
-
 timer_select
 
 # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる

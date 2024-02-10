@@ -4,7 +4,7 @@
 #
 # dipper
 
-Ver="1.13"
+Ver="1.14"
 SERVICE_NAME="dipper.service"
 User_servce="/etc/systemd/system/$SERVICE_NAME"
 

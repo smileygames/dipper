@@ -32,7 +32,7 @@ ipv_update() {
 
 # アドレスをチェックし変更があった場合のみ、DDNSへアクセス
 ipv_check() {
-    local ipv4_old ipv6_old
+    local ipv4_old="" ipv6_old=""
 
     if [[ $My_ipv4 != "" ]] && [ "$IPv4_Select" = on ]; then
         ipv4_old=$(dig "$Domain" "A" +short)  # ドメインのアドレスを読み込む

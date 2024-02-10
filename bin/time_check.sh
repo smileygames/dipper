@@ -2,26 +2,27 @@
 #
 # ./ddns_service/time_check.sh
 #
-# 1分以下のタイマー処理を認めない
+# タイマー時間に制限を付ける
 
 Mode=$1
 Time=$2
 
 time_sec() {
-    local target_time work_sec
+    local target_time=""
+    local work_sec
 
     if [ ${#1} -ge 2 ]; then
-        target_time=`echo "$1" | cut -c 1-\`expr ${#1} - 1\``
+        target_time=${1%?}  # 末尾の文字を削除
     fi
     case "$1" in
         *d )
-            work_sec=`expr $target_time \* 86400`
+            work_sec=$((target_time * 86400))
             ;;
         *h )
-            work_sec=`expr $target_time \* 3600`
+            work_sec=$((target_time * 3600))
             ;;
         *m )
-            work_sec=`expr $target_time \* 60`
+            work_sec=$((target_time * 60))
             ;;
         *s )
             work_sec="$target_time"
@@ -30,7 +31,6 @@ time_sec() {
             work_sec="$1"
             ;;
     esac
-
     echo "$work_sec"
 }
 
@@ -39,7 +39,7 @@ time_check_update() {
 
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 180 ]; then
-        UPDATE_TIME=3m
+        Time=3m
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "3分以下の値[${wait_sec}s]が入力された為、[UPDATE_TIME=3m] に変更しました"
     fi
 }
@@ -49,7 +49,7 @@ time_check_ddns() {
     
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
-        DDNS_TIME=1m
+        Time=1m
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[DDNS_TIME=1m] に変更しました"
     fi
 }
@@ -58,11 +58,13 @@ time_check_ddns() {
 case ${Mode} in
    "update")  # アドレス定期通知
         time_check_update
+        echo "$Time"
         ;;
    "check")   # アドレス変更時のみ通知する
         time_check_ddns
+        echo "$Time"
         ;;
-    * )
-        echo "[${Mode}] <- 引数エラーです"
-    ;; 
+    * )     # エラーの場合は1時間の値を返す
+        echo "1h"
+        ;; 
 esac
