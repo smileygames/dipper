@@ -75,15 +75,19 @@ access() {
     fi
 }
 
-# 実行スクリプト
-case ${Mode} in
-   "update")
-        ipv_update
-        ;;
-   "check") 
-        ipv_check
-        ;;
-    * )
-        echo "[${Mode}] <- 引数エラーです"
-    ;; 
-esac
+main() {
+    # 実行スクリプト
+    case ${Mode} in
+    "update")
+            ipv_update
+            ;;
+    "check") 
+            ipv_check
+            ;;
+        * )
+            echo "[${Mode}] <- 引数エラーです"
+        ;; 
+    esac
+}
+
+main

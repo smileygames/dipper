@@ -54,17 +54,21 @@ time_check_ddns() {
     fi
 }
 
-# 実行スクリプト
-case ${Mode} in
-   "update")  # アドレス定期通知
-        time_check_update
-        echo "$Time"
-        ;;
-   "check")   # アドレス変更時のみ通知する
-        time_check_ddns
-        echo "$Time"
-        ;;
-    * )     # エラーの場合は1時間の値を返す
-        echo "1h"
-        ;; 
-esac
+main() {
+    # 実行スクリプト
+    case ${Mode} in
+    "update")  # アドレス定期通知
+            time_check_update
+            echo "$Time"
+            ;;
+    "check")   # アドレス変更時のみ通知する
+            time_check_ddns
+            echo "$Time"
+            ;;
+        * )     # エラーの場合は1時間の値を返す
+            echo "1h"
+            ;; 
+    esac
+}
+
+main

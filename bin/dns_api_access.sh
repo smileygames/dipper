@@ -80,14 +80,18 @@ api_access() {
     fi
 }
 
-# 実行スクリプト
-case ${Mode} in
-   "update")
-        ;;
-   "check") 
-        ipv_check_api
-        ;;
-    * )
-        echo "[${Mode}] <- 引数エラーです"
-    ;; 
-esac
+main() {
+    # 実行スクリプト
+    case ${Mode} in
+    "update")
+            ;;
+    "check") 
+            ipv_check_api
+            ;;
+        * )
+            echo "[${Mode}] <- 引数エラーです"
+        ;; 
+    esac
+    }
+
+main

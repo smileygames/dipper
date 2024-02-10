@@ -26,19 +26,24 @@ timer_select() {
     fi
 }
 
-# 実行スクリプト
-timer_select
+main() {
+    local exit_code=""
+    # 実行スクリプト
+    timer_select
 
-# バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
-while true;do
-    wait -n
-    exit_code=$?
-    if [ "$exit_code" = 127 ]; then
-        ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました。"
-        exit 0
-    elif [ "$exit_code" != 0 ]; then
-        ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
-        exit 1
-    fi
-    sleep 1
-done
+    # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
+    while true;do
+        wait -n
+        exit_code=$?
+        if [ "$exit_code" = 127 ]; then
+            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました。"
+            exit 0
+        elif [ "$exit_code" != 0 ]; then
+            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
+            exit 1
+        fi
+        sleep 1
+    done
+}
+
+main 
