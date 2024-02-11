@@ -77,6 +77,12 @@ process_err_message() {
     logger -ip daemon.err -t "dipper.sh" "${error_message}"
 }
 
+new_cache_file() {
+    touch "$Cache_File"
+    Err_count=0
+    echo "Count: $Err_count" >> "$Cache_File"
+}
+
 # キャッシュファイルからカウントとメッセージ内容を読み込む関数
 read_cache() {
     # キャッシュファイルが存在するか確認
@@ -86,21 +92,21 @@ read_cache() {
 
     elif [ ! -f "$Cache_Dir" ]; then
         mkdir -p "$Cache_Dir"
-        touch "$Cache_File"
-        Err_count=0
+        new_cache_file
     else
-        touch "$Cache_File"
-        Err_count=0
+        new_cache_file
     fi
 }
 
 # エラーメッセージ処理が実行されたときのカウントを増やし、メッセージ内容をキャッシュファイルに追加する関数
 update_cache() {
+    local count=0
+
     read_cache
-    # カウントを1増やす
-    ((Err_count++))
+    count=$((Err_count + 1))  # インクリメント
+
     # カウントをファイル全体を書き換える形で更新
-    sed -i "s/Count: $Err_count/Count: $Err_count/" "$Cache_File"
+    sed -i "s/Count: $Err_count/Count: $count/" "$Cache_File"
     # メッセージをファイルの末尾に追記
     echo "Message: $1" >> "$Cache_File"
 }
@@ -120,10 +126,9 @@ main() {
             process_err_message
             ;;
         * )
-            echo "[${Mode}] <- 引数エラーです"
         ;; 
     esac
-    update_cache "${Message}\n"
+    update_cache "${Message}"
 }
 
 main

@@ -18,9 +18,9 @@ Email_Adr=$3
 
 # メール通知関数
 send_email_notification() {
-    ./mailrc.sh
     # ここにメール送信のコードを記述します
-    echo -e "エラーメッセージが${Check_Time}に${Check_Count}個以上ありました。\n${ERR_MESSAGE}" |
+    echo -e "エラーメッセージが${Check_Time}に${Check_Count}個以上ありました。\n" |
+            cat -v $Cache_File |
             mail -s "エラー通知" "$Email_Adr"
 }
 
@@ -48,7 +48,7 @@ handle_error_message() {
         Err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
 
         # エラーカウントが閾値を超えた場合、メール通知を送信
-        if [ "$Err_count" -ge "$Check_Count" ]; then
+        if (( "$Err_count" >= "$Check_Count" )); then
             send_email_notification
             reset_counter
         fi
@@ -56,6 +56,8 @@ handle_error_message() {
 }
 
 main() {
+    reset_counter
+
     while true;do
         sleep "$Check_Time";handle_error_message
     done
