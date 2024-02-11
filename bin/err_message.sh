@@ -39,6 +39,8 @@
 #    6   	info	    情報
 #    7   	debug	    デバッグ情報
 
+export ERR_MESSAGE
+
 Mode=$1
 Caller=$2
 Message=$3
@@ -72,7 +74,6 @@ process_err_message() {
 }
 
 main() {
-    # 実行スクリプト
     case ${Mode} in
     "timeout")
             timeout_err_message
@@ -90,6 +91,11 @@ main() {
             echo "[${Mode}] <- 引数エラーです"
         ;; 
     esac
+
+    # エラーカウントを増やす
+    ((ERR_COUNT++))
+    # エラーメッセージをERR_MESSAGEに追加し、改行を追加する
+    ERR_MESSAGE+="${Message}\n"
 }
 
 main

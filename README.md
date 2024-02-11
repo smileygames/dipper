@@ -22,6 +22,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - キャッシュを使わない為、DNSサーバー側のIPが不測の事態で変わった場合もアドレスUPdateが可能。
 - ログはsyslogに記載し、システムで一元管理させている。（dipper.sh の名前でログに書きこまれます）
 - 管理はsystemdで行っている。（デーモン化）
+- メール通知機能の追加。（オプション）コンフィグファイルに追加されているコメントアウトを外して使用。
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
@@ -36,14 +37,14 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.14/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.15/install.sh )
 ```
 
 <br>
 
 ▼最初に初期設定を行ってください。
 
-(v1.12より設定項目が変更されたので古いユーザーコンフィグはそのまま使わないでください)
+(v1.15より設定項目が変更されたので古いユーザーコンフィグはそのまま使わないでください)
 
 installのたびにコンフィグファイルが初期値に戻ってしまうのも面倒なので
 ユーザー側でコンフィグファイルを作成してもらい、上書きインストールでも変更しないようにしました。
@@ -81,7 +82,7 @@ sudo systemctl start dipper.service
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.14/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.15/uninstall.sh )
 ```
 
 <br>

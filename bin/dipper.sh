@@ -24,6 +24,10 @@ timer_select() {
     elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
         ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
     fi
+    # エラーメッセージが設定時間に設定閾値以上だった場合、通知する処理
+    if (( "$EMAIL_CHK_ADR" )); then
+        ./error_handle.sh "$EMAIL_CHK_TIME" "$EMAIL_CHK_COUNT" "$EMAIL_CHK_ADR" &
+    fi
 }
 
 main() {
