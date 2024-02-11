@@ -18,11 +18,9 @@ Email_Adr=$3
 
 # メール通知関数
 send_email_notification() {
-    # ここにメール送信のコードを記述します
-    echo -e "エラーメッセージが${Check_Time}に${Check_Count}個以上ありました。\n" |
-            cat -v $Cache_File |
-            mail -s "エラー通知" "$Email_Adr"
+    mail -s "エラーが${Check_Time}に${Check_Count}個以上ありました" "$Email_Adr" < $Cache_File
 }
+
 
 # 設定時間ごとにカウンターをリセットする関数
 reset_counter() {
