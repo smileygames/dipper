@@ -29,21 +29,28 @@ ip_update() {
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ip_check() {
     local my_ipv4="" my_ipv6=""
+    local exit_code
 
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
         my_ipv4=$(dig -4 @resolver1.opendns.com myip.opendns.com A +short)  # 自分のアドレスを読み込む
-        if [[ $my_ipv4 = "" ]]; then
+        exit_code=$?
+        if [ "${exit_code}" != 0 ]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
+            my_ipv4=""
         fi
     fi
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
         my_ipv6=$(dig -6 @resolver1.opendns.com myip.opendns.com AAAA +short)  # 自分のアドレスを読み込む
-        if [[ $my_ipv6 = "" ]]; then
+        exit_code=$?
+        if [ "${exit_code}" != 0 ]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
+            my_ipv6=""
         fi
     fi
 
-    multi_ddns "$my_ipv4" "$my_ipv6"
+    if [[ $my_ipv4 != "" ]] || [[ $my_ipv4 != "" ]]; then
+        multi_ddns "$my_ipv4" "$my_ipv6"
+    fi
 }
 
 # 複数のDDNSサービス用（拡張するときは処理を増やす）
