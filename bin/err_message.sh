@@ -39,7 +39,11 @@
 #    6   	info	    情報
 #    7   	debug	    デバッグ情報
 
-export ERR_MESSAGE
+# キャッシュファイルのディレクトリパス
+Cache_Dir="../cache"
+# キャッシュファイルのパス
+Cache_File="${Cache_Dir}/err_mail.txt"
+Err_count=0
 
 Mode=$1
 Caller=$2
@@ -73,6 +77,34 @@ process_err_message() {
     logger -ip daemon.err -t "dipper.sh" "${error_message}"
 }
 
+# キャッシュファイルからカウントとメッセージ内容を読み込む関数
+read_cache() {
+    # キャッシュファイルが存在するか確認
+    if [ -f "$Cache_File" ]; then
+        # キャッシュファイルからカウントとメッセージ内容を読み込む
+        Err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
+
+    elif [ ! -f "$Cache_Dir" ]; then
+        mkdir -p "$Cache_Dir"
+        touch "$Cache_File"
+        Err_count=0
+    else
+        touch "$Cache_File"
+        Err_count=0
+    fi
+}
+
+# エラーメッセージ処理が実行されたときのカウントを増やし、メッセージ内容をキャッシュファイルに追加する関数
+update_cache() {
+    read_cache
+    # カウントを1増やす
+    ((Err_count++))
+    # カウントをファイル全体を書き換える形で更新
+    sed -i "s/Count: $Err_count/Count: $Err_count/" "$Cache_File"
+    # メッセージをファイルの末尾に追記
+    echo "Message: $1" >> "$Cache_File"
+}
+
 main() {
     case ${Mode} in
     "timeout")
@@ -91,11 +123,7 @@ main() {
             echo "[${Mode}] <- 引数エラーです"
         ;; 
     esac
-
-    # エラーカウントを増やす
-    ((ERR_COUNT++))
-    # エラーメッセージをERR_MESSAGEに追加し、改行を追加する
-    ERR_MESSAGE+="${Message}\n"
+    update_cache "${Message}\n"
 }
 
 main

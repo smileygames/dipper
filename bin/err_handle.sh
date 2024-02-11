@@ -4,16 +4,21 @@
 #
 # エラーメッセージが1時間に10個以上の場合にメールで通知する
 
+# キャッシュファイルのディレクトリパス
+Cache_Dir="../cache"
+# キャッシュファイルのパス
+Cache_File="${Cache_Dir}/err_mail.txt"
+Err_count=0
+
 Check_Time=$1
 Check_Count=$2
 Email_Adr=$3
 
-# エラーメッセージのカウンター
-export ERR_COUNT=0
 # メール通知の閾値
 
 # メール通知関数
 send_email_notification() {
+    ./mailrc.sh
     # ここにメール送信のコードを記述します
     echo -e "エラーメッセージが${Check_Time}に${Check_Count}個以上ありました。\n${ERR_MESSAGE}" |
             mail -s "エラー通知" "$Email_Adr"
@@ -21,15 +26,32 @@ send_email_notification() {
 
 # 設定時間ごとにカウンターをリセットする関数
 reset_counter() {
-    ERR_COUNT=0
+    # キャッシュファイルが存在する場合、中身の内容を削除してCOUNT=0を書き込む
+    if [ -f "$Cache_File" ]; then
+        echo "Count: 0" > "$Cache_File"
+    fi
+}
+
+# キャッシュファイルからカウントとメッセージ内容を読み込む関数
+read_cache() {
+    # キャッシュファイルからカウントとメッセージ内容を読み込む
+    Err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
+    # カウントとメッセージ内容を出力
+    echo "Count: $COUNT"
 }
 
 # エラーメッセージが生成された場合の処理
 handle_error_message() {
-    # エラーカウントが閾値を超えた場合、メール通知を送信
-    if [ $ERR_COUNT -ge "$Check_Count" ]; then
-        send_email_notification
-        reset_counter
+    # キャッシュファイルが存在するか確認
+    if [ -f "$Cache_File" ]; then
+        # キャッシュファイルからカウントとメッセージ内容を読み込む
+        Err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
+
+        # エラーカウントが閾値を超えた場合、メール通知を送信
+        if [ "$Err_count" -ge "$Check_Count" ]; then
+            send_email_notification
+            reset_counter
+        fi
     fi
 }
 
