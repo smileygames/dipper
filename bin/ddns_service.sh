@@ -19,7 +19,7 @@ Mydns=${#MYDNS_ID[@]}
 CloudFlare=${#CLOUDFLARE_MAIL[@]}
 
 # IPv4とIPv6でアクセスする
-ip_update() {
+multi_update() {
      # MyDNSのDDNSのための処理
     if (( "$Mydns" )); then
         . ./ddns_service/mydns.sh "update" "$IPV4" "$IPV6"
@@ -77,10 +77,10 @@ main() {
             if (( "$Mydns" )); then
                 wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
 
-                sleep 1m;ip_update  # 起動から少し待って最初の処理を行う
+                sleep 1m;multi_update  # 起動から少し待って最初の処理を行う
                 while true;do
                     # IP更新用の処理を設定値に基づいて実行する
-                    sleep "$wait_time";ip_update
+                    sleep "$wait_time";multi_update
                 done
             fi
             ;;
