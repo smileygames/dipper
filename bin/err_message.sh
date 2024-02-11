@@ -71,21 +71,25 @@ process_err_message() {
     logger -ip daemon.err -t "dipper.sh" "${error_message}"
 }
 
-# 実行スクリプト
-case ${Mode} in
-   "timeout")
-        timeout_err_message
-        ;;
-   "no_value") 
-        no_value_err_message
-        ;;
-   "curl")
-        curl_err_message
-        ;;
-   "process")
-        process_err_message
-        ;;
-    * )
-        echo "[${Mode}] <- 引数エラーです"
-    ;; 
-esac
+main() {
+    # 実行スクリプト
+    case ${Mode} in
+    "timeout")
+            timeout_err_message
+            ;;
+    "no_value") 
+            no_value_err_message
+            ;;
+    "curl")
+            curl_err_message
+            ;;
+    "process")
+            process_err_message
+            ;;
+        * )
+            echo "[${Mode}] <- 引数エラーです"
+        ;; 
+    esac
+}
+
+main
