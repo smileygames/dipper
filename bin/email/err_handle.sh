@@ -28,13 +28,13 @@ send_email_notification() {
 
     case $Check_Time in
         *s) 
-            time_str="${Check_Time%s}秒" ;;
+            time_str="${Check_Time%s}秒間" ;;
         *m) 
-            time_str="${Check_Time%m}分" ;;
+            time_str="${Check_Time%m}分間" ;;
         *h) 
             time_str="${Check_Time%h}時間" ;;
         *d) 
-            time_str="${Check_Time%d}日" ;;
+            time_str="${Check_Time%d}日間" ;;
         *) 
             ;;
     esac
