@@ -29,7 +29,9 @@ send_email_notification() {
             ;;
     esac
 
-    mail -s "エラーが${time_str}に${Check_Count}個以上ありました" "$Email_Adr" < $Cache_File
+    echo -e "エラーが${time_str}に${Check_Count}個以上ありました\nFrom: $(hostname) <>\nTo: <${Email_Adr}>\n" | 
+            cat - ${Cache_File} > temp && mv temp ${Cache_File}
+    sendmail -t < ${Cache_File}
 }
 
 # 設定時間ごとにカウンターをリセットする
@@ -58,7 +60,6 @@ handle_error_message() {
 main() {
     local wait_time=""
 
-    reset_counter
     wait_time=$(./time_check.sh "error" "$Check_Time")
     while true;do
         sleep "$wait_time";handle_error_message
