@@ -39,7 +39,7 @@ send_email_notification() {
             ;;
     esac
 
-    echo -e "Subject: エラーが${time_str}に${Check_Count}個以上ありました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
+    echo -e "Subject: エラーが${time_str}に${Err_count}個ありました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
             cat - ${Cache_File} > temp && mv temp ${Cache_File}
     sendmail -t < ${Cache_File}
     exit_code=$?
