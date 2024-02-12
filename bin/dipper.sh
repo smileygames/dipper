@@ -27,7 +27,7 @@ timer_select() {
     # エラーメッセージが設定時間に設定閾値以上だった場合、通知する処理
     set -u
     if [[ -n ${EMAIL_CHK_ADR:-} ]]; then
-        ./err_handle.sh "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" "$ERR_CHK_COUNT" &
+        ./email_err_handle.sh "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" "$ERR_CHK_COUNT" &
     fi
 }
 

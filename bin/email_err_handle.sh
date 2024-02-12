@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./err_handle.sh
+# ./email_err_handle.sh
 #
 # エラーメッセージが1時間に10個以上の場合にメールで通知する
 
