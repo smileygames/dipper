@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# dns_access.sh
+# /access/dns_access.sh
 #
 # multi_accece
 
@@ -72,7 +72,7 @@ access() {
     else
         # echo "${output}"
         echo "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
-        if [[ ${ip_adr} != "update!" ]]; then
+        if [[ "${ip_adr}" != "update!" ]]; then
             ./cache_count.sh "ddns_mail" "${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr} :time=$(date +%T)"
         fi
     fi
