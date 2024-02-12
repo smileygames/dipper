@@ -75,7 +75,7 @@ access() {
         # echo "${output}"
         echo "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
         if [[ "${ip_adr}" != "update!" ]]; then
-            ./cache_count.sh "ddns_mail" "${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr} :time=$(date +%T)"
+            ./cache_count.sh "ddns_mail" "${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr} :time=$(date "+%Y-%m-%d %H:%M:%S")"
         fi
     fi
 }
