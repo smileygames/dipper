@@ -13,9 +13,19 @@ Email_Adr=$1
 Check_Time=$2
 Check_Count=$3
 
+# 設定時間ごとにカウンターをリセットする
+reset_counter() {
+    # キャッシュファイルが存在する場合、中身の内容を削除してCOUNT=0を書き込む
+    if [ -f "$Cache_File" ]; then
+        echo "Count: 0" > "$Cache_File"
+    fi
+}
+
 # メール通知
 send_email_notification() {
     local time_str=""
+    local exit_code
+
     case $Check_Time in
         *s) 
             time_str="${Check_Time%s}秒" ;;
@@ -32,14 +42,15 @@ send_email_notification() {
     echo -e "Subject: エラーが${time_str}に${Check_Count}個以上ありました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
             cat - ${Cache_File} > temp && mv temp ${Cache_File}
     sendmail -t < ${Cache_File}
-}
+    exit_code=$?
 
-# 設定時間ごとにカウンターをリセットする
-reset_counter() {
-    # キャッシュファイルが存在する場合、中身の内容を削除してCOUNT=0を書き込む
-    if [ -f "$Cache_File" ]; then
-        echo "Count: 0" > "$Cache_File"
+    if [ "${exit_code}" != 0 ]; then
+        # curlコマンドのエラー
+        ./err_message.sh "sendmail" "email_err_handle.sh" "sendmailコマンドエラー"
+    else
+        reset_counter
     fi
+
 }
 
 # エラーメッセージが生成された場合の処理
@@ -53,14 +64,15 @@ handle_error_message() {
         if (( "$Err_count" >= "$Check_Count" )); then
             send_email_notification
         fi
-        reset_counter
     fi
 }
 
 main() {
     local wait_time=""
 
-    handle_error_message
+    # 遅延起動で最初の起動を行う
+    sleep 1m;handle_error_message
+
     wait_time=$(./time_check.sh "error" "$Check_Time")
     while true;do
         sleep "$wait_time";handle_error_message

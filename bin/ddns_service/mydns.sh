@@ -24,7 +24,7 @@ mydns_multi_domain() {
             continue
         fi
 
-        ./dns_access.sh \
+        ./access/dns_access.sh \
             "$Mode" \
             "MYDNS" \
             "$i" \

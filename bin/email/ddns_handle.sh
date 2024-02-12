@@ -11,18 +11,28 @@ Count=0
 
 Email_Adr=$1
 
-# メール通知
-send_email_notification() {
-    echo -e "Subject: IPアドレスの変更が${Count}件ありました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
-            cat - ${Cache_File} > temp && mv temp ${Cache_File}
-    sendmail -t < ${Cache_File}
-}
-
 # 設定時間ごとにカウンターをリセットする
 reset_counter() {
     # キャッシュファイルが存在する場合、中身の内容を削除してCOUNT=0を書き込む
     if [ -f "$Cache_File" ]; then
         echo "Count: 0" > "$Cache_File"
+    fi
+}
+
+# メール通知
+send_email_notification() {
+    local exit_code
+
+    echo -e "Subject: IPアドレスの変更が${Count}件ありました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
+            cat - ${Cache_File} > temp && mv temp ${Cache_File}
+    sendmail -t < ${Cache_File}
+    exit_code=$?
+
+    if [ "${exit_code}" != 0 ]; then
+        # curlコマンドのエラー
+        ./err_message.sh "sendmail" "email_ddns_handle.sh" "sendmailコマンドエラー"
+    else
+        reset_counter
     fi
 }
 
@@ -37,7 +47,6 @@ handle_ddns_message() {
         if (( "$Count" )); then
             send_email_notification
         fi
-        reset_counter
     fi
 }
 

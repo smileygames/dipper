@@ -29,7 +29,7 @@ cloudflare_multi_domain() {
         # CLOUDFLARE_DOMAIN[]に入っている変数に”,”があった場合、カンマで区切って配列に格納する
         IFS=',' read -r -a domain <<< "${CLOUDFLARE_DOMAIN[$i]}"
         for j in "${!domain[@]}"; do
-            ./dns_api_access.sh \
+            ./access/dns_api_access.sh \
                 "$Mode" \
                 "CLOUDFLARE" \
                 "$i" \

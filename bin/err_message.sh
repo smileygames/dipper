@@ -64,6 +64,13 @@ curl_err_message() {
     logger -ip authpriv.err -t "dipper.sh" "${error_message}"
 }
 
+# sendmailコマンドエラー
+sendmail_err_message() {
+    local error_message
+    error_message="${Caller}: sendmail error : ${Message}"
+    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+}
+
 # バックグラウンドプロセスエラー
 process_err_message() {
     local error_message
@@ -81,6 +88,9 @@ main() {
             ;;
     "curl")
             curl_err_message
+            ;;
+    "sendmail")
+            sendmail_err_message
             ;;
     "process")
             process_err_message

@@ -60,7 +60,7 @@ time_check_error() {
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
         Time=1m
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[EMAIL_CHK_TIME=1m] に変更しました"
+        ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${wait_sec}s]が入力された為、[ERR_CHK_TIME=1m] に変更しました"
     fi
 }
 

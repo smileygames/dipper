@@ -91,7 +91,7 @@ main() {
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
                     sleep "$wait_time";ip_check
-                    ./email_ddns_handle.sh "$EMAIL_CHK_ADR" & 
+                    ./email/ddns_handle.sh "$EMAIL_CHK_ADR" & 
                 done
             fi
             ;;
