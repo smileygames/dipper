@@ -13,7 +13,7 @@ Email_Adr=$1
 
 # メール通知
 send_email_notification() {
-    mail -s "IPアドレスの変更がありました" "$Email_Adr" < $Cache_File
+    mail -s "IPアドレスの変更が${Count}件ありました" "$Email_Adr" < $Cache_File
 }
 
 # 設定時間ごとにカウンターをリセットする
