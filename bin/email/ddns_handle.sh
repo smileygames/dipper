@@ -29,7 +29,7 @@ send_email_notification() {
     exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
-        # curlコマンドのエラー
+        # sendmailコマンドのエラー
         ./err_message.sh "sendmail" "email_ddns_handle.sh" "sendmailコマンドエラー"
     else
         reset_counter
