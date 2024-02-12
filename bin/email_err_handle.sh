@@ -15,7 +15,21 @@ Check_Count=$3
 
 # メール通知
 send_email_notification() {
-    mail -s "エラーが${Check_Time}に${Check_Count}個以上ありました" "$Email_Adr" < $Cache_File
+    local time_str=""
+    case $Check_Time in
+        *s) 
+            time_str="${Check_Time%s}秒" ;;
+        *m) 
+            time_str="${Check_Time%m}分" ;;
+        *h) 
+            time_str="${Check_Time%h}時間" ;;
+        *d) 
+            time_str="${Check_Time%d}日" ;;
+        *) 
+            ;;
+    esac
+
+    mail -s "エラーが${time_str}に${Check_Count}個以上ありました" "$Email_Adr" < $Cache_File
 }
 
 # 設定時間ごとにカウンターをリセットする

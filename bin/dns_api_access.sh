@@ -78,7 +78,7 @@ api_access() {
     else
         echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
         if [[ ${ip_adr} != "update!" ]]; then
-            ./cache_count.sh "ddns_mail" "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr} :time=$(date +%T)"
+            ./cache_count.sh "ddns_mail" "${Service} : domain=${Domain} type=${record} IP=${ip_adr} :time=$(date +%T)"
         fi
     fi
 }
