@@ -6,7 +6,7 @@
 
 # キャッシュファイルのパス
 Cache_Dir="../cache"
-Cache_File="${Cache_Dir}/ddns_mail.txt"
+Cache_File="${Cache_Dir}/ddns_mail"
 Count=0
 
 Email_Adr=$1
@@ -24,14 +24,14 @@ reset_counter() {
     fi
 }
 
-# エラーメッセージが生成された場合の処理
-handle_error_message() {
+# ipアドレス更新メッセージが生成された場合の処理
+handle_ddns_message() {
     # キャッシュファイルが存在するか確認
     if [ -f "$Cache_File" ]; then
         # キャッシュファイルからカウントとメッセージ内容を読み込む
         Count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
 
-        # エラーカウントが閾値を超えた場合、メール通知を送信
+        # カウントが1以上であれば、メール通知を送信
         if (( "$Count" )); then
             send_email_notification
         fi
@@ -39,4 +39,4 @@ handle_error_message() {
     fi
 }
 
-handle_error_message
+handle_ddns_message

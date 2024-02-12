@@ -63,7 +63,7 @@ access() {
     local max_time=30
 
     # DDNSへアクセスするがIdやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
-    output=$(curl --max-time ${max_time} -sSfu ${access_url} 2>&1)
+    output=$(curl --max-time ${max_time} -sSfu "${access_url}" 2>&1)
     exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
@@ -72,7 +72,9 @@ access() {
     else
         # echo "${output}"
         echo "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
-        ./cache_count.sh "ddns_mail" "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
+        if [[ ${ip_adr} != "update!" ]]; then
+            ./cache_count.sh "ddns_mail" "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
+        fi
     fi
 }
 

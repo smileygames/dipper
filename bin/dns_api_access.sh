@@ -77,7 +77,9 @@ api_access() {
         ./err_message.sh "curl" "$func_name" "${Service}_MAIL[$Array_Num]:${Service}_API[$Array_Num]: ${output}"
     else
         echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
-        ./cache_count.sh "ddns_mail" "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
+        if [[ ${ip_adr} != "update!" ]]; then
+            ./cache_count.sh "ddns_mail" "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
+        fi
     fi
 }
 
