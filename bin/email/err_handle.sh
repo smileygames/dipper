@@ -22,21 +22,7 @@ reset_counter() {
 
 # メール通知
 send_email_notification() {
-    local time_str=""
     local exit_code
-
-    case $Check_Time in
-        *s) 
-            time_str="${Check_Time%s}秒間" ;;
-        *m) 
-            time_str="${Check_Time%m}分間" ;;
-        *h) 
-            time_str="${Check_Time%h}時間" ;;
-        *d) 
-            time_str="${Check_Time%d}日間" ;;
-        *) 
-            ;;
-    esac
 
     echo -e "Subject: dipperでエラーを検出しました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
             cat - ${Cache_File} > temp && mv temp ${Cache_File}
