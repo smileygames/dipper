@@ -57,7 +57,7 @@ handle_error_message() {
     # キャッシュファイルが存在するか確認
     if [ -f "$Cache_File" ]; then
         # キャッシュファイルからカウントとメッセージ内容を読み込む
-        Err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
+        Count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
 
         # エラーカウントが閾値を超えた場合、メール通知を送信
         if (( "$Count" )); then
