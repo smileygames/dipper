@@ -23,7 +23,7 @@ reset_counter() {
 send_email_notification() {
     local exit_code
 
-    echo -e "Subject: IPアドレスの変更が${Count}件ありました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
+    echo -e "Subject: IPアドレスの変更がありました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
             cat - ${Cache_File} > temp && mv temp ${Cache_File}
     sendmail -t < ${Cache_File}
     exit_code=$?

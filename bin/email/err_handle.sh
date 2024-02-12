@@ -38,7 +38,7 @@ send_email_notification() {
             ;;
     esac
 
-    echo -e "Subject: エラーが${time_str}に${Count}個ありました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
+    echo -e "Subject: dipperでエラーを検出しました\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
             cat - ${Cache_File} > temp && mv temp ${Cache_File}
     sendmail -t < ${Cache_File}
     exit_code=$?
