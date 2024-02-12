@@ -7,11 +7,10 @@
 # キャッシュファイルのパス
 Cache_Dir="../cache"
 Cache_File="${Cache_Dir}/err_mail"
-Err_count=0
+Count=0
 
 Email_Adr=$1
 Check_Time=$2
-Check_Count=$3
 
 # 設定時間ごとにカウンターをリセットする
 reset_counter() {
@@ -61,7 +60,7 @@ handle_error_message() {
         Err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
 
         # エラーカウントが閾値を超えた場合、メール通知を送信
-        if (( "$Err_count" >= "$Check_Count" )); then
+        if (( "$Count" )); then
             send_email_notification
         fi
     fi
