@@ -60,6 +60,7 @@ handle_error_message() {
 main() {
     local wait_time=""
 
+    handle_error_message
     wait_time=$(./time_check.sh "error" "$Check_Time")
     while true;do
         sleep "$wait_time";handle_error_message
