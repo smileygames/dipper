@@ -39,12 +39,6 @@
 #    6   	info	    情報
 #    7   	debug	    デバッグ情報
 
-# キャッシュファイルのディレクトリパス
-Cache_Dir="../cache"
-# キャッシュファイルのパス
-Cache_File="${Cache_Dir}/err_mail.txt"
-Err_count=0
-
 Mode=$1
 Caller=$2
 Message=$3
@@ -77,40 +71,6 @@ process_err_message() {
     logger -ip daemon.err -t "dipper.sh" "${error_message}"
 }
 
-new_cache_file() {
-    touch "$Cache_File"
-    Err_count=0
-    echo "Count: $Err_count" >> "$Cache_File"
-}
-
-# キャッシュファイルからカウントとメッセージ内容を読み込む関数
-read_cache() {
-    # キャッシュファイルが存在するか確認
-    if [ -f "$Cache_File" ]; then
-        # キャッシュファイルからカウントとメッセージ内容を読み込む
-        Err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
-
-    elif [ ! -f "$Cache_Dir" ]; then
-        mkdir -p "$Cache_Dir"
-        new_cache_file
-    else
-        new_cache_file
-    fi
-}
-
-# エラーメッセージ処理が実行されたときのカウントを増やし、メッセージ内容をキャッシュファイルに追加する関数
-update_cache() {
-    local count=0
-
-    read_cache
-    count=$((Err_count + 1))  # インクリメント
-
-    # カウントをファイル全体を書き換える形で更新
-    sed -i "s/Count: $Err_count/Count: $count/" "$Cache_File"
-    # メッセージをファイルの末尾に追記
-    echo "Message: $1" >> "$Cache_File"
-}
-
 main() {
     case ${Mode} in
     "timeout")
@@ -128,7 +88,7 @@ main() {
         * )
         ;; 
     esac
-    update_cache "${Message}"
+    ./cache_count.sh "err_mail" "$Message"
 }
 
 main

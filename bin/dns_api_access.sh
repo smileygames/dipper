@@ -43,14 +43,14 @@ ipv_check_api() {
 id_accese() {
     Zone_ID=$(curl -H "x-Auth-Key: ${API_Key}" \
                    -H "x-Auth-Email: ${Email}" \
-                   -sS "$Url?name=${Zone}" |\
+                   -sS "$Url?name=${Zone}" |
                    jq -r .result[0].id)
 
 #    echo "success to fetch zone id: ${ZONE_ID} domain=${Zone}"
 
     Domain_ID=$(curl -H "x-Auth-Key: ${API_Key}" \
                      -H "x-Auth-Email: ${Email}" \
-                     -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |\
+                     -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |
                      jq -r .result[0].id)
 
 #    echo "success to fetch domain id type=${Mode}: ${Domain_ID} domain=${Zone}"
@@ -77,6 +77,7 @@ api_access() {
         ./err_message.sh "curl" "$func_name" "${Service}_MAIL[$Array_Num]:${Service}_API[$Array_Num]: ${output}"
     else
         echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
+        ./cache_count.sh "ddns_mail" "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
     fi
 }
 

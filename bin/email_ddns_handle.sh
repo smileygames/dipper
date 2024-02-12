@@ -1,21 +1,19 @@
 #!/bin/bash
 #
-# ./err_handle.sh
+# ./email_ddns_handle.sh
 #
-# エラーメッセージが1時間に10個以上の場合にメールで通知する
+# DDNSへIPアドレスの変更をしたらEmailへ通知
 
 # キャッシュファイルのパス
 Cache_Dir="../cache"
-Cache_File="${Cache_Dir}/err_mail"
-Err_count=0
+Cache_File="${Cache_Dir}/ddns_mail.txt"
+Count=0
 
 Email_Adr=$1
-Check_Time=$2
-Check_Count=$3
 
 # メール通知
 send_email_notification() {
-    mail -s "エラーが${Check_Time}に${Check_Count}個以上ありました" "$Email_Adr" < $Cache_File
+    mail -s "IPアドレスの変更がありました" "$Email_Adr" < $Cache_File
 }
 
 # 設定時間ごとにカウンターをリセットする
@@ -31,25 +29,14 @@ handle_error_message() {
     # キャッシュファイルが存在するか確認
     if [ -f "$Cache_File" ]; then
         # キャッシュファイルからカウントとメッセージ内容を読み込む
-        Err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
+        Count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
 
         # エラーカウントが閾値を超えた場合、メール通知を送信
-        if (( "$Err_count" >= "$Check_Count" )); then
+        if (( "$Count" )); then
             send_email_notification
         fi
         reset_counter
     fi
 }
 
-main() {
-    local wait_time=""
-
-    reset_counter
-    wait_time=$(./time_check.sh "error" "$Check_Time")
-    while true;do
-        sleep "$wait_time";handle_error_message
-    done
-}
-
-# 実行スクリプト
-main
+handle_error_message

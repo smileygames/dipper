@@ -72,6 +72,7 @@ access() {
     else
         # echo "${output}"
         echo "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
+        ./cache_count.sh "ddns_mail" "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
     fi
 }
 
