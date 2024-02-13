@@ -17,8 +17,6 @@ Domain=${10}
 Zone=${11}
 Url=${12}
 
-export Zone_ID Domain_ID
-
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ipv_check_api() {
     local ipv4_old="" ipv6_old=""
