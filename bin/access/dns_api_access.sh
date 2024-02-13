@@ -11,11 +11,13 @@ My_ipv4=$4
 My_ipv6=$5
 IPv4_Select=$6
 IPv6_Select=$7
-Email=$8
-API_Key=$9
+export Email=$8
+export API_Key=$9
 Domain=${10}
 Zone=${11}
 Url=${12}
+
+export Zone_ID Domain_ID
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ipv_check_api() {

@@ -11,8 +11,8 @@ My_ipv4=$4
 My_ipv6=$5
 IPv4_Select=$6
 IPv6_Select=$7
-Id=$8
-Pass=$9
+export Id=$8
+export Pass=$9
 Domain=${10}
 IPv4_url=${11}
 IPv6_url=${12}
@@ -63,7 +63,7 @@ access() {
     local max_time=30
 
     # DDNSへアクセスするがIdやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
-    output=$(curl --max-time ${max_time} -sSfu "${Id}:${Pass}" "${access_url}" 2>&1)
+    output=$(curl --max-time ${max_time} --digest -sSfu "${Id}:${Pass}" "${access_url}" 2>&1)
     exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
