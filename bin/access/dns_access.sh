@@ -21,12 +21,12 @@ IPv6_url=${12}
 ipv_update() {
     if [ "$My_ipv4" = on ] && [ "$IPv4_Select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "$Id:$Pass ${IPv4_url}" "4" "update!"
+        access "${FUNCNAME[0]}" "${Id}:${Pass}" "${IPv4_url}" "4" "update!"
     fi
 
     if [ "$My_ipv6" = on ] && [ "$IPv6_Select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "$Id:$Pass ${IPv6_url}" "6" "update!"
+        access "${FUNCNAME[0]}" "${Id}:${Pass}" "${IPv6_url}" "6" "update!"
     fi
 }
 
@@ -39,7 +39,7 @@ ipv_check() {
 
         if [[ "$My_ipv4" != "$ipv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "$Id:$Pass ${IPv4_url}" "4" "$My_ipv4"
+            access "${FUNCNAME[0]}" "${Id}:${Pass}" "${IPv4_url}" "4" "$My_ipv4"
         fi
     fi
 
@@ -48,24 +48,23 @@ ipv_check() {
 
         if [[ "$My_ipv6" != "$ipv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "$Id:$Pass ${IPv6_url}" "6" "$My_ipv6"
+            access "${FUNCNAME[0]}" "${Id}:${Pass}" "${IPv6_url}" "6" "$My_ipv6"
         fi
     fi
 }
 
 access() {
     local func_name=$1
-    local access_url=$2
-    local ip_ver=$3
-    local ip_adr=$4
+    local access_id=$2
+    local access_url=$3
+    local ip_ver=$4
+    local ip_adr=$5
 
     local output exit_code
     local max_time=30
 
     # DDNSへアクセスするがIdやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
-    # またシェルチェックで${access_url}を""で囲めとエラーが出るが"${access_url}"だとcurlがURLを取得できないので無視する
-    # shellcheck disable=SC2086
-    output=$(curl --max-time ${max_time} -sSfu ${access_url} 2>&1)
+    output=$(curl --max-time ${max_time} -sSfu "${access_id}" "${access_url}" 2>&1)
     exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
