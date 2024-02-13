@@ -63,7 +63,7 @@ access() {
     local max_time=30
 
     # DDNSへアクセスするがIdやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
-    output=$(curl --max-time ${max_time} --digest -sSfu "${Id}:${Pass}" "${access_url}" 2>&1)
+    output=$(curl --max-time ${max_time} -sSfu "${Id}:${Pass}" "${access_url}" 2>&1)
     exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
