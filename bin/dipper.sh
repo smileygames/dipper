@@ -2,8 +2,9 @@
 #
 # ./dipper.sh
 #
-# shellcheck source=/dev/null
+# main処理。それぞれのタイマー処理をコールして監視する
 
+# shellcheck disable=SC1090,1091
 ## include file
 File_dir="../config"
 source "${File_dir}/default.conf"

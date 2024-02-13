@@ -2,8 +2,9 @@
 #
 # ./ddns_service.sh
 #
-# shellcheck source=/dev/null
+# DDNSタイマー起動処理
 
+# shellcheck disable=SC1090,1091
 ## include file
 File_dir="../config"
 source "${File_dir}/default.conf"
