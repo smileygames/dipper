@@ -13,7 +13,7 @@ main() {
     wait_time=$(./time_check.sh "error" "$Check_Time")
     while true;do
         ./mail_handle.sh "err_mail" "dipperでエラーを検出しました" "$Email_Adr" &
-        sleep "$wait_time";
+        sleep "$wait_time"
     done
 }
 
