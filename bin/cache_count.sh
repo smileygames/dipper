@@ -11,26 +11,21 @@ Message=$2
 Cache_Dir="../cache"
 Cache_File="${Cache_Dir}/${Cache}"
 
-# キャッシュファイルからカウントとメッセージ内容を読み込む
-read_cache() {
+# エラーメッセージ処理が実行されたときのカウントを増やし、メッセージ内容をキャッシュファイルに追加する
+update_cache() {
+    local count=0 err_count=0
+
     # キャッシュファイルが存在するか確認
     if [ -f "$Cache_File" ]; then
         # キャッシュファイルからカウントとメッセージ内容を読み込む
-        Err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
+        err_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
+        count=$((err_count + 1))  # インクリメント
+
+        # カウントをファイル全体を書き換える形で更新
+        sed -i "s/Count: $err_count/Count: $count/" "$Cache_File"
+        # メッセージをファイルの末尾に追記
+        echo "Message: $Message" >> "$Cache_File"
     fi
-}
-
-# エラーメッセージ処理が実行されたときのカウントを増やし、メッセージ内容をキャッシュファイルに追加する
-update_cache() {
-    local count=0
-
-    read_cache
-    count=$((Err_count + 1))  # インクリメント
-
-    # カウントをファイル全体を書き換える形で更新
-    sed -i "s/Count: $Err_count/Count: $count/" "$Cache_File"
-    # メッセージをファイルの末尾に追記
-    echo "Message: $Message" >> "$Cache_File"
 }
 
 update_cache
