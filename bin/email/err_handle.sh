@@ -38,6 +38,13 @@ send_email_notification() {
 
 }
 
+# キャッシュファイル作成
+new_cache_file() {
+    touch "$Cache_File"
+    Count=0
+    echo "Count: $Count" >> "$Cache_File"
+}
+
 # エラーメッセージが生成された場合の処理
 handle_error_message() {
     # キャッシュファイルが存在するか確認
@@ -49,6 +56,12 @@ handle_error_message() {
         if (( "$Count" )); then
             send_email_notification
         fi
+
+    elif [ ! -f "$Cache_Dir" ]; then
+        mkdir -p "$Cache_Dir"
+        new_cache_file
+    else
+        new_cache_file
     fi
 }
 
@@ -56,8 +69,8 @@ main() {
     local wait_time=""
 
     wait_time=$(./time_check.sh "error" "$Check_Time")
-    # 遅延起動で最初の起動を行う
-    sleep 1m;handle_error_message
+    # 最初の起動を行う
+    handle_error_message
     while true;do
         sleep "$wait_time";handle_error_message
     done
