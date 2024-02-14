@@ -17,7 +17,7 @@ update_cache() {
 
     # キャッシュファイルが存在するか確認
     if [ -f "$Cache_File" ]; then
-        # キャッシュファイルからカウントとメッセージ内容を読み込む
+        # キャッシュファイルからカウントを読み込む
         old_count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
         new_count=$((old_count + 1))  # インクリメント
 
