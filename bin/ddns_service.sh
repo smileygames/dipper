@@ -93,7 +93,6 @@ main() {
                     # IPチェック用の処理を設定値に基づいて実行する
                     sleep "$wait_time";ip_check
                     # Email通知処理
-                    set -u
                     if [[ -n ${EMAIL_CHK_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
                         ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました" "$EMAIL_CHK_ADR" & 
                     fi
