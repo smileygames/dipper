@@ -16,24 +16,28 @@ fi
 mail_service() {
     # キャッシュファイルのパス
     local cache_dir="../cache"
+    local cache_err="${cache_dir}/err_mail"
+    local cache_ddns="${cache_dir}/ddns_mail"
 
-    # エラーメール通知機能がonの場合は初期化処理を行い。offの場合はそれぞれのキャッシュファイルを削除する
+    # エラーメール通知機能がonの場合は初期化処理を行い。offの場合はそれぞれのキャッシュファイルを削除
     if [[ -n ${EMAIL_CHK_ADR:-} ]]; then
         if [[ -n ${ERR_CHK_TIME:-} ]]; then
             ./err_mail_service.sh "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" &
         else
-            if [ -f "${cache_dir}/err_mail" ]; then
-                rm "${cache_dir}/err_mail"
+            if [ -f "${cache_err}" ]; then
+                rm "${cache_err}"
             fi
         fi
 
         if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
             ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました" "$EMAIL_CHK_ADR" & 
         else
-            if [ -f "${cache_dir}/ddns_mail" ]; then
-                rm "${cache_dir}/ddns_mail"
+            if [ -f "${cache_ddns}" ]; then
+                rm "${cache_ddns}"
             fi
         fi
+        # cache_dirが空だった場合のみディレクトリを削除
+        rmdir "${cache_dir}"
     else
         if [ -d "${cache_dir}" ]; then
             rm -r "${cache_dir}"
@@ -41,7 +45,7 @@ mail_service() {
     fi
 }
 
-# タイマーイベントを選択し、実行する
+# タイマーイベントを選択し、実行
 timer_select() {
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
         ./ddns_service.sh "update" &  # DDNSアップデートタイマーを開始
