@@ -11,13 +11,11 @@ Email_Adr=$3
 # キャッシュファイルのパス
 Cache_Dir="../cache"
 Cache_File="${Cache_Dir}/${Cache_Name}"
-Count=0
 
 # キャッシュファイル作成
 new_cache_file() {
     touch "$Cache_File"
-    Count=0
-    echo "Count: $Count" >> "$Cache_File"
+    echo "Count: 0" > "$Cache_File"
 }
 
 # メール通知
@@ -40,13 +38,14 @@ send_mail_notification() {
 
 # メール通知メイン処理
 main() {
+    local count=0
     # キャッシュファイルが存在するか確認
     if [ -f "$Cache_File" ]; then
         # キャッシュファイルからカウントとメッセージ内容を読み込む
-        Count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
+        count=$(grep "Count:" "$Cache_File" | awk '{print $2}')
 
         # カウントが1以上であれば、メール通知を送信
-        if (( "$Count" )); then
+        if (( "$count" )); then
             send_mail_notification
         fi
 
