@@ -65,11 +65,11 @@ timer_select() {
 
 main() {
     local exit_code=""
-    # 実行スクリプト
-    timer_select
+
     # メール通知機能チェック処理
     mail_service
-
+    # 実行スクリプト
+    timer_select
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do
         wait -n
