@@ -11,10 +11,9 @@ main() {
     local wait_time=""
 
     wait_time=$(./time_check.sh "error" "$Check_Time")
-    # 最初の起動を行う
-    ./mail_handle.sh "err_mail" "dipperでエラーを検出しました" "$Email_Adr" & 
     while true;do
-        sleep "$wait_time";./mail_handle.sh "err_mail" "dipperでエラーを検出しました" "$Email_Adr" & 
+        ./mail_handle.sh "err_mail" "dipperでエラーを検出しました" "$Email_Adr" &
+        sleep "$wait_time" 
     done
 }
 
