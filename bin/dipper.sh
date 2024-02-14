@@ -13,6 +13,34 @@ if [ -e ${User_File} ]; then
     source "${User_File}"
 fi
 
+mail_service() {
+    # キャッシュファイルのパス
+    local cache_dir="../cache"
+
+    # エラーメール通知機能がonの場合は初期化処理を行い。offの場合はそれぞれのキャッシュファイルを削除する
+    if [[ -n ${EMAIL_CHK_ADR:-} ]]; then
+        if [[ -n ${ERR_CHK_TIME:-} ]]; then
+            ./err_mail_service.sh "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" &
+        else
+            if [ -f "${cache_dir}/err_mail" ]; then
+                rm "${cache_dir}/err_mail"
+            fi
+        fi
+
+        if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
+            ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました" "$EMAIL_CHK_ADR" & 
+        else
+            if [ -f "${cache_dir}/ddns_mail" ]; then
+                rm "${cache_dir}/ddns_mail"
+            fi
+        fi
+    else
+        if [ -d "${cache_dir}" ]; then
+            rm -r "${cache_dir}"
+        fi
+    fi
+}
+
 # タイマーイベントを選択し、実行する
 timer_select() {
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
@@ -25,18 +53,14 @@ timer_select() {
     elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
         ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
     fi
-
-    # エラーメール通知機能がonの場合、エラーメッセージをメールで通知する
-    set -u
-    if [[ -n ${EMAIL_CHK_ADR:-} ]] && [[ -n ${ERR_CHK_TIME:-} ]]; then
-        ./err_mail_servise.sh "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" &
-    fi
 }
 
 main() {
     local exit_code=""
     # 実行スクリプト
     timer_select
+    # メール通知機能チェック処理
+    mail_service
 
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do
