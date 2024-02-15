@@ -46,7 +46,7 @@ id_accese() {
                    -sS "$Url?name=${Zone}" |
                    jq -r .result[0].id)
 
-#    echo "success to fetch zone id: ${ZONE_ID} domain=${Zone}"
+#    echo "success to fetch zone id: ${Zone_ID} domain=${Zone}"
 
     Domain_ID=$(curl -H "Authorization: Bearer ${API_token}" \
                      -H "x-Auth-Email: ${Email}" \
