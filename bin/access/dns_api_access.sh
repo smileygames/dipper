@@ -12,7 +12,7 @@ My_ipv6=$5
 IPv4_Select=$6
 IPv6_Select=$7
 Email=$8
-API_Key=$9
+API_token=$9
 Domain=${10}
 Zone=${11}
 Url=${12}
@@ -41,14 +41,14 @@ ipv_check_api() {
 }
  
 id_accese() {
-    Zone_ID=$(curl -H "x-Auth-Key: ${API_Key}" \
+    Zone_ID=$(curl -H "Authorization: Bearer ${API_token}" \
                    -H "x-Auth-Email: ${Email}" \
                    -sS "$Url?name=${Zone}" |
                    jq -r .result[0].id)
 
 #    echo "success to fetch zone id: ${ZONE_ID} domain=${Zone}"
 
-    Domain_ID=$(curl -H "x-Auth-Key: ${API_Key}" \
+    Domain_ID=$(curl -H "Authorization: Bearer ${API_token}" \
                      -H "x-Auth-Email: ${Email}" \
                      -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |
                      jq -r .result[0].id)
@@ -65,7 +65,7 @@ api_access() {
     id_accese
 
     output=$(curl -X PATCH \
-                  -H "x-Auth-Key: ${API_Key}" \
+                  -H "Authorization: Bearer ${API_token}" \
                   -H "x-Auth-Email: ${Email}" \
                   -H "Content-Type: application/json" \
                   -d "{\"name\":\"$Domain\",\"type\":\"$record\",\"content\":\"$ip_adr\"}" \
@@ -84,7 +84,6 @@ api_access() {
 }
 
 main() {
-    # 実行スクリプト
     case ${Mode} in
     "update")
             ;;
@@ -95,6 +94,7 @@ main() {
             echo "[${Mode}] <- 引数エラーです"
         ;; 
     esac
-    }
+}
 
+# 実行スクリプト
 main
