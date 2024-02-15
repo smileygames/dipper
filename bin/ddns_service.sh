@@ -2,12 +2,13 @@
 #
 # ./ddns_service.sh
 #
-# shellcheck source=/dev/null
+# DDNSタイマー起動処理
 
+# shellcheck disable=SC1090,1091
 ## include file
-File_dir="../config/"
-source "${File_dir}default.conf"
-User_File="${File_dir}user.conf"
+File_dir="../config"
+source "${File_dir}/default.conf"
+User_File="${File_dir}/user.conf"
 if [ -e ${User_File} ]; then
     source "${User_File}"
 fi
@@ -86,11 +87,19 @@ main() {
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
+                # Email_cache初期化
+                if [[ -n ${EMAIL_CHK_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
+                    ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました" "$EMAIL_CHK_ADR" & 
+                fi
                 wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
 
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
                     sleep "$wait_time";ip_check
+                    # Email通知処理
+                    if [[ -n ${EMAIL_CHK_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
+                        ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました" "$EMAIL_CHK_ADR" & 
+                    fi
                 done
             fi
             ;;

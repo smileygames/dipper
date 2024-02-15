@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# dns_access.sh
+# /access/dns_access.sh
 #
 # multi_accece
 
@@ -21,12 +21,12 @@ IPv6_url=${12}
 ipv_update() {
     if [ "$My_ipv4" = on ] && [ "$IPv4_Select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "$Id:$Pass ${IPv4_url}" "4" "update!"
+        access "${FUNCNAME[0]}" "${IPv4_url}" "4" "update!"
     fi
 
     if [ "$My_ipv6" = on ] && [ "$IPv6_Select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "$Id:$Pass ${IPv6_url}" "6" "update!"
+        access "${FUNCNAME[0]}" "${IPv6_url}" "6" "update!"
     fi
 }
 
@@ -39,7 +39,7 @@ ipv_check() {
 
         if [[ "$My_ipv4" != "$ipv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "$Id:$Pass ${IPv4_url}" "4" "$My_ipv4"
+            access "${FUNCNAME[0]}" "${IPv4_url}" "4" "$My_ipv4"
         fi
     fi
 
@@ -48,7 +48,7 @@ ipv_check() {
 
         if [[ "$My_ipv6" != "$ipv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "$Id:$Pass ${IPv6_url}" "6" "$My_ipv6"
+            access "${FUNCNAME[0]}" "${IPv6_url}" "6" "$My_ipv6"
         fi
     fi
 }
@@ -63,7 +63,7 @@ access() {
     local max_time=30
 
     # DDNSへアクセスするがIdやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
-    output=$(curl --max-time ${max_time} -sSfu ${access_url} 2>&1)
+    output=$(curl --max-time ${max_time} -sSfu "${Id}:${Pass}" "${access_url}" 2>&1)
     exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
@@ -72,6 +72,9 @@ access() {
     else
         # echo "${output}"
         echo "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
+        if [[ "${ip_adr}" != "update!" ]]; then
+            ./cache_count.sh "ddns_mail" "${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr} :time=$(date "+%Y-%m-%d %H:%M:%S")"
+        fi
     fi
 }
 

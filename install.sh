@@ -4,7 +4,7 @@
 #
 # dipper
 
-Ver="1.14"
+Ver="1.15"
 SERVICE_NAME="dipper.service"
 User_servce="/etc/systemd/system/$SERVICE_NAME"
 
@@ -32,6 +32,7 @@ fi
 
 # 以前のバージョンのアンインストール処理
 sudo rm -rf /usr/local/dipper/bin
+sudo rm -rf /usr/local/dipper/cache
 
 # v1.01以降のインストール用
 # スクリプトファイルダウンロード＆ファイル属性変更

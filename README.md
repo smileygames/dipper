@@ -19,13 +19,14 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - MyDNSの時のみ、IPアドレスを定期的に更新、既定値は1日に1回、設定で変更可能。（初回のみ1分後）
 - IPアドレスを定期的にチェック。（既定値は3分に1回チェック、設定で変更可能）
 - ドメインのアドレスはDNSサーバーから取得し、自分のIPアドレスと違いがあれば更新。
-- キャッシュを使わない為、DNSサーバー側のIPが不測の事態で変わった場合もアドレスUPdateが可能。
+- アドレスキャッシュを使わない為、DNSサーバー側のIPが不測の事態で変わった場合もアドレスUPdateが可能。
 - ログはsyslogに記載し、システムで一元管理させている。（dipper.sh の名前でログに書きこまれます）
 - 管理はsystemdで行っている。（デーモン化）
+- メール通知機能の追加。（オプション）コンフィグファイルに追加されているコメントアウトを外して使用。
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
-- [CloudFlare](https://www.cloudflare.com/)  【 [インストールの簡単な説明(v1.12用だが基本は同じ)](https://smgjp.com/cloudflare-dipper/) 】
+- [CloudFlare](https://www.cloudflare.com/)  【 [簡単な説明(v1.15用だが基本は同じ)](https://smgjp.com/cloudflaredipper_ddns_dipper/) 】
 
 <br>
 
@@ -36,14 +37,14 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.14/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.15/install.sh )
 ```
 
 <br>
 
 ▼最初に初期設定を行ってください。
 
-(v1.12より設定項目が変更されたので古いユーザーコンフィグはそのまま使わないでください)
+(v1.15より設定項目が変更されたので古いユーザーコンフィグはそのまま使わないでください)
 
 installのたびにコンフィグファイルが初期値に戻ってしまうのも面倒なので
 ユーザー側でコンフィグファイルを作成してもらい、上書きインストールでも変更しないようにしました。
@@ -81,7 +82,7 @@ sudo systemctl start dipper.service
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.14/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.15/uninstall.sh )
 ```
 
 <br>
@@ -100,9 +101,10 @@ sudo systemctl restart dipper.service
 ```bash
 sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
 ```
+<br>
 
+### [メール送信の仕方](https://github.com/smileygames/dipper/wiki/%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%81%E4%BF%A1%E3%81%AE%E4%BB%95%E6%96%B9)
 <br>
 
 ### [マニュアルインストール方法](https://github.com/smileygames/dipper/wiki/%E3%83%9E%E3%83%8B%E3%83%A5%E3%82%A2%E3%83%AB%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E6%96%B9%E6%B3%95)
-
 <br>

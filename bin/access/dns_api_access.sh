@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# dns_api_access.sh
+# /access/dns_api_access.sh
 #
 # multi_accece
 
@@ -12,7 +12,7 @@ My_ipv6=$5
 IPv4_Select=$6
 IPv6_Select=$7
 Email=$8
-API_Key=$9
+API_token=$9
 Domain=${10}
 Zone=${11}
 Url=${12}
@@ -41,16 +41,16 @@ ipv_check_api() {
 }
  
 id_accese() {
-    Zone_ID=$(curl -H "x-Auth-Key: ${API_Key}" \
+    Zone_ID=$(curl -H "Authorization: Bearer ${API_token}" \
                    -H "x-Auth-Email: ${Email}" \
-                   -sS "$Url?name=${Zone}" |\
+                   -sS "$Url?name=${Zone}" |
                    jq -r .result[0].id)
 
 #    echo "success to fetch zone id: ${ZONE_ID} domain=${Zone}"
 
-    Domain_ID=$(curl -H "x-Auth-Key: ${API_Key}" \
+    Domain_ID=$(curl -H "Authorization: Bearer ${API_token}" \
                      -H "x-Auth-Email: ${Email}" \
-                     -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |\
+                     -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |
                      jq -r .result[0].id)
 
 #    echo "success to fetch domain id type=${Mode}: ${Domain_ID} domain=${Zone}"
@@ -65,7 +65,7 @@ api_access() {
     id_accese
 
     output=$(curl -X PATCH \
-                  -H "x-Auth-Key: ${API_Key}" \
+                  -H "Authorization: Bearer ${API_token}" \
                   -H "x-Auth-Email: ${Email}" \
                   -H "Content-Type: application/json" \
                   -d "{\"name\":\"$Domain\",\"type\":\"$record\",\"content\":\"$ip_adr\"}" \
@@ -77,11 +77,13 @@ api_access() {
         ./err_message.sh "curl" "$func_name" "${Service}_MAIL[$Array_Num]:${Service}_API[$Array_Num]: ${output}"
     else
         echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
+        if [[ "${ip_adr}" != "update!" ]]; then
+            ./cache_count.sh "ddns_mail" "${Service} : domain=${Domain} type=${record} IP=${ip_adr} :time=$(date "+%Y-%m-%d %H:%M:%S")"
+        fi
     fi
 }
 
 main() {
-    # 実行スクリプト
     case ${Mode} in
     "update")
             ;;
@@ -92,6 +94,7 @@ main() {
             echo "[${Mode}] <- 引数エラーです"
         ;; 
     esac
-    }
+}
 
+# 実行スクリプト
 main
