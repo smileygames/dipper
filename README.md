@@ -26,7 +26,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
-- [CloudFlare](https://www.cloudflare.com/)  【 [簡単な説明(v1.15用だが基本は同じ)](https://smgjp.com/cloudflaredipper_ddns_dipper/) 】
+- [CloudFlare](https://www.cloudflare.com/)  【 [簡単な説明(v1.16用だが基本は同じ)](https://smgjp.com/cloudflaredipper_ddns_dipper/) 】
 
 <br>
 
@@ -37,7 +37,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.15/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.16/install.sh )
 ```
 
 <br>
@@ -82,7 +82,7 @@ sudo systemctl start dipper.service
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.15/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.16/uninstall.sh )
 ```
 
 <br>

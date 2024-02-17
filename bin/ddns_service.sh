@@ -50,7 +50,7 @@ ip_check() {
         fi
     fi
 
-    if [[ $my_ipv4 != "" ]] || [[ $my_ipv4 != "" ]]; then
+    if [[ $my_ipv4 != "" ]] || [[ $my_ipv6 != "" ]]; then
         multi_ddns "$my_ipv4" "$my_ipv6"
     fi
 }
@@ -88,10 +88,6 @@ main() {
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
-                # Email_cache初期化
-                if [[ -n ${EMAIL_CHK_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-                    ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました" "$EMAIL_CHK_ADR" & 
-                fi
                 wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
 
                 while true;do
