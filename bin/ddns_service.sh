@@ -42,6 +42,7 @@ ip_check() {
     fi
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
         my_ipv6=$(dig -6 @resolver1.opendns.com myip.opendns.com AAAA +short)  # 自分のアドレスを読み込む
+#        my_ipv6=$(ip -o a show scope global up | grep -oP '(?<=inet6 ).+(?=/64 )')  # DNSに負担をかけない方法
         exit_code=$?
         if [ "${exit_code}" != 0 ]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
