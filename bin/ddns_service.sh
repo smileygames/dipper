@@ -65,7 +65,7 @@ multi_ddns() {
         . ./ddns_service/mydns.sh "check" "$my_ipv4" "$my_ipv6"
     fi
 
-    # MyDNSのDDNSのための処理
+    # CloudFlareのDDNSのための処理
     if (( "$CloudFlare" )); then
         . ./ddns_service/cloudflare.sh "check" "$my_ipv4" "$my_ipv6"
     fi
