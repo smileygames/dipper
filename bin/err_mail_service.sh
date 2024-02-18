@@ -10,9 +10,10 @@ Check_Time=$2
 main() {
     local wait_time=""
 
+    ./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$Email_Adr" &
     wait_time=$(./time_check.sh "error" "$Check_Time")
     while true;do
-        sleep "$wait_time";./mail_handle.sh "err_mail" "dipperでエラーを検出しました" "$Email_Adr" &      
+        sleep "$wait_time";./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$Email_Adr" &
     done
 }
 

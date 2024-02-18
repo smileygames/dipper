@@ -20,14 +20,13 @@ mail_service() {
 
     if [[ -n ${EMAIL_CHK_ADR:-} ]]; then
         if [[ -n ${ERR_CHK_TIME:-} ]]; then
-            ./mail_handle.sh "err_mail" "dipperでエラーを検出しました" "$EMAIL_CHK_ADR" &
             ./err_mail_service.sh "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" &
         elif [ -f "${cache_err}" ]; then
             rm "${cache_err}"
         fi
 
         if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-            ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました" "$EMAIL_CHK_ADR" &
+            ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" &
         elif [ -f "${cache_ddns}" ]; then
             rm "${cache_ddns}"
         fi
