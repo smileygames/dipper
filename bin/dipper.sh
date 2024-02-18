@@ -15,7 +15,7 @@
 
 # shellcheck disable=SC1090,1091
 ## include file
-File_dir="../config"
+File_dir="./config"
 source "${File_dir}/default.conf"
 User_File="${File_dir}/user.conf"
 if [ -e ${User_File} ]; then
@@ -23,7 +23,7 @@ if [ -e ${User_File} ]; then
 fi
 
 mail_service() {
-    local cache_dir="../cache"
+    local cache_dir="./cache"
     local cache_err="${cache_dir}/err_mail"
     local cache_ddns="${cache_dir}/ddns_mail"
 
