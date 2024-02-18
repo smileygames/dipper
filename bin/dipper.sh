@@ -29,13 +29,13 @@ mail_service() {
 
     if [[ -n ${EMAIL_CHK_ADR:-} ]]; then
         if [[ -n ${ERR_CHK_TIME:-} ]]; then
-            ./err_mail_service.sh "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" &
+            ./bin/err_mail_service.sh "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" &
         elif [ -f "${cache_err}" ]; then
             rm "${cache_err}"
         fi
 
         if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-            ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" &
+            ./bin/mail_handle.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" &
         elif [ -f "${cache_ddns}" ]; then
             rm "${cache_ddns}"
         fi
@@ -52,14 +52,14 @@ mail_service() {
 # タイマーイベントを選択し、実行する
 timer_select() {
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
-        ./ddns_service.sh "update" &  # DDNSアップデートタイマーを開始
+        ./bin/ddns_service.sh "update" &  # DDNSアップデートタイマーを開始
     fi
 
     if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
+        ./bin/ddns_service.sh "check" &  # DDNSチェックタイマーを開始
 
     elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
+        ./bin/ddns_service.sh "check" &  # DDNSチェックタイマーを開始
     fi
 }
 
@@ -75,10 +75,10 @@ main() {
         wait -n
         exit_code=$?
         if [ "$exit_code" = 127 ]; then
-            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました。"
+            ./bin/err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました。"
             exit 0
         elif [ "$exit_code" != 0 ]; then
-            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
+            ./bin/err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
             exit 1
         fi
         sleep 1
