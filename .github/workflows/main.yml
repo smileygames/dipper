@@ -1,0 +1,15 @@
+name: Bash Workflow
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Ubuntu環境で実行します
+
+    steps:
+    - name: Checkout Repository  # リポジトリのチェックアウト
+      uses: actions/checkout@v2
+
+    - name: Run Bash Script  # Bashスクリプトを実行します
+      run: |
+        bash ./dipper/bin/dipper.sh  # 実行したいBashスクリプトへのパスを指定します
