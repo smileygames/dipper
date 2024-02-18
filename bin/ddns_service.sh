@@ -4,13 +4,12 @@
 #
 # DDNSタイマー起動処理
 
-# shellcheck disable=SC1090
-Script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-File_dir="${Script_dir}/../config"
-Default_File="${File_dir}/default.conf"
+# shellcheck disable=SC1090,1091
+## include file
+File_dir="../config"
+source "${File_dir}/default.conf"
 User_File="${File_dir}/user.conf"
-source "${Default_File}"
-if [ -e "${User_File}" ]; then
+if [ -e ${User_File} ]; then
     source "${User_File}"
 fi
 
@@ -24,7 +23,7 @@ CloudFlare=${#CLOUDFLARE_MAIL[@]}
 multi_update() {
      # MyDNSのDDNSのための処理
     if (( "$Mydns" )); then
-        . ."${Script_dir}"/ddns_service/mydns.sh "update" "$IPV4" "$IPV6"
+        . ./ddns_service/mydns.sh "update" "$IPV4" "$IPV6"
     fi
 }
 
@@ -63,12 +62,12 @@ multi_ddns() {
 
     # MyDNSのDDNSのための処理
     if (( "$Mydns" )); then
-        . ."${Script_dir}"/ddns_service/mydns.sh "check" "$my_ipv4" "$my_ipv6"
+        . ./ddns_service/mydns.sh "check" "$my_ipv4" "$my_ipv6"
     fi
 
     # CloudFlareのDDNSのための処理
     if (( "$CloudFlare" )); then
-        . ."${Script_dir}"/ddns_service/cloudflare.sh "check" "$my_ipv4" "$my_ipv6"
+        . ./ddns_service/cloudflare.sh "check" "$my_ipv4" "$my_ipv6"
     fi
 }
 
