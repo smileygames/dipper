@@ -13,4 +13,5 @@ jobs:
     - name: Run Bash Script  # Bashスクリプトを実行します
       working-directory: ./bin  # 実行ディレクトリを/binに変更します
       run: |
-        bash chmod +x ./dipper.sh  # 実行したいBashスクリプトへのパスを指定します
+        chmod +x ./dipper.sh |
+        bash ./dipper.sh  # 実行したいBashスクリプトへのパスを指定します
