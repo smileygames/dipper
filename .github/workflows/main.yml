@@ -8,7 +8,7 @@ jobs:
 
     steps:
     - name: Checkout Repository  # リポジトリのチェックアウト
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Run Bash Script  # Bashスクリプトを実行します
       working-directory: ./bin  # 実行ディレクトリを/binに変更します
