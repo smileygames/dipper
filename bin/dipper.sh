@@ -4,12 +4,13 @@
 #
 # main処理。それぞれのタイマー処理をコールして監視する
 
-# shellcheck disable=SC1090,1091
-## include file
-File_dir="../config"
-source "${File_dir}/default.conf"
+# shellcheck disable=SC1090
+Script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+File_dir="${Script_dir}/../config"
+Default_File="${File_dir}/default.conf"
 User_File="${File_dir}/user.conf"
-if [ -e ${User_File} ]; then
+source "${Default_File}"
+if [ -e "${User_File}" ]; then
     source "${User_File}"
 fi
 
