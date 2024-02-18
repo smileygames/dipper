@@ -4,12 +4,13 @@
 #
 # DDNSタイマー起動処理
 
-# shellcheck disable=SC1090,1091
 ## include file
 File_dir="../config"
+# shellcheck disable=SC1091
 source "${File_dir}/default.conf"
 User_File="${File_dir}/user.conf"
 if [ -e ${User_File} ]; then
+    # shellcheck disable=SC1090
     source "${User_File}"
 fi
 
@@ -62,11 +63,13 @@ multi_ddns() {
 
     # MyDNSのDDNSのための処理
     if (( "$Mydns" )); then
+        # shellcheck disable=SC1091
         . ./ddns_service/mydns.sh "check" "$my_ipv4" "$my_ipv6"
     fi
 
     # CloudFlareのDDNSのための処理
     if (( "$CloudFlare" )); then
+        # shellcheck disable=SC1091
         . ./ddns_service/cloudflare.sh "check" "$my_ipv4" "$my_ipv6"
     fi
 }
