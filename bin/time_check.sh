@@ -79,7 +79,9 @@ main() {
             time_check_error
             echo "$Time"
             ;;
-        * )     # エラーの場合何もしない
+        * )     # エラーの場合は1時間の値を返す
+            echo "1h"
+            ./err_message.sh "no_value" "${FUNCNAME[0]}" "エラーのため、1hを返しました"
             ;; 
     esac
 }
