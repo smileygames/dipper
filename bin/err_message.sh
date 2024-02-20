@@ -96,7 +96,7 @@ main() {
             process_err_message
             ;;
         * )
-        ;; 
+            ;; 
     esac
     ./cache_count.sh "err_mail" "$Message :time=$(date "+%Y-%m-%d %H:%M:%S")"
 }

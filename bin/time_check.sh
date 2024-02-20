@@ -79,8 +79,7 @@ main() {
             time_check_error
             echo "$Time"
             ;;
-        * )     # エラーの場合は1時間の値を返す
-            echo "1h"
+        * )     # エラーの場合何もしない
             ;; 
     esac
 }
