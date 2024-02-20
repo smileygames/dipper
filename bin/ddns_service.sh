@@ -83,10 +83,16 @@ main() {
             if (( "$Mydns" )); then
                 wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
 
-                sleep 1m;multi_update  # 起動から少し待って最初の処理を行う
+                sleep 1m    # 起動から少し待って最初の処理を行う
                 while true;do
                     # IP更新用の処理を設定値に基づいて実行する
-                    sleep "$wait_time";multi_update
+                    multi_update
+                    sleep "$wait_time"
+                    exit_code=$?
+                    if [ "${exit_code}" != 0 ]; then
+                        ./err_message.sh "sleep" "UPDATE_TIME=${wait_time}: 無効な時間間隔の為 ip update serviceを終了しました"
+                        exit 1
+                    fi
                 done
             fi
             ;;
@@ -96,7 +102,13 @@ main() {
 
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
-                    sleep "$wait_time";ip_check
+                    sleep "$wait_time"
+                    exit_code=$?
+                    if [ "${exit_code}" != 0 ]; then
+                        ./err_message.sh "sleep" "DDNS_TIME=${wait_time}: 無効な時間間隔の為 ip check serviceを終了しました"
+                        exit 1
+                    fi
+                    ip_check
                     # Email通知処理
                     if [[ -n ${EMAIL_CHK_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
                         ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" & 

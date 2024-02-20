@@ -78,6 +78,13 @@ process_err_message() {
     logger -ip daemon.err -t "dipper.sh" "${error_message}"
 }
 
+# sleepコマンドエラー
+sleep_err_message() {
+    local error_message
+    error_message="${Caller}: sleep error: ${Message}"
+    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+}
+
 main() {
     case ${Mode} in
     "timeout")
@@ -94,6 +101,9 @@ main() {
             ;;
     "process")
             process_err_message
+            ;;
+    "sleep")
+            sleep_err_message
             ;;
         * )
             ;; 
