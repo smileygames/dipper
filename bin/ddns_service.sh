@@ -24,6 +24,7 @@ CloudFlare=${#CLOUDFLARE_MAIL[@]}
 multi_update() {
      # MyDNSのDDNSのための処理
     if (( "$Mydns" )); then
+        # shellcheck disable=SC1091
         . ./ddns_service/mydns.sh "update" "$IPV4" "$IPV6"
     fi
 }
