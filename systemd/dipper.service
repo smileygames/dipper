@@ -4,7 +4,6 @@ After=syslog.target network-online.target nss-lookup.target
 
 [Service]
 Type=simple
-Restart=on-failure
 WorkingDirectory=/usr/local/dipper/bin
 ExecStart=/usr/local/dipper/bin/dipper.sh
 
