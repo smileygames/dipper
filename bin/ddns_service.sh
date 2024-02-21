@@ -90,7 +90,7 @@ main() {
                     sleep "$wait_time"
                     exit_code=$?
                     if [ "${exit_code}" != 0 ]; then
-                        ./err_message.sh "sleep" "UPDATE_TIME=${wait_time}: 無効な時間間隔の為 ip update serviceを終了しました"
+                        ./err_message.sh "sleep" "ddns_service.sh" "UPDATE_TIME=${wait_time}: 無効な時間間隔の為 ip update serviceを終了しました"
                         exit 1
                     fi
                 done
@@ -105,7 +105,7 @@ main() {
                     sleep "$wait_time"
                     exit_code=$?
                     if [ "${exit_code}" != 0 ]; then
-                        ./err_message.sh "sleep" "DDNS_TIME=${wait_time}: 無効な時間間隔の為 ip check serviceを終了しました"
+                        ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${wait_time}: 無効な時間間隔の為 ip check serviceを終了しました"
                         exit 1
                     fi
                     ip_check

@@ -16,7 +16,7 @@ main() {
         sleep "$wait_time"
         exit_code=$?
         if [ "${exit_code}" != 0 ]; then
-            ./err_message.sh "sleep" "ERR_CHK_TIME=${wait_time}: 無効な時間間隔の為 err mail serviceを終了しました"
+            ./err_message.sh "sleep" "err_mail_service.sh" "ERR_CHK_TIME=${wait_time}: 無効な時間間隔の為 err mail serviceを終了しました"
             exit 1
         fi
     done
