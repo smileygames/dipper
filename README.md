@@ -9,8 +9,8 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 [uninstall方法](https://github.com/smileygames/mydns-ip-update)
 
 事前に必要なもの
-- [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
 - [bash version4.3以降](https://github.com/smileygames/dipper/wiki/Bash-Install)
+- [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
 - [jqコマンド](https://github.com/smileygames/dipper/wiki/jq-command-install)
 
 ## 概要
