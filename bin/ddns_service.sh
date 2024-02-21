@@ -18,7 +18,7 @@ fi
 Mode=$1
 # 配列の要素数を変数に代入（DDNSのサービスごと）
 Mydns=${#MYDNS_ID[@]}
-CloudFlare=${#CLOUDFLARE_MAIL[@]}
+CloudFlare=${#CLOUDFLARE_API[@]}
 
 # IPv4とIPv6でアクセスする
 multi_update() {

@@ -11,11 +11,10 @@ My_ipv4=$4
 My_ipv6=$5
 IPv4_Select=$6
 IPv6_Select=$7
-Email=$8
+Zone=$8
 API_token=$9
 Domain=${10}
-Zone=${11}
-Url=${12}
+Url=${11}
 
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ipv_check_api() {
@@ -42,18 +41,16 @@ ipv_check_api() {
  
 id_accese() {
     Zone_ID=$(curl -H "Authorization: Bearer ${API_token}" \
-                   -H "x-Auth-Email: ${Email}" \
                    -sS "$Url?name=${Zone}" |
                    jq -r .result[0].id)
 
 #    echo "success to fetch zone id: ${Zone_ID} domain=${Zone}"
 
     Domain_ID=$(curl -H "Authorization: Bearer ${API_token}" \
-                     -H "x-Auth-Email: ${Email}" \
                      -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |
                      jq -r .result[0].id)
 
-#    echo "success to fetch domain id type=${Mode}: ${Domain_ID} domain=${Zone}"
+#    echo "success to fetch domain id: ${Domain_ID} domain=${Zone}"
 }
 
 api_access() {
@@ -66,7 +63,6 @@ api_access() {
 
     output=$(curl -X PATCH \
                   -H "Authorization: Bearer ${API_token}" \
-                  -H "x-Auth-Email: ${Email}" \
                   -H "Content-Type: application/json" \
                   -d "{\"name\":\"$Domain\",\"type\":\"$record\",\"content\":\"$ip_adr\"}" \
                   -sS "$Url/${Zone_ID}/dns_records/${Domain_ID}")

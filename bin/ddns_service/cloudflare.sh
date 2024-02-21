@@ -12,9 +12,8 @@ My_ipv6=$3
 cloudflare_multi_domain() {
     local domain=""
 
-    for i in "${!CLOUDFLARE_MAIL[@]}"; do
-        if [[ ${CLOUDFLARE_MAIL[$i]} = "" ]] \
-        || [[ ${CLOUDFLARE_API[$i]} = "" ]] \
+    for i in "${!CLOUDFLARE_API[@]}"; do
+        if [[ ${CLOUDFLARE_API[$i]} = "" ]] \
         || [[ ${CLOUDFLARE_ZONE[$i]} = "" ]] \
         || [[ ${CLOUDFLARE_DOMAIN[$i]} = "" ]]; then
             ./err_message.sh \
@@ -37,10 +36,9 @@ cloudflare_multi_domain() {
                 "${My_ipv6}"  \
                 "${CLOUDFLARE_IPV4[$i]}" \
                 "${CLOUDFLARE_IPV6[$i]}" \
-                "${CLOUDFLARE_MAIL[$i]}" \
+                "${CLOUDFLARE_ZONE[$i]}" \
                 "${CLOUDFLARE_API[$i]}" \
                 "${domain[$j]}" \
-                "${CLOUDFLARE_ZONE[$i]}" \
                 "$CLOUDFLARE_URL"
         done
     done
