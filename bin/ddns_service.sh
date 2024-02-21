@@ -83,6 +83,7 @@ main() {
             if (( "$Mydns" )); then
                 wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
 
+#                multi_update   # debug用
                 sleep 1m    # 起動から少し待って最初の処理を行う
                 while true;do
                     # IP更新用の処理を設定値に基づいて実行する
@@ -100,6 +101,7 @@ main() {
             if (( "$Mydns" || "$CloudFlare" )); then
                 wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
 
+#                ip_check   # debug用
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
                     sleep "$wait_time"
