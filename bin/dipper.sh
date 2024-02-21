@@ -70,6 +70,7 @@ main() {
     while true;do
         wait -n
         exit_code=$?
+        sleep 30
         if [ "$exit_code" = 127 ]; then
             ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました。"
             ./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_CHK_ADR"
@@ -79,7 +80,6 @@ main() {
             ./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_CHK_ADR"
             exit 1
         fi
-        sleep 30
     done
 }
 
