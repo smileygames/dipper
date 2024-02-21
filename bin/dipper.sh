@@ -79,7 +79,7 @@ main() {
             ./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_CHK_ADR"
             exit 1
         fi
-        sleep 15
+        sleep 10
     done
 }
 
