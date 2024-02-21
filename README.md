@@ -10,6 +10,8 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 事前に必要なもの
 - [bash version4.3以降](https://github.com/smileygames/dipper/wiki/Bash-Install)
+
+事前に必要なもの(インストールスクリプト実行時にインストールも可能)
 - [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
 - [jqコマンド](https://github.com/smileygames/dipper/wiki/jq-command-install)
 
@@ -23,7 +25,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - アドレスキャッシュを使わない為、DNSサーバー側のIPが不測の事態で変わった場合もアドレスUPdateが可能。
 - ログはsyslogに記載し、システムで一元管理させている。（dipper.sh の名前でログに書きこまれます）
 - 管理はsystemdで行っている。（デーモン化）
-- メール通知機能の追加。（オプション）コンフィグファイルに追加されているコメントアウトを外して使用。
+- メール通知機能の追加。（[オプション](https://github.com/smileygames/dipper/wiki/%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%81%E4%BF%A1%E3%81%AE%E4%BB%95%E6%96%B9)）コンフィグファイルに追加されているコメントアウトを外して使用。
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
@@ -38,7 +40,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.18/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.19/install.sh )
 ```
 
 <br>
@@ -83,7 +85,7 @@ sudo systemctl start dipper.service
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.18/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.19/uninstall.sh )
 ```
 
 <br>
