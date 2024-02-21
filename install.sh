@@ -40,6 +40,10 @@ wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O -
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
 sudo rm -rf dipper
+sudo rm -rf /usr/local/dipper/.github
+sudo rm -rf /usr/local/dipper/.vscode
+sudo rm -f /usr/local/dipper/.gitgnore
+
 sudo chmod -R 755 /usr/local/dipper/bin
 
 sudo systemctl enable /usr/local/dipper/systemd/dipper.service
