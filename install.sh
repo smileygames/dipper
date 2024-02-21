@@ -56,22 +56,22 @@ if ! command -v dig &> /dev/null; then
             # ディストリビューションの判定
             if [ -x "$(command -v apt)" ]; then
                 sudo apt update
-                sudo apt install dnsutils
-            elif [ -x "$(command -v yum)" ]; then
-                sudo yum install bind-utils
+                sudo apt install -y dnsutils
             elif [ -x "$(command -v dnf)" ]; then
-                sudo dnf install bind-utils
+                sudo dnf install -y bind-utils
+            elif [ -x "$(command -v yum)" ]; then
+                sudo yum install -y bind-utils
             elif [ -x "$(command -v pacman)" ]; then
-                sudo pacman -S bind-tools
+                sudo pacman -S --noconfirm bind-tools
             elif [ -x "$(command -v apk)" ]; then
                 sudo apk update
-                sudo apk add bind-tools
+                sudo apk add --no-cache bind-tools
             elif [ -x "$(command -v zypper)" ]; then
-                sudo zypper install bind-utils
+                sudo zypper install -y bind-utils
             elif [ -x "$(command -v pkg)" ]; then
-                sudo pkg install bind-tools
+                sudo pkg install -y bind-tools
             elif [ -x "$(command -v pkgin)" ]; then
-                sudo pkgin install bind-tools
+                sudo pkgin install -y bind-tools
             else
                 echo "このディストリビューションではdigコマンドのインストールプロセスがサポートされていません。"
             fi
@@ -92,26 +92,25 @@ if ! command -v jq &> /dev/null; then
         [Yy]* )
             echo "インストールプロセスを開始します..."
             # ディストリビューションの判定
-            # ディストリビューションの判定
             if [ -x "$(command -v apt)" ]; then
                 sudo apt update
-                sudo apt install jq
-            elif [ -x "$(command -v yum)" ]; then
-                sudo yum install epel-release   # epelリポジトリを追加（必要な場合）
-                sudo yum install jq
+                sudo apt install -y jq
             elif [ -x "$(command -v dnf)" ]; then
-                sudo dnf install jq
+                sudo dnf install -y jq
+            elif [ -x "$(command -v yum)" ]; then
+                sudo yum install -y epel-release   # epelリポジトリを追加（必要な場合）
+                sudo yum install -y jq
             elif [ -x "$(command -v pacman)" ]; then
-                sudo pacman -S jq
+                sudo pacman -S --noconfirm jq
             elif [ -x "$(command -v apk)" ]; then
                 sudo apk update
-                sudo apk add jq
+                sudo apk add --no-cache jq
             elif [ -x "$(command -v zypper)" ]; then
-                sudo zypper install jq
+                sudo zypper install -y jq
             elif [ -x "$(command -v pkg)" ]; then
-                sudo pkg install jq
+                sudo pkg install -y jq
             elif [ -x "$(command -v pkgin)" ]; then
-                sudo pkgin install jq
+                sudo pkgin install -y jq
             else
                 echo "このディストリビューションではjqコマンドインストールプロセスがサポートされていません。"
             fi
