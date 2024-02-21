@@ -35,6 +35,62 @@ sudo rm -rf /usr/local/dipper/bin
 sudo rm -rf /usr/local/dipper/cache
 
 # v1.01以降のインストール用
+
+# digコマンドのインストールを確認し、インストールされていない場合はインストールする
+if ! command -v dig &> /dev/null; then
+    echo "digコマンドがインストールされていません。インストールプロセスを開始します..."
+    # ディストリビューションの判定
+    if [ -x "$(command -v apt)" ]; then
+        sudo apt update
+        sudo apt install dnsutils
+    elif [ -x "$(command -v yum)" ]; then
+        sudo yum install bind-utils
+    elif [ -x "$(command -v dnf)" ]; then
+        sudo dnf install bind-utils
+    elif [ -x "$(command -v pacman)" ]; then
+        sudo pacman -S bind-tools
+    elif [ -x "$(command -v apk)" ]; then
+        sudo apk update
+        sudo apk add bind-tools
+    elif [ -x "$(command -v zypper)" ]; then
+        sudo zypper install bind-utils
+    elif [ -x "$(command -v pkg)" ]; then
+        sudo pkg install bind-tools
+    elif [ -x "$(command -v pkgin)" ]; then
+        sudo pkgin install bind-tools
+    else
+        echo "このディストリビューションではdigコマンドインストールプロセスがサポートされていません。"
+    fi
+fi
+
+# jqコマンドのインストールを確認し、インストールされていない場合はインストールする
+if ! command -v jq &> /dev/null; then
+    echo "jqコマンドがインストールされていません。インストールプロセスを開始します..."
+    # ディストリビューションの判定
+    if [ -x "$(command -v apt)" ]; then
+        sudo apt update
+        sudo apt install jq
+    elif [ -x "$(command -v yum)" ]; then
+        sudo yum install epel-release   # epelリポジトリを追加（必要な場合）
+        sudo yum install jq
+    elif [ -x "$(command -v dnf)" ]; then
+        sudo dnf install jq
+    elif [ -x "$(command -v pacman)" ]; then
+        sudo pacman -S jq
+    elif [ -x "$(command -v apk)" ]; then
+        sudo apk update
+        sudo apk add jq
+    elif [ -x "$(command -v zypper)" ]; then
+        sudo zypper install jq
+    elif [ -x "$(command -v pkg)" ]; then
+        sudo pkg install jq
+    elif [ -x "$(command -v pkgin)" ]; then
+        sudo pkgin install jq
+    else
+        echo "このディストリビューションではjqコマンドインストールプロセスがサポートされていません。"
+    fi
+fi
+
 # スクリプトファイルダウンロード＆ファイル属性変更
 wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
