@@ -86,7 +86,7 @@ if ! command -v dig &> /dev/null; then
 fi
 
 # jqコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
-if ! command -v dig &> /dev/null; then
+if ! command -v jq &> /dev/null; then
     read -r -p "jqコマンドが見つかりません。インストールしますか？ (y/n): " answer
     case $answer in
         [Yy]* )
