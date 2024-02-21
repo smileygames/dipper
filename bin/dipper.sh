@@ -14,6 +14,25 @@ if [ -e ${User_File} ]; then
     source "${User_File}"
 fi
 
+# 環境変数宣言
+export EMAIL_CHK_DDNS
+export EMAIL_CHK_ADR
+export ERR_CHK_TIME
+
+# タイマーイベントを選択し、実行する
+timer_select() {
+    if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
+        ./ddns_service.sh "update" &  # DDNSアップデートタイマーを開始
+    fi
+
+    if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
+        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
+
+    elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
+        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
+    fi
+}
+
 # メール通知機能チェック処理
 mail_service() {
     local cache_dir="../cache"
@@ -42,37 +61,25 @@ mail_service() {
     fi
 }
 
-# タイマーイベントを選択し、実行する
-timer_select() {
-    if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
-        ./ddns_service.sh "update" &  # DDNSアップデートタイマーを開始
-    fi
-
-    if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
-
-    elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        ./ddns_service.sh "check" &  # DDNSチェックタイマーを開始
-    fi
-}
-
 main() {
     local exit_code=""
 
-    mail_service
     timer_select
+    mail_service
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do
         wait -n
         exit_code=$?
         if [ "$exit_code" = 127 ]; then
             ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました。"
+            ./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_CHK_ADR"
             exit 0
         elif [ "$exit_code" != 0 ]; then
             ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
+            ./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_CHK_ADR"
             exit 1
         fi
-        sleep 1
+        sleep 10
     done
 }
 

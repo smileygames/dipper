@@ -12,12 +12,6 @@ Email_Adr=$3
 Cache_Dir="../cache"
 Cache_File="${Cache_Dir}/${Cache_Name}"
 
-# キャッシュファイル作成
-new_cache_file() {
-    touch "$Cache_File"
-    echo "Count: 0" > "$Cache_File"
-}
-
 # メール通知
 send_mail_notification() {
     local exit_code
@@ -48,12 +42,6 @@ main() {
         if (( "$count" )); then
             send_mail_notification
         fi
-
-    elif [ ! -f "$Cache_Dir" ]; then
-        mkdir -p "$Cache_Dir"
-        new_cache_file
-    else
-        new_cache_file
     fi
 }
 

@@ -10,10 +10,15 @@ Check_Time=$2
 main() {
     local wait_time=""
 
-    ./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$Email_Adr" &
     wait_time=$(./time_check.sh "error" "$Check_Time")
     while true;do
-        sleep "$wait_time";./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$Email_Adr" &
+        ./mail_handle.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$Email_Adr"
+        sleep "$wait_time"
+        exit_code=$?
+        if [ "${exit_code}" != 0 ]; then
+            ./err_message.sh "sleep" "err_mail_service.sh" "ERR_CHK_TIME=${wait_time}: 無効な時間間隔の為 err mail serviceを終了しました"
+            exit 1
+        fi
     done
 }
 
