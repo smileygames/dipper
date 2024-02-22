@@ -8,7 +8,6 @@
 mail_err_service() {
     local email_adr=$1
     local check_time=$2
-    local wait_time=""
 
     wait_time=$(./time_check.sh "error" "$check_time")
     while true;do
@@ -31,15 +30,18 @@ main() {
     if [[ -n ${EMAIL_CHK_ADR:-} ]]; then
         if [[ -n ${ERR_CHK_TIME:-} ]]; then
             mail_err_service "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" &
-        elif [ -f "${cache_err}" ]; then
-            rm "${cache_err}"
+        else
+            rm -f "${cache_err}"
         fi
 
         if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
             ./mail_sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" &
-        elif [ -f "${cache_ddns}" ]; then
-            rm "${cache_ddns}"
+        else
+            rm -f "${cache_ddns}"
         fi
+    else
+        rm -f "${cache_err}"
+        rm -f "${cache_ddns}"
     fi
 }
 

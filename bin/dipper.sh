@@ -51,7 +51,7 @@ main() {
     local exit_code=""
 
     timer_select
-    ./mail_service.sh &
+    ./mail_service.sh
     ./cache_ip_service.sh &
     dir_check
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
