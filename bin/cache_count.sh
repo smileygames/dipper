@@ -34,7 +34,7 @@ update_cache() {
         # メッセージをファイルの末尾に追記
         echo "Message: $Message" >> "$Cache_File"
 
-    elif [[ -n ${EMAIL_CHK_ADR:-} ]]; then
+    elif [[ -n ${EMAIL_ADR:-} ]]; then
         if [[ -n ${ERR_CHK_TIME:-} ]] || [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
             mkdir -p "$Cache_Dir"
             new_cache_file

@@ -15,7 +15,7 @@ mail_err_service() {
         sleep "$wait_time"
         exit_code=$?
         if [ "${exit_code}" != 0 ]; then
-            ./err_message.sh "sleep" "mail_err_service" "ERR_CHK_TIME=${wait_time}: 無効な時間間隔の為 mail_err_serviceを終了しました"
+            ./err_message.sh "sleep" "mail_service.sh" "ERR_CHK_TIME=${wait_time}: 無効な時間間隔の為 mail_err_serviceを終了しました"
             exit 1
         fi
     done
@@ -27,15 +27,15 @@ main() {
     local cache_err="${cache_dir}/err_mail"
     local cache_ddns="${cache_dir}/ddns_mail"
 
-    if [[ -n ${EMAIL_CHK_ADR:-} ]]; then
+    if [[ -n ${EMAIL_ADR:-} ]]; then
         if [[ -n ${ERR_CHK_TIME:-} ]]; then
-            mail_err_service "$EMAIL_CHK_ADR" "$ERR_CHK_TIME" &
+            mail_err_service "$EMAIL_ADR" "$ERR_CHK_TIME" &
         else
             rm -f "${cache_err}"
         fi
 
         if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-            ./mail_sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" &
+            ./mail_sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
         else
             rm -f "${cache_ddns}"
         fi
