@@ -6,15 +6,17 @@
 
 # メール通知機能チェック処理
 mail_err_service() {
+    local email_adr=$1
+    local check_time=$2
     local wait_time=""
 
-    wait_time=$(./time_check.sh "error" "$Check_Time")
+    wait_time=$(./time_check.sh "error" "$check_time")
     while true;do
-        ./mail_sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$Email_Adr"
+        ./mail_sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$email_adr"
         sleep "$wait_time"
         exit_code=$?
         if [ "${exit_code}" != 0 ]; then
-            ./err_message.sh "sleep" "mail_err_service" "ERR_CHK_TIME=${wait_time}: 無効な時間間隔の為 err mail serviceを終了しました"
+            ./err_message.sh "sleep" "mail_err_service" "ERR_CHK_TIME=${wait_time}: 無効な時間間隔の為 mail_err_serviceを終了しました"
             exit 1
         fi
     done
@@ -34,7 +36,7 @@ main() {
         fi
 
         if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-            ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" &
+            ./mail_sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" &
         elif [ -f "${cache_ddns}" ]; then
             rm "${cache_ddns}"
         fi
