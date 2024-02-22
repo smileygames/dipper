@@ -47,42 +47,42 @@ Message=$3
 timeout_err_message() {
     local error_message
     error_message="${Caller}: Failed Timeout: ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    logger -p authpriv.err -t "dipper.sh" "${error_message}"
 }
 
 # データがないエラー
 no_value_err_message() {
     local error_message
     error_message="${Caller}: no value: ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    logger -p authpriv.err -t "dipper.sh" "${error_message}"
 }
 
 # curlコマンドエラー
 curl_err_message() {
     local error_message
     error_message="${Caller}: curl error : ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    logger -p authpriv.err -t "dipper.sh" "${error_message}"
 }
 
 # sendmailコマンドエラー
 sendmail_err_message() {
     local error_message
     error_message="${Caller}: sendmail error : ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    logger -p authpriv.err -t "dipper.sh" "${error_message}"
 }
 
 # バックグラウンドプロセスエラー
 process_err_message() {
     local error_message
     error_message="${Caller}: abend error : ${Message}"
-    logger -ip daemon.err -t "dipper.sh" "${error_message}"
+    logger -p daemon.err -t "dipper.sh" "${error_message}"
 }
 
 # sleepコマンドエラー
 sleep_err_message() {
     local error_message
     error_message="${Caller}: sleep error: ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    logger -p authpriv.err -t "dipper.sh" "${error_message}"
 }
 
 main() {
