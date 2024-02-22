@@ -29,32 +29,13 @@ multi_update() {
     fi
 }
 
-# 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 ip_check() {
-    local my_ipv4="" my_ipv6=""
-    local exit_code
+    local adress="" ipv4="" ipv6=""
 
-    if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        my_ipv4=$(dig -4 @resolver1.opendns.com myip.opendns.com A +short)  # 自分のアドレスを読み込む
-        exit_code=$?
-        if [ "${exit_code}" != 0 ]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
-            my_ipv4=""
-        fi
-    fi
-    if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        my_ipv6=$(dig -6 @resolver1.opendns.com myip.opendns.com AAAA +short)  # 自分のアドレスを読み込む
-#        my_ipv6=$(ip -o a show scope global up | grep -oP '(?<=inet6 ).+(?=/64 )')  # DNSに負担をかけない方法
-        exit_code=$?
-        if [ "${exit_code}" != 0 ]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
-            my_ipv6=""
-        fi
-    fi
-
-    if [[ $my_ipv4 != "" ]] || [[ $my_ipv6 != "" ]]; then
-        multi_ddns "$my_ipv4" "$my_ipv6"
-    fi
+    adress=$(./ip_check.sh)
+    # 出力を空白で分割し、変数に割り当てる
+    read -r ipv4 ipv6 <<< "$adress"
+    multi_ddns "$ipv4" "$ipv6"
 }
 
 # 複数のDDNSサービス用（拡張するときは処理を増やす）
@@ -101,7 +82,7 @@ main() {
             if (( "$Mydns" || "$CloudFlare" )); then
                 wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
 
-#                ip_check   # debug用
+                ip_check   # debug用
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
                     sleep "$wait_time"
@@ -113,7 +94,7 @@ main() {
                     ip_check
                     # Email通知処理
                     if [[ -n ${EMAIL_CHK_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-                        ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" & 
+                        ./mail_sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR"
                     fi
                 done
             fi

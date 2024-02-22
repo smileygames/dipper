@@ -36,12 +36,8 @@ update_cache() {
 
     elif [[ -n ${EMAIL_CHK_ADR:-} ]]; then
         if [[ -n ${ERR_CHK_TIME:-} ]] || [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-            if [ ! -f "$Cache_Dir" ]; then
-                mkdir -p "$Cache_Dir"
-                new_cache_file
-            else
-                new_cache_file
-            fi
+            mkdir -p "$Cache_Dir"
+            new_cache_file
         fi
     fi
 }

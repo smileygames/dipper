@@ -26,6 +26,7 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - ログはsyslogに記載し、システムで一元管理させている。（dipper.sh の名前でログに書きこまれます）
 - 管理はsystemdで行っている。（デーモン化）
 - メール通知機能の追加。（[オプション](https://github.com/smileygames/dipper/wiki/%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%81%E4%BF%A1%E3%81%AE%E4%BB%95%E6%96%B9)）コンフィグファイルに追加されているコメントアウトを外して使用。
+- アドレスキャッシュ機能の追加（オプション）初期時無効。コンフィグファイルIP_CACHE_TIMEの値を変えることで機能する。
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
@@ -40,14 +41,14 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.19/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.20/install.sh )
 ```
 
 <br>
 
 ▼最初に初期設定を行ってください。
 
-(v1.19より設定項目が変更されたので古いユーザーコンフィグはそのまま使わないでください)
+(v1.20より設定項目が変更されたので古いユーザーコンフィグはそのまま使わないでください)
 
 installのたびにコンフィグファイルが初期値に戻ってしまうのも面倒なので
 ユーザー側でコンフィグファイルを作成してもらい、上書きインストールでも変更しないようにしました。
@@ -85,7 +86,7 @@ sudo systemctl start dipper.service
 ### アンインストールスクリプト
 ▼アンインストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.19/uninstall.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.20/uninstall.sh )
 ```
 
 <br>

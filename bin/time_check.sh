@@ -64,6 +64,16 @@ time_check_error() {
     fi
 }
 
+time_check_ip_cache() {
+    local wait_sec
+    
+    wait_sec=$(time_sec "$Time")
+    if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 900 ]; then
+        Time=5m
+        ./err_message.sh "no_value" "${FUNCNAME[0]}" "15分以下の値[${wait_sec}s]が入力された為、[IP_CACHE_TIME=15m] に変更しました"
+    fi
+}
+
 main() {
     # 実行スクリプト
     case ${Mode} in
@@ -77,6 +87,10 @@ main() {
             ;;
     "error")    # エラーカウント処理のタイムチェック
             time_check_error
+            echo "$Time"
+            ;;
+    "ip_cache")    # エラーカウント処理のタイムチェック
+            time_check_ip_cache
             echo "$Time"
             ;;
         * )     # エラーの場合は1時間の値を返す

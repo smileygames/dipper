@@ -44,13 +44,9 @@ id_accese() {
                    -sS "$Url?name=${Zone}" |
                    jq -r .result[0].id)
 
-#    echo "success zone id: ${Zone_ID} domain=${Zone}"
-
     Domain_ID=$(curl -H "Authorization: Bearer ${API_token}" \
                      -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |
                      jq -r .result[0].id)
-
-#    echo "success domain id: ${Domain_ID} domain=${Zone}"
 }
 
 api_access() {

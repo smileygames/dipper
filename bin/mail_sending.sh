@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./mail_handle.sh
+# ./mail_sending.sh
 #
 # 変更を検知したらEmailへ通知
 
