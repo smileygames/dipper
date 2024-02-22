@@ -21,7 +21,7 @@ export IPV6
 export IPV6_DDNS
 export IP_CACHE_TIME
 export EMAIL_CHK_DDNS
-export EMAIL_CHK_ADR
+export EMAIL_ADR
 export ERR_CHK_TIME
 
 # タイマーイベントを選択し、実行する
