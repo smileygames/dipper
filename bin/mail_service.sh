@@ -8,6 +8,7 @@
 mail_err_service() {
     local email_adr=$1
     local check_time=$2
+    local wait_time=""
 
     wait_time=$(./time_check.sh "error" "$check_time")
     while true;do

@@ -9,8 +9,9 @@ Cache_Dir="../cache"
 Cache_File="${Cache_Dir}/ip_cache"
 
 main() {
+    local wait_time=""
+
     if [ "$IP_CACHE_TIME" != 0 ]; then
-        local wait_time=""
 
         wait_time=$(./time_check.sh "ip_cache" "$IP_CACHE_TIME")
         while true;do
