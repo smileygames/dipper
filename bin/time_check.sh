@@ -69,7 +69,7 @@ time_check_ip_cache() {
     
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 900 ]; then
-        Time=5m
+        Time=15m
         ./err_message.sh "no_value" "${FUNCNAME[0]}" "15分以下の値[${wait_sec}s]が入力された為、[IP_CACHE_TIME=15m] に変更しました"
     fi
 }
