@@ -93,7 +93,7 @@ main() {
     cache_time_sec=$(./time_check.sh "ip_time" "$IP_CACHE_TIME")
 
     # 経過時間が設定された時間より大きい場合、キャッシュを初期化
-    if [ "$diff_time" -gt "$cache_time_sec" ]; then
+    if ((diff_time > cache_time_sec)); then
         cache_reset
     fi
     ip_adr=$(ip_check)
