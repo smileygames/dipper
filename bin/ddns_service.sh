@@ -80,7 +80,6 @@ main() {
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
                 wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
-                    ip_check
 
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
