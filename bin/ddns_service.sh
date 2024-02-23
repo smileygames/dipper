@@ -30,11 +30,9 @@ multi_update() {
 }
 
 ip_check() {
-    local adress="" ipv4="" ipv6=""
-
-    adress=$(./ip_check.sh)
+    cache_ip=$(./ip_check.sh)
     # 出力を空白で分割し、変数に割り当てる
-    read -r ipv4 ipv6 <<< "$adress"
+    read -r ipv4 ipv6 <<< "$cache_ip"
     multi_ddns "$ipv4" "$ipv6"
 }
 
@@ -83,13 +81,13 @@ main() {
 
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
+                    ip_check
                     sleep "$wait_time"
                     exit_code=$?
                     if [ "${exit_code}" != 0 ]; then
                         ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${wait_time}: 無効な時間間隔の為 ip check serviceを終了しました"
                         exit 1
                     fi
-                    ip_check
                     # Email通知処理
                     if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
                         ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"

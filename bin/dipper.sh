@@ -52,7 +52,6 @@ main() {
 
     timer_select
     ./mail/service.sh
-    ./cache/ip_service.sh &
     dir_check
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do

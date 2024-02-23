@@ -39,7 +39,7 @@ ipv_check() {
 
         if [[ "$My_ipv4" != "$ipv4_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "${IPv4_url}" "4" "$My_ipv4"
+            access "${FUNCNAME[0]}" "${IPv4_url}" "A" "$My_ipv4"
         fi
     fi
 
@@ -48,7 +48,7 @@ ipv_check() {
 
         if [[ "$My_ipv6" != "$ipv6_old" ]]; then
             # バックグラウンドプロセスで実行
-            access "${FUNCNAME[0]}" "${IPv6_url}" "6" "$My_ipv6"
+            access "${FUNCNAME[0]}" "${IPv6_url}" "AAAA" "$My_ipv6"
         fi
     fi
 }
