@@ -51,8 +51,8 @@ main() {
     local exit_code=""
 
     timer_select
-    ./mail_service.sh
-    ./cache_ip_service.sh &
+    ./mail/service.sh
+    ./cache/ip_service.sh &
     dir_check
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do
@@ -60,11 +60,11 @@ main() {
         exit_code=$?
         if [ "$exit_code" = 127 ]; then
             ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました。"
-            ./mail_sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             exit 0
         elif [ "$exit_code" != 0 ]; then
             ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
-            ./mail_sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             exit 1
         fi
         sleep 10

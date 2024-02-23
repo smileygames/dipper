@@ -80,6 +80,7 @@ main() {
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
                 wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
+                    ip_check
 
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
@@ -92,7 +93,7 @@ main() {
                     ip_check
                     # Email通知処理
                     if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-                        ./mail_sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
+                        ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
                     fi
                 done
             fi

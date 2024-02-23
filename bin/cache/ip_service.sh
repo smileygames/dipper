@@ -21,7 +21,9 @@ main() {
                 ./err_message.sh "sleep" "cache_ip_service.sh" "IP_CACHE_TIME=${wait_time}: 無効な時間間隔の為 cache_ip_serviceを終了しました"
                 exit 1
             fi
-            rm -f "$Cache_File"
+            # 中身をクリア
+            echo "ipv4:" > "$Cache_File"
+            echo "ipv6:" >> "$Cache_File"
         done
     else
         rm -f "$Cache_File"

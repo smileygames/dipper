@@ -23,7 +23,7 @@ ip_cache_check() {
 
     if (( "$flag_ip" )); then
         echo "${my_ipv4} ${my_ipv6}"
-        ./cache_ip_update.sh "$my_ipv4" "$my_ipv6"
+        ./cache/ip_update.sh "$my_ipv4" "$my_ipv6"
     fi
 }
 

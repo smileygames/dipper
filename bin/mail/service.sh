@@ -12,7 +12,7 @@ mail_err_service() {
 
     wait_time=$(./time_check.sh "error" "$check_time")
     while true;do
-        ./mail_sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$email_adr"
+        ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$email_adr"
         sleep "$wait_time"
         exit_code=$?
         if [ "${exit_code}" != 0 ]; then
@@ -36,7 +36,7 @@ main() {
         fi
 
         if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-            ./mail_sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
+            ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
         else
             rm -f "${cache_ddns}"
         fi
