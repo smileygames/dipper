@@ -29,16 +29,15 @@ main() {
     local cache_ddns="${cache_dir}/ddns_mail"
 
     if [[ -n ${EMAIL_ADR:-} ]]; then
-        if [[ -n ${ERR_CHK_TIME:-} ]]; then
-            mail_err_service "$EMAIL_ADR" "$ERR_CHK_TIME" &
-        else
-            rm -f "${cache_err}"
-        fi
-
         if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
             ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
         else
             rm -f "${cache_ddns}"
+        fi
+        if [[ -n ${ERR_CHK_TIME:-} ]]; then
+            mail_err_service "$EMAIL_ADR" "$ERR_CHK_TIME" &
+        else
+            rm -f "${cache_err}"
         fi
     else
         rm -f "${cache_err}"
