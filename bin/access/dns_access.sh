@@ -21,12 +21,12 @@ IPv6_url=${12}
 ipv_update() {
     if [ "$My_ipv4" = on ] && [ "$IPv4_Select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "${IPv4_url}" "4" "update!"
+        access "${FUNCNAME[0]}" "${IPv4_url}" "A" "update!"
     fi
 
     if [ "$My_ipv6" = on ] && [ "$IPv6_Select" = on ]; then
         # バックグラウンドプロセスで実行
-        access "${FUNCNAME[0]}" "${IPv6_url}" "6" "update!"
+        access "${FUNCNAME[0]}" "${IPv6_url}" "AAAA" "update!"
     fi
 }
 
@@ -56,7 +56,7 @@ ipv_check() {
 access() {
     local func_name=$1
     local access_url=$2
-    local ip_ver=$3
+    local record=$3
     local ip_adr=$4
 
     local output exit_code
@@ -64,16 +64,15 @@ access() {
 
     # DDNSへアクセスするがIdやパスワードがおかしい場合、対話式モードになってスタックするので"-f"処理を入れている
     output=$(curl --max-time ${max_time} -sSfu "${Id}:${Pass}" "${access_url}" 2>&1)
-    exit_code=$?
 
+    exit_code=$?
     if [ "${exit_code}" != 0 ]; then
         # curlコマンドのエラー
         ./err_message.sh "curl" "${func_name}" "${Service}_ID[$Array_Num]:${Service}_PASS[$Array_Num]: ${output}"
     else
-        # echo "${output}"
-        echo "Access successful ${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr}"
+        echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
         if [[ "${ip_adr}" != "update!" ]]; then
-            ./cache/count.sh "ddns_mail" "${Service} : domain=${Domain} IPv${ip_ver}=${ip_adr} :time=$(date "+%Y-%m-%d %H:%M:%S")"
+            ./cache/count.sh "ddns_mail" "${Service} : domain=${Domain} type=${record} IP=${ip_adr} :time=$(date "+%Y-%m-%d %H:%M:%S")"
         fi
     fi
 }
