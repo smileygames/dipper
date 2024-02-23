@@ -10,12 +10,9 @@ Cache_File="${Cache_Dir}/ip_cache"
 ip_cache_read() {
     local ip_date=$1
     
-    # キャッシュファイルが存在するか確認
-    if [ -f "$Cache_File" ]; then
-        # キャッシュファイルからipアドレスを読み込んで出力
-        ip_cache_date=$(grep "$ip_date:" "$Cache_File" | awk '{print $2}')
-        echo "$ip_cache_date"
-    fi
+    # キャッシュファイルからipアドレスを読み込んで出力
+    ip_cache_date=$(grep "$ip_date:" "$Cache_File" | awk '{print $2}')
+    echo "$ip_cache_date"
 }
 
 ip_cache_check() {
@@ -64,7 +61,7 @@ ip_check() {
     fi
 
     if [[ $my_ipv4 != "" ]] || [[ $my_ipv6 != "" ]]; then
-        if [ "$IP_CACHE_TIME" != 0 ]; then
+        if [ "$IP_CACHE_TIME" != 0 ] && [ -f "$Cache_File" ]; then
             ip_cache_check "$my_ipv4" "$my_ipv6"
         else
             echo "${my_ipv4} ${my_ipv6}"
@@ -73,15 +70,12 @@ ip_check() {
 }
 
 cache_reset() {
-    if [ -f "$Cache_File" ]; then
-        echo "time:" > "$Cache_File"
-        echo "ipv4:" >> "$Cache_File"
-        echo "ipv6:" >> "$Cache_File"
-    fi
+    echo "time:" > "$Cache_File"
+    echo "ipv4:" >> "$Cache_File"
+    echo "ipv6:" >> "$Cache_File"
 }
 
-main() {
-    local ip_adr="" ipv4_adr="" ipv6_adr=""
+cache_time_check() {
     local old_time now_time diff_time cache_time_sec
 
     # キャッシュファイルのtimeを読み込む
@@ -95,6 +89,15 @@ main() {
     # 経過時間が設定された時間より大きい場合、キャッシュを初期化
     if ((diff_time > cache_time_sec)); then
         cache_reset
+    fi
+}
+
+main() {
+    local ip_adr="" ipv4_adr="" ipv6_adr=""
+
+    # キャッシュファイルが存在するか確認
+    if [ -f "$Cache_File" ]; then
+        cache_time_check
     fi
     ip_adr=$(ip_check)
     # 出力を空白で分割し、変数に割り当てる
