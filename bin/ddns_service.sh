@@ -29,10 +29,12 @@ multi_update() {
     fi
 }
 
-ip_check() {
-    cache_ip=$(./ip_check.sh)
+ip_adr_read() {
+    local ip_adr
+
+    ip_adr=$(./ip_check.sh)
     # 出力を空白で分割し、変数に割り当てる
-    read -r ipv4 ipv6 <<< "$cache_ip"
+    read -r ipv4 ipv6 <<< "$ip_adr"
     multi_ddns "$ipv4" "$ipv6"
 }
 
@@ -80,7 +82,7 @@ main() {
 
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
-                    ip_check
+                    ip_adr_read
                     sleep "$wait_time"
                     exit_code=$?
                     if [ "${exit_code}" != 0 ]; then

@@ -18,23 +18,25 @@ ip_cache_read() {
 ip_cache_check() {
     local new_ipv4=$1
     local new_ipv6=$2
-    local flag_ip=0 ipv4_old="" ipv6_old=""
+    local flag_ip=0 old_ipv4="" old_ipv6=""
 
-    ipv4_old=$(ip_cache_read "ipv4")  # キャッシュのアドレスを読み込む
-
-    if [[ "$new_ipv4" != "$ipv4_old" ]]; then
+    if [ -f "$Cache_File" ]; then
+        old_ipv4=$(ip_cache_read "ipv4")  # キャッシュのアドレスを読み込む
+    fi
+    if [[ "$new_ipv4" != "$old_ipv4" ]]; then
         flag_ip=1
     fi
 
-    ipv6_old=$(ip_cache_read "ipv6")  # キャッシュのアドレスを読み込む
-
-    if [[ "$new_ipv6" != "$ipv6_old" ]]; then
+    if [ -f "$Cache_File" ]; then
+        old_ipv6=$(ip_cache_read "ipv6")  # キャッシュのアドレスを読み込む
+    fi
+    if [[ "$new_ipv6" != "$old_ipv6" ]]; then
         flag_ip=1
     fi
 
     if (( "$flag_ip" )); then
-        echo "${my_ipv4} ${my_ipv6}"
-        ./cache/ip_update.sh "$my_ipv4" "$my_ipv6"
+        ./cache/ip_update.sh "$new_ipv4" "$new_ipv6"
+        echo "${new_ipv4} ${new_ipv6}"
     fi
 }
 
@@ -61,7 +63,7 @@ ip_check() {
     fi
 
     if [[ $my_ipv4 != "" ]] || [[ $my_ipv6 != "" ]]; then
-        if [ "$IP_CACHE_TIME" != 0 ] && [ -f "$Cache_File" ]; then
+        if [ "$IP_CACHE_TIME" != 0 ]; then
             ip_cache_check "$my_ipv4" "$my_ipv6"
         else
             echo "${my_ipv4} ${my_ipv6}"
