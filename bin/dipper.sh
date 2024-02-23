@@ -42,7 +42,7 @@ dir_check() {
     local cache_dir="../cache"
     # ディレクトリの中身をチェック
     if [ -d "${cache_dir}" ] && [ -z "$(ls -A ${cache_dir})" ]; then
-        # ファイルが存在しない
+        # ファイルが存在しない場合、削除
         rm -r "${cache_dir}"
     fi
 }

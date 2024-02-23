@@ -46,7 +46,6 @@ multi_ddns() {
         # shellcheck disable=SC1091
         . ./ddns_service/mydns.sh "check" "$my_ipv4" "$my_ipv6"
     fi
-
     # CloudFlareのDDNSのための処理
     if (( "$CloudFlare" )); then
         # shellcheck disable=SC1091
@@ -88,7 +87,6 @@ main() {
                         ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${wait_time}: 無効な時間間隔の為 ip check serviceを終了しました"
                         exit 1
                     fi
-                    # Email通知処理
                     if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
                         ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
                     fi

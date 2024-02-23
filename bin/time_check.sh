@@ -90,17 +90,12 @@ main() {
             time_check_error
             echo "$Time"
             ;;
-    "ip_cache")    # IP_CACHE_TIMEのタイムチェック
-            time_check_ip_cache
-            echo "$Time"
-            ;;
     "ip_time")    # IP_CACHE_TIMEを秒数に変換
             time_check_ip_time
             echo "$Time"
             ;;
-        * )     # エラーの場合は1時間の値を返す
-            echo "1h"
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "エラーのため、1hを返しました"
+        * )
+            ./err_message.sh "no_value" "${FUNCNAME[0]}" "[${Mode}] <- 引数エラーです"
             ;; 
     esac
 }

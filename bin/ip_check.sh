@@ -4,17 +4,16 @@
 #
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 
+Cache_Dir="../cache"
+Cache_File="${Cache_Dir}/ip_cache"
+
 ip_cache_read() {
     local ip_date=$1
-    local cache_dir="../cache"
-    local cache_file="${cache_dir}/ip_cache"
     
     # キャッシュファイルが存在するか確認
-    if [ -f "$cache_file" ]; then
-        # キャッシュファイルからipアドレスを読み込む
-        ip_cache_date=$(grep "$ip_date:" "$cache_file" | awk '{print $2}')
-
-        # 読み取ったIPアドレスを出力
+    if [ -f "$Cache_File" ]; then
+        # キャッシュファイルからipアドレスを読み込んで出力
+        ip_cache_date=$(grep "$ip_date:" "$Cache_File" | awk '{print $2}')
         echo "$ip_cache_date"
     fi
 }
@@ -74,13 +73,10 @@ ip_check() {
 }
 
 cache_reset() {
-    local cache_file="../cache/ip_cache"
-
-    # キャッシュファイルが存在するか確認
-    if [ -f "$cache_file" ]; then
-        echo "time:" > "$cache_file"
-        echo "ipv4:" >> "$cache_file"
-        echo "ipv6:" >> "$cache_file"
+    if [ -f "$Cache_File" ]; then
+        echo "time:" > "$Cache_File"
+        echo "ipv4:" >> "$Cache_File"
+        echo "ipv6:" >> "$Cache_File"
     fi
 }
 

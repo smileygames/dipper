@@ -15,7 +15,6 @@ Cache_File="${Cache_Dir}/${Cache_Name}"
 new_cache_file() {
     touch "$Cache_File"
     echo "Count: 1" >> "$Cache_File"
-    # メッセージをファイルの末尾に追記
     echo "Message: $Message" >> "$Cache_File"
 }
 

@@ -22,7 +22,6 @@ send_mail_notification() {
     exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
-        # sendmailコマンドのエラー
         ./err_message.sh "sendmail" "email_ddns_handle.sh" "sendmailコマンドエラー"
     else
         # 中身の内容を削除してCOUNT=0を書き込む(reset処理)

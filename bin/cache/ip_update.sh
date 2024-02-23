@@ -18,7 +18,6 @@ new_ip_cache_file() {
     # 現在のエポック秒を取得
     current_time=$(date +%s)
 
-    # アドレスをファイルの末尾に追記
     echo "time: $current_time" > "$Cache_File"
     echo "ipv4: $New_Ipv4" >> "$Cache_File"
     echo "ipv6: $New_Ipv6" >> "$Cache_File"

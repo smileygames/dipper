@@ -4,7 +4,6 @@
 #
 # エラーメッセージが設定時間に1個以上の場合にメールで通知する
 
-# メール通知機能チェック処理
 mail_err_service() {
     local email_adr=$1
     local check_time=$2
