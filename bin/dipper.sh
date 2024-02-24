@@ -66,11 +66,11 @@ main() {
         wait -n
         exit_code=$?
         if [ "$exit_code" = 127 ]; then
-            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました。"
+            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました"
             ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             exit 0
         elif [ "$exit_code" != 0 ]; then
-            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました。"
+            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました"
             ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             exit 1
         fi
