@@ -19,7 +19,7 @@ cloudflare_multi_domain() {
             ./err_message.sh \
                 "no_value" \
                 "${FUNCNAME[0]}" \
-                "CLOUDFLARE_MAIL[$i] or CLOUDFLARE_API[$i] or CLOUDFLARE_DOMAIN[$i]"
+                "CLOUDFLARE_API[$i] or CLOUDFLARE_ZONE[$i] or CLOUDFLARE_DOMAIN[$i]"
             continue
         fi
         if [[ ${CLOUDFLARE_IPV4[$i]} != on ]] && [[ ${CLOUDFLARE_IPV6[$i]} != on ]]; then

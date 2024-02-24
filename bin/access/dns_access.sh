@@ -63,7 +63,7 @@ access() {
 
     exit_code=$?
     if [ "${exit_code}" != 0 ]; then
-        ./err_message.sh "curl" "${func_name}" "${Service}_ID[$Array_Num]:${Service}_PASS[$Array_Num]: ${output}"
+        ./err_message.sh "curl" "${func_name}" "${Service}[$Array_Num]: ${output}"
     else
         echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
         if [[ "${ip_adr}" != "update!" ]]; then

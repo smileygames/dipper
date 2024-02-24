@@ -45,44 +45,38 @@ Message=$3
 
 # タイムアウトエラー
 timeout_err_message() {
-    local error_message
-    error_message="${Caller}: Failed Timeout: ${Message}"
-    logger -p authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: Failed Timeout: ${Message}"
+    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
 }
 
 # データがないエラー
 no_value_err_message() {
-    local error_message
-    error_message="${Caller}: no value: ${Message}"
-    logger -p authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: no value: ${Message}"
+    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
 }
 
 # curlコマンドエラー
 curl_err_message() {
-    local error_message
-    error_message="${Caller}: curl error : ${Message}"
-    logger -p authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: curl error : ${Message}"
+    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
 }
 
 # sendmailコマンドエラー
 sendmail_err_message() {
-    local error_message
-    error_message="${Caller}: sendmail error : ${Message}"
-    logger -p authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: sendmail error : ${Message}"
+    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
 }
 
 # バックグラウンドプロセスエラー
 process_err_message() {
-    local error_message
-    error_message="${Caller}: abend error : ${Message}"
-    logger -p daemon.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: abend error : ${Message}"
+    logger -p daemon.err -t "dipper.sh" "${Error_Message}"
 }
 
 # sleepコマンドエラー
 sleep_err_message() {
-    local error_message
-    error_message="${Caller}: sleep error: ${Message}"
-    logger -p authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: sleep error: ${Message}"
+    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
 }
 
 main() {
@@ -108,7 +102,7 @@ main() {
         * )
             ;; 
     esac
-    ./cache/count.sh "err_mail" "$Message :time=$(date "+%Y-%m-%d %H:%M:%S")"
+    ./cache/count.sh "err_mail" "$Error_Message :time=$(date "+%Y-%m-%d %H:%M:%S")"
 }
 
 main
