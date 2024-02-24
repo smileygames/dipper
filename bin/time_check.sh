@@ -90,7 +90,7 @@ main() {
             time_check_error
             echo "$Time"
             ;;
-    "ip_time")    # IP_CACHE_TIMEを秒数に変換
+    "ip_time")  # IP_CACHE_TIMEを秒数に変換
             time_check_ip
             echo "$Time"
             ;;
