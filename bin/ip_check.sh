@@ -21,8 +21,8 @@ ip_cache_check() {
     local flag_ip=0 old_ipv4="" old_ipv6=""
 
     if [ -f "$Cache_File" ]; then
-        old_ipv4=$(ip_cache_read "ipv4")  # キャッシュのアドレスを読み込む
-        old_ipv6=$(ip_cache_read "ipv6")  # キャッシュのアドレスを読み込む
+        old_ipv4=$(ip_cache_read "ipv4")  # キャッシュのipv4アドレスを読み込む
+        old_ipv6=$(ip_cache_read "ipv6")  # キャッシュのipv6アドレスを読み込む
     fi
 
     if [[ "$new_ipv4" != "$old_ipv4" ]] || [[ "$new_ipv6" != "$old_ipv6" ]]; then
