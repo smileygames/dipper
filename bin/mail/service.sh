@@ -5,7 +5,6 @@
 # エラーメッセージが設定時間に1個以上の場合にメールで通知する
 
 mail_err_service() {
-    local email_adr=$1
     local wait_time=""
 
     if [[ "$ERR_CHK_TIME" =~ ^[0-9]+[dhms]$ ]]; then
@@ -16,7 +15,7 @@ mail_err_service() {
     fi
 
     while true;do
-        ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$email_adr"
+        ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
         sleep "$wait_time"
     done
 }
@@ -28,16 +27,16 @@ main() {
     local cache_ddns="${cache_dir}/ddns_mail"
 
     if [[ -n ${EMAIL_ADR:-} ]]; then
-        if [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-            ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
-        else
+        if [ "$EMAIL_CHK_DDNS" != on ]; then
             rm -f "${cache_ddns}"
+        else
+            ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
         fi
 
-        if [[ -n ${ERR_CHK_TIME:-} ]]; then
-            mail_err_service "$EMAIL_ADR"
-        else
+        if [ "$ERR_CHK_TIME" = 0 ]; then
             rm -f "${cache_err}"
+        else
+            mail_err_service
         fi
     else
         rm -f "${cache_err}"
