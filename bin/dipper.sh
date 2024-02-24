@@ -26,8 +26,13 @@ export ERR_CHK_TIME
 
 cache_time_set() {
     if [ "$IP_CACHE_TIME" != 0 ]; then
-        IP_CACHE_TIME_SEC=$(./time_check.sh "ip_time" "$IP_CACHE_TIME")
-        export IP_CACHE_TIME_SEC
+        if [[ "$IP_CACHE_TIME" =~ ^[0-9]+[dhms]$ ]]; then
+            IP_CACHE_TIME_SEC=$(./time_check.sh "ip_time" "$IP_CACHE_TIME")
+            export IP_CACHE_TIME_SEC
+        else
+            ./err_message.sh "sleep" "cache_time_set" "IP_CACHE_TIME=${IP_CACHE_TIME}:無効な形式 例:1d,2h,13m,24s,35: dipper.shをエラー終了しました"
+            exit 1
+        fi
     fi
 }
 
@@ -59,7 +64,7 @@ main() {
 
     cache_time_set
     timer_select
-    ./mail/service.sh
+    ./mail/service.sh &
     dir_check
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do

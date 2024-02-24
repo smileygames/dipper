@@ -68,7 +68,7 @@ main() {
                 if [[ "$UPDATE_TIME" =~ ^[0-9]+[dhms]$ ]]; then
                     wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
                 else
-                    ./err_message.sh "sleep" "ddns_service.sh" "UPDATE_TIME=${UPDATE_TIME}:無効な形式 例:10d,5h,30m,15s: ip update serviceをエラー終了しました"
+                    ./err_message.sh "sleep" "ddns_service.sh" "UPDATE_TIME=${UPDATE_TIME}:無効な形式 例:1d,2h,13m,24s,35: ip update serviceをエラー終了しました"
                     exit 1
                 fi
 
@@ -85,7 +85,7 @@ main() {
                 if [[ "$DDNS_TIME" =~ ^[0-9]+[dhms]$ ]]; then
                     wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
                 else
-                    ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${DDNS_TIME}:無効な形式 例:10d,5h,30m,15s: ip check serviceをエラー終了しました"
+                    ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${DDNS_TIME}:無効な形式 例:1d,2h,13m,24s,35: ip check serviceをエラー終了しました"
                     exit 1
                 fi
 
