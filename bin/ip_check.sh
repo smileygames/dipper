@@ -73,18 +73,16 @@ cache_reset() {
 }
 
 cache_time_check() {
-    local old_time now_time diff_time cache_time_sec
+    local old_time now_time diff_time
 
     # キャッシュファイルのtimeを読み込む
     old_time=$(ip_cache_read "time")
     # 現在のエポック秒を取得
     now_time=$(date +%s)
-
     diff_time=$((now_time - old_time))
-    cache_time_sec=$(./time_check.sh "ip_time" "$IP_CACHE_TIME")
 
     # 経過時間が設定された時間より大きい場合、キャッシュを初期化
-    if ((diff_time > cache_time_sec)); then
+    if ((diff_time > IP_CACHE_TIME_SEC)); then
         cache_reset
     fi
 }

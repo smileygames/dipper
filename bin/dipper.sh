@@ -24,6 +24,13 @@ export EMAIL_CHK_DDNS
 export EMAIL_ADR
 export ERR_CHK_TIME
 
+cache_time_set() {
+    if [ "$IP_CACHE_TIME" != 0 ]; then
+        IP_CACHE_TIME_SEC=$(./time_check.sh "ip_time" "$IP_CACHE_TIME")
+        export IP_CACHE_TIME_SEC
+    fi
+}
+
 # タイマーイベントを選択し、実行する
 timer_select() {
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
@@ -50,6 +57,7 @@ dir_check() {
 main() {
     local exit_code=""
 
+    cache_time_set
     timer_select
     ./mail/service.sh
     dir_check
