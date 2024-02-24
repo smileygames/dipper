@@ -11,7 +11,7 @@ mail_err_service() {
     if [[ "$ERR_CHK_TIME" =~ ^[0-9]+[dhms]$ ]]; then
         wait_time=$(./time_check.sh "error" "$ERR_CHK_TIME")
     else
-        ./err_message.sh "sleep" "mail_service.sh" "ERR_CHK_TIME=${ERR_CHK_TIME}:無効な形式 例:10d,5h,30m,15s: mail_err_serviceを異常終了しました"
+        ./err_message.sh "sleep" "mail_service.sh" "ERR_CHK_TIME=${ERR_CHK_TIME}:無効な形式 例:10d,5h,30m,15s: mail_err_serviceをエラー終了しました"
         exit 1
     fi
 
