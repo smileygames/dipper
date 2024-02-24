@@ -40,7 +40,7 @@ ip_cache_check() {
     fi
 }
 
-ip_check() {
+myip_check() {
     local my_ipv4="" my_ipv6=""
     local exit_code
 
@@ -101,7 +101,7 @@ main() {
     if [ -f "$Cache_File" ]; then
         cache_time_check
     fi
-    ip_adr=$(ip_check)
+    ip_adr=$(myip_check)
     # 出力を空白で分割し、変数に割り当てる
     read -r ipv4_adr ipv6_adr <<< "$ip_adr"
     echo "$ipv4_adr $ipv6_adr" 
