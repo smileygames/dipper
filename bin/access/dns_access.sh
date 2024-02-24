@@ -67,7 +67,7 @@ access() {
     else
         echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
         if [[ "${ip_adr}" != "update!" ]]; then
-            ./cache/count.sh "ddns_mail" "${Service} : domain=${Domain} type=${record} IP=${ip_adr} :time=$(date "+%Y-%m-%d %H:%M:%S")"
+            ./cache/count.sh "ddns_mail" "$(date "+%Y-%m-%d %H:%M:%S")  ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
         fi
     fi
 }

@@ -111,7 +111,7 @@ main() {
         * )
             ;; 
     esac
-    ./cache/count.sh "err_mail" "$Error_Message :time=$(date "+%Y-%m-%d %H:%M:%S")"
+    ./cache/count.sh "err_mail" "$(date "+%Y-%m-%d %H:%M:%S")  $Error_Message"
 }
 
 main
