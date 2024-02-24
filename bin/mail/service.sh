@@ -6,18 +6,18 @@
 
 mail_err_service() {
     local email_adr=$1
-    local check_time=$2
     local wait_time=""
 
-    wait_time=$(./time_check.sh "error" "$check_time")
+    if [[ "$ERR_CHK_TIME" =~ ^[0-9]+[dhms]$ ]]; then
+        wait_time=$(./time_check.sh "error" "$ERR_CHK_TIME")
+    else
+        ./err_message.sh "sleep" "mail_service.sh" "ERR_CHK_TIME=${ERR_CHK_TIME}:無効な形式 例:10d,5h,30m,15s: mail_err_serviceを異常終了しました"
+        exit 1
+    fi
+
     while true;do
         ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$email_adr"
         sleep "$wait_time"
-        exit_code=$?
-        if [ "${exit_code}" != 0 ]; then
-            ./err_message.sh "sleep" "mail_service.sh" "ERR_CHK_TIME=${wait_time}: 無効な時間間隔の為 mail_err_serviceを終了しました"
-            exit 1
-        fi
     done
 }
 
@@ -34,7 +34,7 @@ main() {
             rm -f "${cache_ddns}"
         fi
         if [[ -n ${ERR_CHK_TIME:-} ]]; then
-            mail_err_service "$EMAIL_ADR" "$ERR_CHK_TIME" &
+            mail_err_service "$EMAIL_ADR" &
         else
             rm -f "${cache_err}"
         fi

@@ -36,6 +36,10 @@ ip_adr_read() {
     # 出力を空白で分割し、変数に割り当てる
     read -r ipv4 ipv6 <<< "$ip_adr"
     multi_ddns "$ipv4" "$ipv6"
+
+    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
+        ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
+    fi
 }
 
 # 複数のDDNSサービス用（拡張するときは処理を増やす）
@@ -61,37 +65,34 @@ main() {
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
-                wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
+                if [[ "$UPDATE_TIME" =~ ^[0-9]+[dhms]$ ]]; then
+                    wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
+                else
+                    ./err_message.sh "sleep" "ddns_service.sh" "UPDATE_TIME=${UPDATE_TIME}:無効な形式 例:10d,5h,30m,15s: ip update serviceを異常終了しました"
+                    exit 1
+                fi
 
                 sleep 1m    # 起動から少し待って最初の処理を行う
                 while true;do
                     # IP更新用の処理を設定値に基づいて実行する
                     multi_update
                     sleep "$wait_time"
-                    exit_code=$?
-                    if [ "${exit_code}" != 0 ]; then
-                        ./err_message.sh "sleep" "ddns_service.sh" "UPDATE_TIME=${wait_time}: 無効な時間間隔の為 ip update serviceを終了しました"
-                        exit 1
-                    fi
                 done
             fi
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
-                wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
+                if [[ "$DDNS_TIME" =~ ^[0-9]+[dhms]$ ]]; then
+                    wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
+                else
+                    ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${DDNS_TIME}:無効な形式 例:10d,5h,30m,15s: ip check serviceを異常終了しました"
+                    exit 1
+                fi
 
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
                     ip_adr_read
                     sleep "$wait_time"
-                    exit_code=$?
-                    if [ "${exit_code}" != 0 ]; then
-                        ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${wait_time}: 無効な時間間隔の為 ip check serviceを終了しました"
-                        exit 1
-                    fi
-                    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-                        ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
-                    fi
                 done
             fi
             ;;
