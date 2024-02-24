@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./cache_ip_update.sh
+# ./cache/ip_update.sh
 #
 # ipアドレスキャッシュファイルの作成及び、update処理
 

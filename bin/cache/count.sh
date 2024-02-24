@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./cache_count.sh
+# ./cache/count.sh
 #
 # キャッシュファイルの作成及び、count処理
 

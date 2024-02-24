@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./mail_service.sh
+# ./mail/service.sh
 #
 # エラーメッセージが設定時間に1個以上の場合にメールで通知する
 
