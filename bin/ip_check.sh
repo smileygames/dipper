@@ -7,6 +7,14 @@
 Cache_Dir="../cache"
 Cache_File="${Cache_Dir}/ip_cache"
 
+ip_cache_read() {
+    local ip_date=$1
+    
+    # キャッシュファイルからipアドレスを読み込んで出力
+    ip_cache_date=$(grep "$ip_date:" "$Cache_File" | awk '{print $2}')
+    echo "$ip_cache_date"
+}
+
 cache_reset() {
     echo "time:" > "$Cache_File"
     echo "ipv4:" >> "$Cache_File"
@@ -33,14 +41,6 @@ cache_time_check() {
     else
         rm -f "${Cache_File}"
     fi
-}
-
-ip_cache_read() {
-    local ip_date=$1
-    
-    # キャッシュファイルからipアドレスを読み込んで出力
-    ip_cache_date=$(grep "$ip_date:" "$Cache_File" | awk '{print $2}')
-    echo "$ip_cache_date"
 }
 
 ip_cache_check() {
