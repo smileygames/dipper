@@ -52,7 +52,13 @@ timeout_err_message() {
 # データがないエラー
 no_value_err_message() {
     Error_Message="${Caller}: no value: ${Message}"
-    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
+    logger -p user.err -t "dipper.sh" "${Error_Message}"
+}
+
+# 範囲外の値エラー
+out_range_err_message() {
+    Error_Message="${Caller}: out_range: ${Message}"
+    logger -p user.err -t "dipper.sh" "${Error_Message}"
 }
 
 # curlコマンドエラー
@@ -86,6 +92,9 @@ main() {
             ;;
     "no_value") 
             no_value_err_message
+            ;;
+    "out_range")
+            out_range_err_message
             ;;
     "curl")
             curl_err_message

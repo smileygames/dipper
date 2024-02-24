@@ -15,7 +15,7 @@ Cache_File="${Cache_Dir}/${Cache_Name}"
 new_cache_file() {
     touch "$Cache_File"
     echo "Count: 1" >> "$Cache_File"
-    echo "Message: $Message" >> "$Cache_File"
+    echo "$Message" >> "$Cache_File"
 }
 
 # エラーメッセージ処理が実行されたときのカウントを増やし、メッセージ内容をキャッシュファイルに追加する
@@ -31,7 +31,7 @@ update_cache() {
         # カウントをファイル全体を書き換える形で更新
         sed -i "s/Count: $old_count/Count: $new_count/" "$Cache_File"
         # メッセージをファイルの末尾に追記
-        echo "Message: $Message" >> "$Cache_File"
+        echo "$Message" >> "$Cache_File"
 
     elif [[ -n ${EMAIL_ADR:-} ]]; then
         if [[ -n ${ERR_CHK_TIME:-} ]] || [[ -n ${EMAIL_CHK_DDNS:-} ]]; then

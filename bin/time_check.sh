@@ -39,7 +39,7 @@ time_check_update() {
 
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 180 ]; then
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "3分以下の値[${Time}]が入力された為、[UPDATE_TIME=3m] に変更しました"
+        ./err_message.sh "out_range" "${FUNCNAME[0]}" "3分以下の値[${Time}]が入力された為、[UPDATE_TIME=3m] に変更しました"
         Time=3m
     fi
 }
@@ -49,7 +49,7 @@ time_check_ddns() {
     
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${Time}]が入力された為、[DDNS_TIME=1m] に変更しました"
+        ./err_message.sh "out_range" "${FUNCNAME[0]}" "1分以下の値[${Time}]が入力された為、[DDNS_TIME=1m] に変更しました"
         Time=1m
     fi
 }
@@ -59,7 +59,7 @@ time_check_error() {
     
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 60 ]; then
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "1分以下の値[${Time}]が入力された為、[ERR_CHK_TIME=1m] に変更しました"
+        ./err_message.sh "out_range" "${FUNCNAME[0]}" "1分以下の値[${Time}]が入力された為、[ERR_CHK_TIME=1m] に変更しました"
         Time=1m
     fi
 }
@@ -69,7 +69,7 @@ time_check_ip_time() {
     
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 900 ]; then
-        ./err_message.sh "no_value" "${FUNCNAME[0]}" "15分以下の値[${Time}]が入力された為、[IP_CACHE_TIME=15m] に変更しました"
+        ./err_message.sh "out_range" "${FUNCNAME[0]}" "15分以下の値[${Time}]が入力された為、[IP_CACHE_TIME=15m] に変更しました"
         wait_sec=900
     fi
     Time=$wait_sec
