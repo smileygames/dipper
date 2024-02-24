@@ -64,7 +64,7 @@ time_check_error() {
     fi
 }
 
-time_check_ip_time() {
+time_check_ip() {
     local wait_sec
     
     wait_sec=$(time_sec "$Time")
@@ -91,7 +91,7 @@ main() {
             echo "$Time"
             ;;
     "ip_time")    # IP_CACHE_TIMEを秒数に変換
-            time_check_ip_time
+            time_check_ip
             echo "$Time"
             ;;
         * )
