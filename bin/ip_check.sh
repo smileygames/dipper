@@ -59,7 +59,7 @@ ip_cache_check() {
 }
 
 myip_check() {
-    local my_ipv4="-" my_ipv6="-"
+    local my_ipv4="" my_ipv6=""
     local exit_code
 
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
@@ -67,7 +67,7 @@ myip_check() {
         exit_code=$?
         if [ "${exit_code}" != 0 ]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
-            my_ipv4="-"
+            my_ipv4=""
         fi
     fi
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
@@ -76,7 +76,7 @@ myip_check() {
         exit_code=$?
         if [ "${exit_code}" != 0 ]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
-            my_ipv6="-"
+            my_ipv6=""
         fi
     fi
 
