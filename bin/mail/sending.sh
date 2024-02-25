@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./mail_handle.sh
+# ./mail/sending.sh
 #
 # 変更を検知したらEmailへ通知
 
@@ -16,13 +16,12 @@ Cache_File="${Cache_Dir}/${Cache_Name}"
 send_mail_notification() {
     local exit_code
 
-    echo -e "Subject: ${Sub_Message}\nFrom: $(hostname) <server>\nTo: <${Email_Adr}>\n" | 
+    echo -e "Subject: ${Sub_Message}\nFrom: dipper <server>\nTo: <${Email_Adr}>\n" | 
             cat - "${Cache_File}" > temp && mv temp "${Cache_File}"
     sendmail -t < "${Cache_File}"
     exit_code=$?
 
     if [ "${exit_code}" != 0 ]; then
-        # sendmailコマンドのエラー
         ./err_message.sh "sendmail" "email_ddns_handle.sh" "sendmailコマンドエラー"
     else
         # 中身の内容を削除してCOUNT=0を書き込む(reset処理)

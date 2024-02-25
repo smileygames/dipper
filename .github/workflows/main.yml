@@ -9,12 +9,16 @@ jobs:
     steps:
     - name: Checkout Repository  # リポジトリのチェックアウト
       uses: actions/checkout@v4
+#    - run: npm install -g bats
+#    - run: bats -v
 
     - name: Run Bash Script  # Bashスクリプトを実行します
       working-directory: ./bin  # 実行ディレクトリを/binに変更します
       run: |  # 実行したいBashスクリプトへのパスを指定します
-        bash ./dipper.sh |
-        bash ./ddns_service.sh |
-        bash ./ddns_service.sh "update" |
-        bash ./ddns_service.sh "check"
-        
+        bash dipper.sh
+
+#    - name: Run Bats  # Batsスクリプトを実行します
+#      working-directory: ./bin  # 実行ディレクトリを/binに変更します
+#      run: |  # 実行したいBashスクリプトへのパスを指定します
+#        bats test.bats
+         

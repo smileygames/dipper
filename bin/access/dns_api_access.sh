@@ -24,7 +24,6 @@ ipv_check_api() {
         ipv4_old=$(dig "$Domain" "A" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv4" != "$ipv4_old" ]]; then
-            # バックグラウンドプロセスで実行
             api_access "${FUNCNAME[0]}" "A" "$My_ipv4"
         fi
     fi
@@ -33,7 +32,6 @@ ipv_check_api() {
         ipv6_old=$(dig "$Domain" "AAAA" +short)  # ドメインのアドレスを読み込む
 
         if [[ "$My_ipv6" != "$ipv6_old" ]]; then
-            # バックグラウンドプロセスで実行
             api_access "${FUNCNAME[0]}" "AAAA" "$My_ipv6"
         fi
     fi
@@ -44,13 +42,9 @@ id_accese() {
                    -sS "$Url?name=${Zone}" |
                    jq -r .result[0].id)
 
-#    echo "success zone id: ${Zone_ID} domain=${Zone}"
-
     Domain_ID=$(curl -H "Authorization: Bearer ${API_token}" \
                      -sS "$Url/${Zone_ID}/dns_records?type=${record}&name=${Domain}" |
                      jq -r .result[0].id)
-
-#    echo "success domain id: ${Domain_ID} domain=${Zone}"
 }
 
 api_access() {
@@ -69,12 +63,11 @@ api_access() {
 
     exit_code=$?
     if [ "${exit_code}" != 0 ]; then
-        # curlコマンドのエラー
-        ./err_message.sh "curl" "$func_name" "${Service}_MAIL[$Array_Num]:${Service}_API[$Array_Num]: ${output}"
+        ./err_message.sh "curl" "$func_name" "${Service}[$Array_Num]:: ${output}"
     else
         echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
         if [[ "${ip_adr}" != "update!" ]]; then
-            ./cache_count.sh "ddns_mail" "${Service} : domain=${Domain} type=${record} IP=${ip_adr} :time=$(date "+%Y-%m-%d %H:%M:%S")"
+            ./cache/count.sh "ddns_mail" "$(date "+%Y-%m-%d %H:%M:%S")  ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
         fi
     fi
 }

@@ -13,6 +13,11 @@ if [ -e ${User_File} ]; then
     # shellcheck disable=SC1090
     source "${User_File}"
 fi
+Test_File="${File_dir}/test.conf"
+if [ -e ${Test_File} ]; then
+    # shellcheck disable=SC1090
+    source "${Test_File}"
+fi
 
 # 引数を変数に代入
 Mode=$1
@@ -29,31 +34,16 @@ multi_update() {
     fi
 }
 
-# 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
-ip_check() {
-    local my_ipv4="" my_ipv6=""
-    local exit_code
+ip_adr_read() {
+    local ip_adr
 
-    if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        my_ipv4=$(dig -4 @resolver1.opendns.com myip.opendns.com A +short)  # 自分のアドレスを読み込む
-        exit_code=$?
-        if [ "${exit_code}" != 0 ]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
-            my_ipv4=""
-        fi
-    fi
-    if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        my_ipv6=$(dig -6 @resolver1.opendns.com myip.opendns.com AAAA +short)  # 自分のアドレスを読み込む
-#        my_ipv6=$(ip -o a show scope global up | grep -oP '(?<=inet6 ).+(?=/64 )')  # DNSに負担をかけない方法
-        exit_code=$?
-        if [ "${exit_code}" != 0 ]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
-            my_ipv6=""
-        fi
-    fi
+    ip_adr=$(./ip_check.sh)
+    # 出力を空白で分割し、変数に割り当てる
+    read -r ipv4 ipv6 <<< "$ip_adr"
+    multi_ddns "$ipv4" "$ipv6"
 
-    if [[ $my_ipv4 != "" ]] || [[ $my_ipv6 != "" ]]; then
-        multi_ddns "$my_ipv4" "$my_ipv6"
+    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
+        ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
     fi
 }
 
@@ -67,7 +57,6 @@ multi_ddns() {
         # shellcheck disable=SC1091
         . ./ddns_service/mydns.sh "check" "$my_ipv4" "$my_ipv6"
     fi
-
     # CloudFlareのDDNSのための処理
     if (( "$CloudFlare" )); then
         # shellcheck disable=SC1091
@@ -81,40 +70,34 @@ main() {
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
-                wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
+                if [[ "$UPDATE_TIME" =~ ^[0-9]+[dhms]$ ]]; then
+                    wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
+                else
+                    ./err_message.sh "sleep" "ddns_service.sh" "UPDATE_TIME=${UPDATE_TIME}:無効な形式 例:1d,2h,13m,24s,35: ip update serviceをエラー終了しました"
+                    exit 1
+                fi
 
-#                multi_update   # debug用
-                sleep 1m    # 起動から少し待って最初の処理を行う
+                sleep 30    # 起動から30秒待つ
                 while true;do
                     # IP更新用の処理を設定値に基づいて実行する
                     multi_update
                     sleep "$wait_time"
-                    exit_code=$?
-                    if [ "${exit_code}" != 0 ]; then
-                        ./err_message.sh "sleep" "ddns_service.sh" "UPDATE_TIME=${wait_time}: 無効な時間間隔の為 ip update serviceを終了しました"
-                        exit 1
-                    fi
                 done
             fi
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
-                wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
+                if [[ "$DDNS_TIME" =~ ^[0-9]+[dhms]$ ]]; then
+                    wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
+                else
+                    ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${DDNS_TIME}:無効な形式 例:1d,2h,13m,24s,35: ip check serviceをエラー終了しました"
+                    exit 1
+                fi
 
-#                ip_check   # debug用
                 while true;do
                     # IPチェック用の処理を設定値に基づいて実行する
+                    ip_adr_read
                     sleep "$wait_time"
-                    exit_code=$?
-                    if [ "${exit_code}" != 0 ]; then
-                        ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${wait_time}: 無効な時間間隔の為 ip check serviceを終了しました"
-                        exit 1
-                    fi
-                    ip_check
-                    # Email通知処理
-                    if [[ -n ${EMAIL_CHK_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-                        ./mail_handle.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_CHK_ADR" & 
-                    fi
                 done
             fi
             ;;

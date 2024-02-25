@@ -45,44 +45,44 @@ Message=$3
 
 # タイムアウトエラー
 timeout_err_message() {
-    local error_message
-    error_message="${Caller}: Failed Timeout: ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: Failed Timeout: ${Message}"
+    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
 }
 
 # データがないエラー
 no_value_err_message() {
-    local error_message
-    error_message="${Caller}: no value: ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: no value: ${Message}"
+    logger -p user.err -t "dipper.sh" "${Error_Message}"
+}
+
+# 範囲外の値エラー
+out_range_err_message() {
+    Error_Message="${Caller}: out_range: ${Message}"
+    logger -p user.err -t "dipper.sh" "${Error_Message}"
 }
 
 # curlコマンドエラー
 curl_err_message() {
-    local error_message
-    error_message="${Caller}: curl error : ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: curl error : ${Message}"
+    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
 }
 
 # sendmailコマンドエラー
 sendmail_err_message() {
-    local error_message
-    error_message="${Caller}: sendmail error : ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: sendmail error : ${Message}"
+    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
 }
 
 # バックグラウンドプロセスエラー
 process_err_message() {
-    local error_message
-    error_message="${Caller}: abend error : ${Message}"
-    logger -ip daemon.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: abend error : ${Message}"
+    logger -p daemon.err -t "dipper.sh" "${Error_Message}"
 }
 
 # sleepコマンドエラー
 sleep_err_message() {
-    local error_message
-    error_message="${Caller}: sleep error: ${Message}"
-    logger -ip authpriv.err -t "dipper.sh" "${error_message}"
+    Error_Message="${Caller}: sleep error: ${Message}"
+    logger -p authpriv.err -t "dipper.sh" "${Error_Message}"
 }
 
 main() {
@@ -92,6 +92,9 @@ main() {
             ;;
     "no_value") 
             no_value_err_message
+            ;;
+    "out_range")
+            out_range_err_message
             ;;
     "curl")
             curl_err_message
@@ -108,7 +111,7 @@ main() {
         * )
             ;; 
     esac
-    ./cache_count.sh "err_mail" "$Message :time=$(date "+%Y-%m-%d %H:%M:%S")"
+    ./cache/count.sh "err_mail" "$(date "+%Y-%m-%d %H:%M:%S")  $Error_Message"
 }
 
 main
