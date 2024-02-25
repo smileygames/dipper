@@ -24,22 +24,17 @@ cache_reset() {
 cache_time_check() {
     local old_time now_time diff_time
 
-    if [ "$IP_CACHE_TIME" != 0 ]; then
-        # キャッシュファイルが存在するか確認
-        if [ -f "$Cache_File" ]; then
-            # キャッシュファイルのtimeを読み込む
-            old_time=$(ip_cache_read "time")
-            # 現在のエポック秒を取得
-            now_time=$(date +%s)
-            diff_time=$((now_time - old_time))
+    if [ "$IP_CACHE_TIME" != 0 ] && [ -f "$Cache_File" ]; then
+        # キャッシュファイルのtimeを読み込む
+        old_time=$(ip_cache_read "time")
+        # 現在のエポック秒を取得
+        now_time=$(date +%s)
+        diff_time=$((now_time - old_time))
 
-            # 経過時間が設定された時間より大きい場合、キャッシュを初期化
-            if ((diff_time > IP_CACHE_TIME_SEC)); then
-                cache_reset
-            fi
+        # 経過時間が設定された時間より大きい場合、キャッシュを初期化
+        if ((diff_time > IP_CACHE_TIME_SEC)); then
+            cache_reset
         fi
-    else
-        rm -f "${Cache_File}"
     fi
 }
 

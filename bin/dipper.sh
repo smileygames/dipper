@@ -52,15 +52,36 @@ timer_select() {
         elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
             ./ddns_service.sh "check" &     # DDNSチェックタイマーを開始
         fi
-        ./mail/service.sh &
+
+        if [[ -n ${EMAIL_ADR:-} ]] && [ "$ERR_CHK_TIME" != 0 ]; then
+            ./mail/service.sh &
+        fi
     fi
 }
 
-dir_check() {
+cache_check() {
     local cache_dir="../cache"
-    # ディレクトリの中身をチェック
+    local cache_ddns="${cache_dir}/ddns_mail"
+    local cache_err="${cache_dir}/err_mail"
+    local cache_adr="${cache_dir}/ip_cache"
+
+    if [[ -n ${EMAIL_ADR:-} ]]; then
+        if [ "$EMAIL_CHK_DDNS" != on ]; then
+            rm -f "${cache_ddns}"
+        fi
+        if [ "$ERR_CHK_TIME" = 0 ]; then
+            rm -f "${cache_err}"
+        fi
+    else
+        rm -f "${cache_ddns}" "${cache_err}"
+    fi
+
+    if [ "$IP_CACHE_TIME" = 0 ]; then
+        rm -f "${cache_adr}"
+    fi
+
+     # キャッシュディレクトリ内が空の場合、ディレクトリを削除
     if [ -d "${cache_dir}" ] && [ -z "$(ls -A ${cache_dir})" ]; then
-        # ファイルが存在しない場合、削除
         rm -r "${cache_dir}"
     fi
 }
@@ -70,7 +91,7 @@ main() {
 
     cache_time_set
     timer_select
-    dir_check
+    cache_check
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do
         wait -n
@@ -84,7 +105,7 @@ main() {
             ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             exit 1
         fi
-        sleep 5
+        sleep 10
     done
 }
 

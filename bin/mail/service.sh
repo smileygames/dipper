@@ -20,28 +20,4 @@ mail_err_service() {
     done
 }
 
-# メール通知機能チェック処理
-main() {
-    local cache_dir="../cache"
-    local cache_err="${cache_dir}/err_mail"
-    local cache_ddns="${cache_dir}/ddns_mail"
-
-    if [[ -n ${EMAIL_ADR:-} ]]; then
-        if [ "$EMAIL_CHK_DDNS" != on ]; then
-            rm -f "${cache_ddns}"
-        else
-            ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
-        fi
-
-        if [ "$ERR_CHK_TIME" = 0 ]; then
-            rm -f "${cache_err}"
-        else
-            mail_err_service
-        fi
-    else
-        rm -f "${cache_err}"
-        rm -f "${cache_ddns}"
-    fi
-}
-
-main
+mail_err_service
