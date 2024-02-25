@@ -13,6 +13,11 @@ if [ -e ${User_File} ]; then
     # shellcheck disable=SC1090
     source "${User_File}"
 fi
+Test_File="${File_dir}/test.conf"
+if [ -e ${Test_File} ]; then
+    # shellcheck disable=SC1090
+    source "${Test_File}"
+fi
 
 # 環境変数宣言
 export IPV4
@@ -40,13 +45,14 @@ cache_time_set() {
 timer_select() {
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
         ./ddns_service.sh "update" &    # DDNSアップデートタイマーを開始
-    fi
 
-    if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        ./ddns_service.sh "check" &     # DDNSチェックタイマーを開始
+        if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
+            ./ddns_service.sh "check" &     # DDNSチェックタイマーを開始
 
-    elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        ./ddns_service.sh "check" &     # DDNSチェックタイマーを開始
+        elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
+            ./ddns_service.sh "check" &     # DDNSチェックタイマーを開始
+        fi
+        ./mail/service.sh &
     fi
 }
 
@@ -64,7 +70,6 @@ main() {
 
     cache_time_set
     timer_select
-    ./mail/service.sh &
     dir_check
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do

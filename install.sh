@@ -43,6 +43,7 @@ sudo cp -rv dipper /usr/local/
 sudo rm -rf dipper
 sudo rm -rf /usr/local/dipper/.github
 sudo rm -rf /usr/local/dipper/.vscode
+sudo rm -rf /usr/local/dipper/.test
 sudo rm -f /usr/local/dipper/.gitignore
 
 sudo chmod -R 755 /usr/local/dipper/bin
