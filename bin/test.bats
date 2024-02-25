@@ -166,11 +166,13 @@ run ./ddns_service.sh invalid_argument
 [ "$status" -eq 0 ]
 [ "$output" = "[invalid_argument] <- 引数エラーです" ]
 }
+
 # UPDATE_TIMEの不正な形式をテスト
 @test "ddns_service.sh : UPDATE_TIMEの不正な形式をテスト" {
   up_test "UPDATE_TIME" "invalid_time"
   run ./ddns_service.sh update
   [ "$status" -eq 1 ]
+  re_test
 }
 
 # DDNS_TIMEの不正な形式をテスト
@@ -178,6 +180,7 @@ run ./ddns_service.sh invalid_argument
   up_test "DDNS_TIME" "invalid_time"
   run ./ddns_service.sh check
   [ "$status" -eq 1 ]
+  re_test
 }
 
 
