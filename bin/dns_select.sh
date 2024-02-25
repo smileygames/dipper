@@ -4,21 +4,6 @@
 #
 # DDNSタイマー起動処理
 
-## include file
-File_dir="../config"
-# shellcheck disable=SC1091
-source "${File_dir}/default.conf"
-User_File="${File_dir}/user.conf"
-if [ -e ${User_File} ]; then
-    # shellcheck disable=SC1090
-    source "${User_File}"
-fi
-Test_File="${File_dir}/test.conf"
-if [ -e ${Test_File} ]; then
-    # shellcheck disable=SC1090
-    source "${Test_File}"
-fi
-
 # 引数を変数に代入
 Mode=$1
 # 配列の要素数を変数に代入（DDNSのサービスごと）
@@ -30,7 +15,11 @@ multi_update() {
      # MyDNSのDDNSのための処理
     if (( "$Mydns" )); then
         # shellcheck disable=SC1091
-        . ./ddns_service/mydns.sh "update" "$IPV4" "$IPV6"
+        . ./dns_service/mydns.sh "update"
+    fi
+
+    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${UPDATE_TIME:-} ]]; then
+        ./mail/sending.sh "update_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
     fi
 }
 
@@ -57,50 +46,29 @@ multi_ddns() {
     # MyDNSのDDNSのための処理
     if (( "$Mydns" )); then
         # shellcheck disable=SC1091
-        . ./ddns_service/mydns.sh "check" "$my_ipv4" "$my_ipv6"
+        . ./dns_service/mydns.sh "check" "$my_ipv4" "$my_ipv6"
     fi
     # CloudFlareのDDNSのための処理
     if (( "$CloudFlare" )); then
         # shellcheck disable=SC1091
-        . ./ddns_service/cloudflare.sh "check" "$my_ipv4" "$my_ipv6"
+        . ./dns_service/cloudflare.sh "check" "$my_ipv4" "$my_ipv6"
     fi
 }
 
 main() {
-    local wait_time=""
     # タイマー処理
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
-                if [[ "$UPDATE_TIME" =~ ^[0-9]+[dhms]$ ]]; then
-                    wait_time=$(./time_check.sh "$Mode" "$UPDATE_TIME")
-                else
-                    ./err_message.sh "sleep" "ddns_service.sh" "UPDATE_TIME=${UPDATE_TIME}:無効な形式 例:1d,2h,13m,24s,35: ip update serviceをエラー終了しました"
-                    exit 1
-                fi
-
                 sleep 30    # 起動から30秒待つ
-                while true;do
-                    # IP更新用の処理を設定値に基づいて実行する
-                    multi_update
-                    sleep "$wait_time"
-                done
+                # IP更新用の処理を設定値に基づいて実行する
+                multi_update
             fi
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
-                if [[ "$DDNS_TIME" =~ ^[0-9]+[dhms]$ ]]; then
-                    wait_time=$(./time_check.sh "$Mode" "$DDNS_TIME")
-                else
-                    ./err_message.sh "sleep" "ddns_service.sh" "DDNS_TIME=${DDNS_TIME}:無効な形式 例:1d,2h,13m,24s,35: ip check serviceをエラー終了しました"
-                    exit 1
-                fi
-
-                while true;do
-                    # IPチェック用の処理を設定値に基づいて実行する
-                    ip_adr_read
-                    sleep "$wait_time"
-                done
+                # IPチェック用の処理を設定値に基づいて実行する
+                ip_adr_read
             fi
             ;;
         * )

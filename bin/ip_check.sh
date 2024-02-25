@@ -16,15 +16,20 @@ ip_cache_read() {
 }
 
 cache_reset() {
-    echo "time: $now_time" > "$Cache_File"
+    # 現在のエポック秒を取得
+    current_time=$(date +%s)
+
+    echo "time: $current_time" > "$Cache_File"
     echo "ipv4:" >> "$Cache_File"
     echo "ipv6:" >> "$Cache_File"
 }
 
 cache_time_check() {
-    local old_time now_time diff_time
+    local set_time_sec old_time now_time diff_time
 
     if [ "$IP_CACHE_TIME" != 0 ] && [ -f "$Cache_File" ]; then
+        set_time_sec=$(./time_check.sh "sec_time" "$IP_CACHE_TIME")
+
         # キャッシュファイルのtimeを読み込む
         old_time=$(ip_cache_read "time")
         # 現在のエポック秒を取得
@@ -32,7 +37,7 @@ cache_time_check() {
         diff_time=$((now_time - old_time))
 
         # 経過時間が設定された時間より大きい場合、キャッシュを初期化
-        if ((diff_time > IP_CACHE_TIME_SEC)); then
+        if ((diff_time > set_time_sec)); then
             cache_reset
         fi
     fi

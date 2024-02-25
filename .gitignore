@@ -1,5 +1,5 @@
 /config/user.conf
 /config/test.conf
 /cache
-/cache/ddns_mail
+/cache/ddns_cache
 /cache/err_mail

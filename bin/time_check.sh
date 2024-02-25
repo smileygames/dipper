@@ -70,9 +70,8 @@ time_check_ip() {
     wait_sec=$(time_sec "$Time")
     if [[ ${wait_sec} != "" ]] && [ "$wait_sec" -lt 900 ]; then
         ./err_message.sh "out_range" "${FUNCNAME[0]}" "15分以下の値[${Time}]が入力された為、[IP_CACHE_TIME=15m] に変更しました"
-        wait_sec=900
+        Time=1m
     fi
-    Time=$wait_sec
 }
 
 main() {
@@ -92,6 +91,10 @@ main() {
             ;;
     "ip_time")  # IP_CACHE_TIMEを秒数に変換
             time_check_ip
+            echo "$Time"
+            ;;
+    "sec_time")  # IP_CACHE_TIMEを秒数に変換
+            Time=$(time_sec "$Time")
             echo "$Time"
             ;;
         * )

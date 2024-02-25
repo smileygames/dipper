@@ -15,6 +15,10 @@ Cache_File="${Cache_Dir}/${Cache_Name}"
 new_cache_file() {
     mkdir -p "$Cache_Dir"
     touch "$Cache_File"
+    # 現在のエポック秒を取得
+    current_time=$(date +%s)
+
+    echo "time: $current_time" > "$Cache_File"
     echo "Count: 1" >> "$Cache_File"
     echo "$Message" >> "$Cache_File"
 }
@@ -33,11 +37,8 @@ update_cache() {
         sed -i "s/Count: $old_count/Count: $new_count/" "$Cache_File"
         # メッセージをファイルの末尾に追記
         echo "$Message" >> "$Cache_File"
-
-    elif [[ -n ${EMAIL_ADR:-} ]]; then
-        if [ "$ERR_CHK_TIME" != 0 ] || [ "$EMAIL_CHK_DDNS" = on ]; then
-            new_cache_file
-        fi
+    else
+        new_cache_file
     fi
 }
 
