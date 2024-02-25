@@ -62,11 +62,11 @@ ERR_CHK_TIME=1m
 # それぞれのユーザーに対して、IPv4/IPv6を選択可能、但し、上記のIPvの設定によっては無効になる場合もあり
 
 Num=1  # Number 1個目のドメイン
-MYDNS_ID[1]="mydnsxxxx1"
-MYDNS_PASS[1]="Password1"
-MYDNS_DOMAIN[1]="example.com"
-MYDNS_IPV4[1]=on
-MYDNS_IPV6[1]=off
+MYDNS_ID[1]=
+MYDNS_PASS[1]=
+MYDNS_DOMAIN[1]=
+MYDNS_IPV4[1]=
+MYDNS_IPV6[1]=
 
 #Num=2  # Number 2個目のドメイン
 #MYDNS_ID[2]="mydnsxxxxx2"
@@ -86,12 +86,12 @@ MYDNS_IPV6_URL="https://ipv6.mydns.jp/login.html"
 # CloudFlareのDDNSはIPv4とIPv6に対応
 # IPV6及びIPV6_DDNSの設定のどちらか一方がoffの場合、CloudFlare_IPV6は無効になるので注意です。
 
-#Num=1  # Number 1個目のドメイン
-#CLOUDFLARE_API[1]="User_API_token"
-#CLOUDFLARE_ZONE[1]="example.com"
-#CLOUDFLARE_DOMAIN[1]="example.com,www.example.com"
-#CLOUDFLARE_IPV4[1]=on
-#CLOUDFLARE_IPV6[1]=on
+Num=1  # Number 1個目のドメイン
+CLOUDFLARE_API[1]=
+CLOUDFLARE_ZONE[1]=
+CLOUDFLARE_DOMAIN[1]=
+CLOUDFLARE_IPV4[1]=
+CLOUDFLARE_IPV6[1]=
 
 #Num=2  # Number 2個目のドメイン
 #CLOUDFLARE_API[2]="User_API_token"
@@ -169,6 +169,7 @@ run ./ddns_service.sh invalid_argument
 
 # UPDATE_TIMEの不正な形式をテスト
 @test "ddns_service.sh : UPDATE_TIMEの不正な形式をテスト" {
+  up_test "MYDNS_ID[1]" "mydnsxxxx1"
   up_test "UPDATE_TIME" "invalid_time"
   run ./ddns_service.sh update
   [ "$status" -eq 1 ]
@@ -177,6 +178,7 @@ run ./ddns_service.sh invalid_argument
 
 # DDNS_TIMEの不正な形式をテスト
 @test "ddns_service.sh : DDNS_TIMEの不正な形式をテスト" {
+  up_test "CLOUDFLARE_API[1]" "User_API_token"
   up_test "DDNS_TIME" "invalid_time"
   run ./ddns_service.sh check
   [ "$status" -eq 1 ]
