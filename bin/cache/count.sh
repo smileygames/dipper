@@ -34,7 +34,7 @@ update_cache() {
         echo "$Message" >> "$Cache_File"
 
     elif [[ -n ${EMAIL_ADR:-} ]]; then
-        if [[ -n ${ERR_CHK_TIME:-} ]] || [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
+        if [ "$ERR_CHK_TIME" != 0 ] || [ "$EMAIL_CHK_DDNS" = on ]; then
             mkdir -p "$Cache_Dir"
             new_cache_file
         fi
