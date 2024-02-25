@@ -54,7 +54,7 @@ ip_cache_check() {
 
     if (( "$flag_ip" )); then
         ./cache/ip_update.sh "$new_ipv4" "$new_ipv6"
-        echo "${new_ipv4}-${new_ipv6}"
+        echo "${new_ipv4} ${new_ipv6}"
     fi
 }
 
@@ -82,7 +82,7 @@ myip_check() {
 
     if [[ $my_ipv4 != "" ]] || [[ $my_ipv6 != "" ]]; then
         if [ "$IP_CACHE_TIME" != 0 ]; then
-            ip_cache_check "${my_ipv4}" "{$my_ipv6}"
+            ip_cache_check "$my_ipv4" "$my_ipv6"
         else
             echo "${my_ipv4} ${my_ipv6}"
         fi
