@@ -10,6 +10,7 @@ Mode=$1
 Mydns=${#MYDNS_ID[@]}
 CloudFlare=${#CLOUDFLARE_API[@]}
 
+
 # IPv4とIPv6でアクセスする
 multi_update() {
      # MyDNSのDDNSのための処理
@@ -19,7 +20,7 @@ multi_update() {
     fi
 
     if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${UPDATE_TIME:-} ]]; then
-        ./mail/sending.sh "update_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
+        ./mail/sending.sh "update_cache" "IPアドレスを更新しました <$(hostname)>" "$EMAIL_ADR"
     fi
 }
 
@@ -34,7 +35,7 @@ ip_adr_read() {
     multi_ddns "$ipv4" "$ipv6"
 
     if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-        ./mail/sending.sh "ddns_mail" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
+        ./mail/sending.sh "ddns_cache" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
     fi
 }
 
@@ -60,7 +61,7 @@ main() {
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
-                sleep 30    # 起動から30秒待つ
+#                sleep 30    # 起動から30秒待つ
                 # IP更新用の処理を設定値に基づいて実行する
                 multi_update
             fi

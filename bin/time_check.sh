@@ -74,6 +74,10 @@ time_check_ip() {
     fi
 }
 
+sec_time_cnv() {
+    Time=$(time_sec "$Time")
+}
+
 main() {
     # 実行スクリプト
     case ${Mode} in
@@ -94,7 +98,7 @@ main() {
             echo "$Time"
             ;;
     "sec_time")  # IP_CACHE_TIMEを秒数に変換
-            Time=$(time_sec "$Time")
+            sec_time_cnv
             echo "$Time"
             ;;
         * )

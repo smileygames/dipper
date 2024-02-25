@@ -52,35 +52,50 @@ cache_time_multi() {
     ERR_CHK_TIME=$(cache_time_set "error" "ERR_CHK_TIME" "$ERR_CHK_TIME")
 }
 
+err_process() {
+    local exit_code=$1
+    local process_name=$2
+
+    if [ "$exit_code" != 0 ]; then
+        ./err_message.sh "process" "dipper.sh" "endcode=${exit_code}  ${process_name}プロセスが異常終了した為、強制終了しました"
+        ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+        exit 1
+    fi
+}
+
 # タイマーイベントを選択し、実行する
 timer_select() {
     local run_on
 
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
-            run_on=$(cache_time_check "update_cache" "$UPDATE_TIME")
+            run_on=$(cache_time_check "../cache/update_cache" "$UPDATE_TIME")
             if [ "$run_on" = on ]; then
                 # shellcheck disable=SC1091
                 . ./dns_select.sh "update" &        # DNSアップデートを開始
+                err_process "$?"
             fi
 
             if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-                run_on=$(cache_time_check "ddns_cache" "$DDNS_TIME")
+                run_on=$(cache_time_check "../cache/ddns_cache" "$DDNS_TIME")
                 if [ "$run_on" = on ]; then
                     # shellcheck disable=SC1091
                     . ./dns_select.sh "check" &     # DNSチェックを開始
+                    err_process "$?"
                 fi
             elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-                run_on=$(cache_time_check "ddns_cache" "$DDNS_TIME")
+                run_on=$(cache_time_check "../cache/ddns_cache" "$DDNS_TIME")
                 if [ "$run_on" = on ]; then
                     # shellcheck disable=SC1091
                     . ./dns_select.sh "check" &     # DNSチェックを開始
+                    err_process "$?"
                 fi
             fi
 
             if [[ -n ${EMAIL_ADR:-} ]] && [ "$ERR_CHK_TIME" != 0 ]; then
-                run_on=$(cache_time_check "err_mail" "$ERR_CHK_TIME")
+                run_on=$(cache_time_check "../cache/err_mail" "$ERR_CHK_TIME")
                 if [ "$run_on" = on ]; then
                     ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR" &
+                    err_process "$?"
                 fi
             fi
     fi
@@ -114,12 +129,12 @@ cache_check() {
 }
 
 ip_cache_read() {
-    local cache_file=$1
-    local ip_date=$1
+    local date_namee=$1
+    local cache_file=$2
 
     # キャッシュファイルからipアドレスを読み込んで出力
-    ip_cache_date=$(grep "$ip_date:" "$cache_file" | awk '{print $2}')
-    echo "$ip_cache_date"
+    cachet_ime=$(grep "${date_namee}:" "$cache_file" | awk '{print $2}')
+    echo "$cachet_ime"
 }
 
 cache_reset() {
@@ -128,7 +143,7 @@ cache_reset() {
     current_time=$(date +%s)
 
     echo "time: $current_time" > "$cache_file"
-    echo "Count:" >> "$cache_file"
+    echo "Count: 0" >> "$cache_file"
 }
 
 cache_time_check() {
@@ -137,10 +152,10 @@ cache_time_check() {
     local set_time_sec old_time now_time diff_time
 
     if [ "$set_time" != 0 ] && [ -f "$cache_file" ]; then
-        set_time_sec=$(./time_check.sh "$cache_file" "sec_time")
+        set_time_sec=$(./time_check.sh "sec_time" "$set_time")
 
         # キャッシュファイルのtimeを読み込む
-        old_time=$(ip_cache_read "$cache_file" "time")
+        old_time=$(ip_cache_read "time" "$cache_file")
         # 現在のエポック秒を取得
         now_time=$(date +%s)
         diff_time=$((now_time - old_time))
@@ -163,20 +178,8 @@ main() {
     cache_check
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do
-        timer_select
-
-        wait -n
-        exit_code=$?
-        if [ "$exit_code" = 127 ]; then
-            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスが全て終了しました"
-            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
-            exit 0
-        elif [ "$exit_code" != 0 ]; then
-            ./err_message.sh "process" "dipper.sh" "endcode=$exit_code  プロセスのどれかが異常終了した為、強制終了しました"
-            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
-            exit 1
-        fi
         sleep 10
+        timer_select
     done
 }
 
