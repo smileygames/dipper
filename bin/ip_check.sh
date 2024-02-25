@@ -16,7 +16,7 @@ ip_cache_read() {
 }
 
 cache_reset() {
-    echo "time:" > "$Cache_File"
+    echo "time: $now_time" > "$Cache_File"
     echo "ipv4:" >> "$Cache_File"
     echo "ipv6:" >> "$Cache_File"
 }
