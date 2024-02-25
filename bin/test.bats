@@ -61,19 +61,19 @@ ERR_CHK_TIME=1m
 # 例はコメントアウトされているので、先頭の # を外してID等を変更して使用してください
 # それぞれのユーザーに対して、IPv4/IPv6を選択可能、但し、上記のIPvの設定によっては無効になる場合もあり
 
-#Num=1  # Number 1個目のドメイン
-#MYDNS_ID[$Num]="mydnsxxxx1"
-#MYDNS_PASS[$Num]="Password1"
-#MYDNS_DOMAIN[$Num]="example.com"
-#MYDNS_IPV4[$Num]=on
-#MYDNS_IPV6[$Num]=off
+Num=1  # Number 1個目のドメイン
+MYDNS_ID[1]="mydnsxxxx1"
+MYDNS_PASS[1]="Password1"
+MYDNS_DOMAIN[1]="example.com"
+MYDNS_IPV4[1]=on
+MYDNS_IPV6[1]=off
 
 #Num=2  # Number 2個目のドメイン
-#MYDNS_ID[$Num]="mydnsxxxxx2"
-#MYDNS_PASS[$Num]="Password2"
-#MYDNS_DOMAIN[$Num]="example2.com"
-#MYDNS_IPV4[$Num]=on
-#MYDNS_IPV6[$Num]=off
+#MYDNS_ID[2]="mydnsxxxxx2"
+#MYDNS_PASS[2]="Password2"
+#MYDNS_DOMAIN[2]="example2.com"
+#MYDNS_IPV4[2]=on
+#MYDNS_IPV6[2]=off
 
 # MyDNS Login URL
 MYDNS_IPV4_URL="https://ipv4.mydns.jp/login.html"
@@ -87,18 +87,18 @@ MYDNS_IPV6_URL="https://ipv6.mydns.jp/login.html"
 # IPV6及びIPV6_DDNSの設定のどちらか一方がoffの場合、CloudFlare_IPV6は無効になるので注意です。
 
 #Num=1  # Number 1個目のドメイン
-#CLOUDFLARE_API[$Num]="User_API_token"
-#CLOUDFLARE_ZONE[$Num]="example.com"
-#CLOUDFLARE_DOMAIN[$Num]="example.com,www.example.com"
-#CLOUDFLARE_IPV4[$Num]=on
-#CLOUDFLARE_IPV6[$Num]=on
+#CLOUDFLARE_API[1]="User_API_token"
+#CLOUDFLARE_ZONE[1]="example.com"
+#CLOUDFLARE_DOMAIN[1]="example.com,www.example.com"
+#CLOUDFLARE_IPV4[1]=on
+#CLOUDFLARE_IPV6[1]=on
 
 #Num=2  # Number 2個目のドメイン
-#CLOUDFLARE_API[$Num]="User_API_token"
-#CLOUDFLARE_ZONE[$Num]="example2.com"
-#CLOUDFLARE_DOMAIN[$Num]="example2.com"
-#CLOUDFLARE_IPV4[$Num]=on
-#CLOUDFLARE_IPV6[$Num]=off
+#CLOUDFLARE_API[2]="User_API_token"
+#CLOUDFLARE_ZONE[2]="example2.com"
+#CLOUDFLARE_DOMAIN[2]="example2.com"
+#CLOUDFLARE_IPV4[2]=on
+#CLOUDFLARE_IPV6[2]=off
 
 # CloudFlare Login URL
 CLOUDFLARE_URL="https://api.cloudflare.com/client/v4/zones"
