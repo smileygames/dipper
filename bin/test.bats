@@ -155,11 +155,31 @@ run re_test
   re_test
 }
 
+@test "ddns_service.sh : main関数の引数無しチェック" {
+run ./ddns_service.sh
+[ "$status" -eq 0 ]
+[ "$output" = "[] <- 引数エラーです" ]
+}
+
 @test "ddns_service.sh : main関数の引数チェック - 不正な引数" {
 run ./ddns_service.sh invalid_argument
 [ "$status" -eq 0 ]
 [ "$output" = "[invalid_argument] <- 引数エラーです" ]
 }
+# UPDATE_TIMEの不正な形式をテスト
+@test "ddns_service.sh : UPDATE_TIMEの不正な形式をテスト" {
+  up_test "UPDATE_TIME" "invalid_time"
+  run ./ddns_service.sh update
+  [ "$status" -eq 1 ]
+}
+
+# DDNS_TIMEの不正な形式をテスト
+@test "ddns_service.sh : DDNS_TIMEの不正な形式をテスト" {
+  up_test "DDNS_TIME" "invalid_time"
+  run ./ddns_service.sh check
+  [ "$status" -eq 1 ]
+}
+
 
 @test "最後にテスト用の設定ファイル削除" {
 run rm -f $Test_File
