@@ -84,7 +84,7 @@ main() {
             ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             exit 1
         fi
-        sleep 10
+        sleep 5
     done
 }
 
