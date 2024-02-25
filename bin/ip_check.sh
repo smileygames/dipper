@@ -54,12 +54,12 @@ ip_cache_check() {
 
     if (( "$flag_ip" )); then
         ./cache/ip_update.sh "$new_ipv4" "$new_ipv6"
-        echo "${new_ipv4} ${new_ipv6}"
+        echo "${new_ipv4}-${new_ipv6}"
     fi
 }
 
 myip_check() {
-    local my_ipv4="" my_ipv6=""
+    local my_ipv4="-" my_ipv6="-"
     local exit_code
 
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
@@ -67,7 +67,7 @@ myip_check() {
         exit_code=$?
         if [ "${exit_code}" != 0 ]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
-            my_ipv4=""
+            my_ipv4="-"
         fi
     fi
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
@@ -76,13 +76,13 @@ myip_check() {
         exit_code=$?
         if [ "${exit_code}" != 0 ]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
-            my_ipv6=""
+            my_ipv6="-"
         fi
     fi
 
     if [[ $my_ipv4 != "" ]] || [[ $my_ipv6 != "" ]]; then
         if [ "$IP_CACHE_TIME" != 0 ]; then
-            ip_cache_check "$my_ipv4" "$my_ipv6"
+            ip_cache_check "${my_ipv4}" "{$my_ipv6}"
         else
             echo "${my_ipv4} ${my_ipv6}"
         fi
@@ -95,8 +95,9 @@ main() {
     cache_time_check
     ip_adr=$(myip_check)
     # 出力を空白で分割し、変数に割り当てる
-    read -r ipv4_adr ipv6_adr <<< "$ip_adr"
-    echo "$ipv4_adr $ipv6_adr" 
+    read -r ipv4_adr <<< "${ip_adr%% *}"  # 最初の空白までを IPv4 アドレスとして読み込む
+    read -r ipv6_adr <<< "${ip_adr#* }"   # 最初の空白以降を IPv6 アドレスとして読み込む
+    echo "${ipv4_adr} ${ipv6_adr}" 
 }
 
 main

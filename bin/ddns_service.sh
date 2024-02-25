@@ -39,7 +39,9 @@ ip_adr_read() {
 
     ip_adr=$(./ip_check.sh)
     # 出力を空白で分割し、変数に割り当てる
-    read -r ipv4 ipv6 <<< "$ip_adr"
+    read -r ipv4 <<< "${ip_adr%% *}"  # 最初の空白までを IPv4 アドレスとして読み込む
+    read -r ipv6 <<< "${ip_adr#* }"   # 最初の空白以降を IPv6 アドレスとして読み込む
+
     multi_ddns "$ipv4" "$ipv6"
 
     if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
