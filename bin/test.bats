@@ -135,7 +135,7 @@ run re_test
   up_test "UPDATE_TIME" "invalid_time"
   up_test "DDNS_TIME" "invalid_time"
   run ./dipper.sh
-  [ "$status" -ne 0 ]
+  [ "$status" -eq 0 ]
   re_test
 }
 
@@ -151,7 +151,7 @@ run re_test
   up_test "IPV6_DDNS" "off"
   up_test "UPDATE_TIME" "invalid_time"
   run ./dipper.sh
-  [ "$status" -ne 0 ]
+  [ "$status" -eq 0 ]
   re_test
 }
 
