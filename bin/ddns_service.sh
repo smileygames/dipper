@@ -72,7 +72,7 @@ main() {
                     exit 1
                 fi
 
-                sleep 1m    # 起動から少し待って最初の処理を行う
+                sleep 30    # 起動から30秒待つ
                 while true;do
                     # IP更新用の処理を設定値に基づいて実行する
                     multi_update
