@@ -15,6 +15,8 @@ Cache_File="${Cache_Dir}/ip_cache"
 new_ip_cache_file() {
     local current_time
 
+    mkdir -p "$Cache_Dir"
+    touch "$Cache_File"
     # 現在のエポック秒を取得
     current_time=$(date +%s)
 
@@ -32,8 +34,6 @@ ip_update_cache() {
 
     # キャッシュファイルが存在しない場合、新しいファイルを作成する
     elif [ "$IP_CACHE_TIME" != 0 ]; then
-        mkdir -p "$Cache_Dir"
-        touch "$Cache_File"
         new_ip_cache_file
     fi
 }

@@ -13,6 +13,7 @@ Cache_File="${Cache_Dir}/${Cache_Name}"
 
 # キャッシュファイル作成
 new_cache_file() {
+    mkdir -p "$Cache_Dir"
     touch "$Cache_File"
     echo "Count: 1" >> "$Cache_File"
     echo "$Message" >> "$Cache_File"
@@ -35,7 +36,6 @@ update_cache() {
 
     elif [[ -n ${EMAIL_ADR:-} ]]; then
         if [ "$ERR_CHK_TIME" != 0 ] || [ "$EMAIL_CHK_DDNS" = on ]; then
-            mkdir -p "$Cache_Dir"
             new_cache_file
         fi
     fi
