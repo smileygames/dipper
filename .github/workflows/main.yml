@@ -15,10 +15,10 @@ jobs:
     - name: Run Bash Script  # Bashスクリプトを実行します
       working-directory: ./bin  # 実行ディレクトリを/binに変更します
       run: |  # 実行したいBashスクリプトへのパスを指定します
-        bash ./dipper.sh
+        bash dipper.sh
 
     - name: Run Bats  # Batsスクリプトを実行します
       working-directory: ./bin  # 実行ディレクトリを/binに変更します
       run: |  # 実行したいBashスクリプトへのパスを指定します
-        bats ./test.bats
+        bats test.bats
          
