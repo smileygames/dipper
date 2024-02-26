@@ -117,7 +117,7 @@ main() {
     ./cache/time_initial.sh
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do
-        sleep 10
+        sleep 1
         timer_select
     done
 }

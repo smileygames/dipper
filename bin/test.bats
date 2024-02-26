@@ -22,36 +22,20 @@ EMAIL_UP_DDNS=off
 EMAIL_CHK_DDNS=off
 EMAIL_ADR=
 
-Num=1  # Number 1個目のドメイン
-MYDNS_ID[1]=""
-MYDNS_PASS[1]=""
-MYDNS_DOMAIN[1]=""
-MYDNS_IPV4[1]=""
-MYDNS_IPV6[1]=""
-
-#Num=2  # Number 2個目のドメイン
-#MYDNS_ID[2]="mydnsxxxxx2"
-#MYDNS_PASS[2]="Password2"
-#MYDNS_DOMAIN[2]="example2.com"
-#MYDNS_IPV4[2]=on
-#MYDNS_IPV6[2]=off
+MYDNS_ID=()
+MYDNS_PASS=()
+MYDNS_DOMAIN=()
+MYDNS_IPV4=()
+MYDNS_IPV6=()
 
 MYDNS_IPV4_URL="https://ipv4.mydns.jp/login.html"
 MYDNS_IPV6_URL="https://ipv6.mydns.jp/login.html"
 
-Num=1  # Number 1個目のドメイン
-CLOUDFLARE_API[1]=""
-CLOUDFLARE_ZONE[1]=""
-CLOUDFLARE_DOMAIN[1]=""
-CLOUDFLARE_IPV4[1]=""
-CLOUDFLARE_IPV6[1]=""
-
-#Num=2  # Number 2個目のドメイン
-#CLOUDFLARE_API[2]="User_API_token"
-#CLOUDFLARE_ZONE[2]="example2.com"
-#CLOUDFLARE_DOMAIN[2]="example2.com"
-#CLOUDFLARE_IPV4[2]=on
-#CLOUDFLARE_IPV6[2]=off
+CLOUDFLARE_API=()
+CLOUDFLARE_ZONE=()
+CLOUDFLARE_DOMAIN=()
+CLOUDFLARE_IPV4=()
+CLOUDFLARE_IPV6=()
 
 CLOUDFLARE_URL="https://api.cloudflare.com/client/v4/zones"
 EOF
@@ -103,32 +87,34 @@ up_test() {
   [ "$status" -eq 1 ]
 }
 
-#@test "dns_select.sh : main関数の引数無しチェック" {
-#  run MYDNS_ID[1]="mydnsxxxx1" ./dns_select.sh
-#  [ "$output" = "[] <- 引数エラーです" ]
-#"}
+@test "dns_select.sh : main関数の引数無しチェック" {
+  up_test "MYDNS_ID" "(mydnsxxxx1)"
+  run ./dns_select.sh
+  [ "$output" = "[] <- 引数エラーです" ]
+  re_test
+}
 
-#@test "dns_select.sh : main関数の引数チェック - 不正な引数" {
-#  up_test "MYDNS_ID[1]" "mydnsxxxx1"
-#  run ./dns_select.sh invalid_argument
-#  [ "$status" -eq 0 ]
-#  [ "$output" = "[invalid_argument] <- 引数エラーです" ]
-#  re_test
-#}
+@test "dns_select.sh : main関数の引数チェック - 不正な引数" {
+  up_test "MYDNS_ID" "(mydnsxxxx1)"
+  run ./dns_select.sh invalid_argument
+  [ "$status" -eq 0 ]
+  [ "$output" = "[invalid_argument] <- 引数エラーです" ]
+  re_test
+}
 
-#@test "dns_select.sh : update処理の正常終了チェック" {
-#  up_test "MYDNS_ID[1]" "mydnsxxxx1"
-#  run ./dns_select.sh update
-#  [ "$status" -eq 0 ]
-#  re_test
-#}
+@test "dns_select.sh : update処理の正常終了チェック" {
+  up_test "MYDNS_ID" "(mydnsxxxx1)"
+  run ./dns_select.sh update
+  [ "$status" -eq 0 ]
+  re_test
+}
 
-#@test "dns_select.sh : check処理の正常終了チェック" {
-#  up_test "CLOUDFLARE_API[1]" "User_API_token"
-#  run ./dns_select.sh check
-#  [ "$status" -eq 0 ]
-#  re_test
-#}
+@test "dns_select.sh : check処理の正常終了チェック" {
+  up_test "CLOUDFLARE_API" "(User_API_token)"
+  run ./dns_select.sh check
+  [ "$status" -eq 0 ]
+  re_test
+}
 
 
 @test "最後にテスト用の設定ファイル削除" {

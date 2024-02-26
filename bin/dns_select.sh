@@ -4,15 +4,18 @@
 #
 # DDNSタイマー起動処理
 
+## include file
+Test_File="../config/test.conf"
+if [ -e ${Test_File} ]; then
+    # shellcheck disable=SC1090
+    source "${Test_File}"
+fi
+
 # 引数を変数に代入
 Mode=$1
 # 配列の要素数を変数に代入（DDNSのサービスごと）
 Mydns=${#MYDNS_ID[@]}
 CloudFlare=${#CLOUDFLARE_API[@]}
-# 全てのDNSサービスに値が何もない場合の処理
-if (( !Mydns && !CloudFlare )); then
-    exit 1
-fi
 
 # IPv4とIPv6でアクセスする
 multi_update() {
@@ -65,6 +68,11 @@ ip_adr_read() {
 }
 
 main() {
+    # 全てのDNSサービスに値が何もない場合の処理
+    if (( !"$Mydns" && !"$CloudFlare" )); then
+        exit 1
+    fi
+
     # タイマー処理
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
