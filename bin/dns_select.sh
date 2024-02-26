@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./ddns_select.sh
+# ./dns_select.sh
 #
 # DDNSタイマー起動処理
 
@@ -10,7 +10,7 @@ Mode=$1
 Mydns=${#MYDNS_ID[@]}
 CloudFlare=${#CLOUDFLARE_API[@]}
 # 全てのDNSサービスに値が何もない場合の処理
-if [[ -z "$Mydns" && -z "$CloudFlare" ]]; then
+if (( !Mydns && !CloudFlare )); then
     exit 1
 fi
 
