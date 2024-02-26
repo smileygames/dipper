@@ -4,7 +4,7 @@
 #
 # DDNSタイマー起動処理
 
-## include file
+## test用
 Test_File="../config/test.conf"
 if [ -e ${Test_File} ]; then
     # shellcheck disable=SC1090
