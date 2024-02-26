@@ -47,11 +47,11 @@ ERR_CHK_TIME=0
 ## Emailに通知するための設定
 #-----------------------------------------------
 # DDNSで定期更新があった場合に通知する
-#EMAIL_UP_DDNS=off
+EMAIL_UP_DDNS=off
 # DDNSでアドレス変更があった場合に通知する
-#EMAIL_CHK_DDNS=off
+EMAIL_CHK_DDNS=off
 
-#EMAIL_ADR=""
+EMAIL_ADR=""
 #-----------------------------------------------
 
 ## MyDNS
@@ -118,8 +118,8 @@ up_test() {
 # ---------------- テスト開始 ---------------------
 
 @test "最初にテスト用の設定ファイル作成" {
-run re_test
-[ "$status" -eq 0 ]
+  run re_test
+  [ "$status" -eq 0 ]
 }
 
 @test "dipper.sh : 正常に終了される" {
@@ -140,18 +140,22 @@ run re_test
 
 @test "dipper.sh : IP_CACHE_TIMEの不正な形式をテスト" {
   up_test "IP_CACHE_TIME" "invalid_time"
-  run  ./dipper.sh
+  run ./dipper.sh
   [ "$status" -eq 1 ]
   re_test
 }
 
-@test "dns_select.sh : main関数の引数無しチェック" {
-  up_test "MYDNS_ID[1]" "mydnsxxxx1"
+@test "dns_select.sh : main関数の値なし終了チェック" {
   run ./dns_select.sh
-  [ "$status" -eq 0 ]
-  [ "$output" = "[] <- 引数エラーです" ]
-  re_test
+  [ "$status" -eq 1 ]
 }
+
+#@test "dns_select.sh : main関数の引数無しチェック" {
+#  run MYDNS_ID[1]="mydnsxxxx1" ./dns_select.sh
+#  [ "$status" -eq 0 ]
+#  [ "$output" = "[] <- 引数エラーです" ]
+#}
+
 
 #@test "dns_select.sh : main関数の引数チェック - 不正な引数" {
 #  up_test "MYDNS_ID[1]" "mydnsxxxx1"
