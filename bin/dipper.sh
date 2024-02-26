@@ -35,7 +35,7 @@ cache_time_set() {
     local cache_time=$3
 
     if [ "$cache_time" != 0 ]; then
-        if [[ "$cache_time" =~ ^[0-9]+[dhms]$ ]]; then
+        if [[ "$cache_time" =~ ^[0-9]+[0-9]*[dhms]?$ ]]; then
             ./time_check.sh "$mode" "$cache_time"
         else
             ./err_message.sh "sleep" "cache_time_set" "$cache_time_name=${cache_time}:無効な形式 例:1d,2h,13m,24s,35: dipper.shをエラー終了しました"

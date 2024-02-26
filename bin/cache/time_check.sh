@@ -16,14 +16,6 @@ ip_cache_read() {
     echo "$cachet_time"
 }
 
-cache_reset() {
-    # 現在のエポック秒を取得
-    current_time=$(date +%s)
-
-    echo "time: $current_time" > "$Cache_File"
-    echo "Count: 0" >> "$Cache_File"
-}
-
 cache_time_check() {
     local set_time_sec old_time now_time diff_time
 
@@ -37,7 +29,6 @@ cache_time_check() {
         diff_time=$((now_time - old_time))
         # 経過時間が設定された時間より大きい場合、キャッシュを初期化
         if ((diff_time > set_time_sec)); then
-            cache_reset
             echo "on"
         else
             echo "off"
