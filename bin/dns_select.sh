@@ -19,7 +19,7 @@ multi_update() {
         . ./dns_service/mydns.sh "update"
     fi
 
-    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${UPDATE_TIME:-} ]]; then
+    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_UP_DDNS:-} ]]; then
         ./mail/sending.sh "update_cache" "IPアドレスを更新しました <$(hostname)>" "$EMAIL_ADR"
     fi
 }

@@ -24,7 +24,7 @@ export IPV4
 export IPV4_DDNS
 export IPV6
 export IPV6_DDNS
-export IP_CACHE_TIME
+export EMAIL_UP_DDNS
 export EMAIL_CHK_DDNS
 export EMAIL_ADR
 export ERR_CHK_TIME
@@ -33,24 +33,23 @@ cache_time_set() {
     local mode=$1
     local cache_time_name=$2
     local cache_time=$3
-    local cache_time_name cache_time
 
-    if [ "$cache_time" != 0 ]; then
-        if [[ "$cache_time" =~ ^[0-9]+[dhms]$ ]]; then
+    if [ "$cache_time" != 0 ] && [[ "$cache_time" =~ ^[0-9]+[dhms]$ ]]; then
             ./time_check.sh "$mode" "$cache_time"
-        else
-            ./err_message.sh "sleep" "cache_time_set" "$cache_time_name=${cache_time}:無効な形式 例:1d,2h,13m,24s,35: dipper.shをエラー終了しました"
-            exit 1
-        fi
+    else
+        ./err_message.sh "sleep" "cache_time_set" "$cache_time_name=${cache_time}:無効な形式 例:1d,2h,13m,24s,35: dipper.shをエラー終了しました"
+        exit 1
     fi
 }
 
-cache_time_multi() {
-    IP_CACHE_TIME=$(cache_time_set "ip_time" "IP_CACHE_TIME" "$IP_CACHE_TIME")
-    UPDATE_TIME=$(cache_time_set "update" "UPDATE_TIME" "$UPDATE_TIME")
-    DDNS_TIME=$(cache_time_set "check" "DDNS_TIME" "$DDNS_TIME")
-    ERR_CHK_TIME=$(cache_time_set "error" "ERR_CHK_TIME" "$ERR_CHK_TIME")
-}
+IP_CACHE_TIME=$(cache_time_set "ip_time" "IP_CACHE_TIME" "$IP_CACHE_TIME")
+UPDATE_TIME=$(cache_time_set "update" "UPDATE_TIME" "$UPDATE_TIME")
+DDNS_TIME=$(cache_time_set "check" "DDNS_TIME" "$DDNS_TIME")
+ERR_CHK_TIME=$(cache_time_set "error" "ERR_CHK_TIME" "$ERR_CHK_TIME")
+export IP_CACHE_TIME
+export UPDATE_TIME
+export DDNS_TIME
+export ERR_CHK_TIME
 
 err_process() {
     local exit_code=$1
@@ -65,117 +64,49 @@ err_process() {
 
 # タイマーイベントを選択し、実行する
 timer_select() {
+    local cache_dir="../cache"
+    local cache_update="${cache_dir}/update_cache"
+    local cache_ddns="${cache_dir}/ddns_cache"
+    local cache_err="${cache_dir}/err_mail"
     local run_on
 
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
-            run_on=$(cache_time_check "../cache/update_cache" "$UPDATE_TIME")
+            run_on=$(./cache/time_check.sh "$cache_update" "$UPDATE_TIME")
             if [ "$run_on" = on ]; then
                 # shellcheck disable=SC1091
-                . ./dns_select.sh "update" &        # DNSアップデートを開始
+                . ./dns_select.sh "update"      # DNSアップデートを開始
                 err_process "$?"
             fi
-
             if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-                run_on=$(cache_time_check "../cache/ddns_cache" "$DDNS_TIME")
+                run_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
                 if [ "$run_on" = on ]; then
                     # shellcheck disable=SC1091
-                    . ./dns_select.sh "check" &     # DNSチェックを開始
+                    . ./dns_select.sh "check"   # DNSチェックを開始
                     err_process "$?"
                 fi
             elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-                run_on=$(cache_time_check "../cache/ddns_cache" "$DDNS_TIME")
+                run_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
                 if [ "$run_on" = on ]; then
                     # shellcheck disable=SC1091
-                    . ./dns_select.sh "check" &     # DNSチェックを開始
+                    . ./dns_select.sh "check"   # DNSチェックを開始
                     err_process "$?"
                 fi
             fi
 
             if [[ -n ${EMAIL_ADR:-} ]] && [ "$ERR_CHK_TIME" != 0 ]; then
-                run_on=$(cache_time_check "../cache/err_mail" "$ERR_CHK_TIME")
+                run_on=$(./cache/time_check.sh "$cache_err" "$ERR_CHK_TIME")
                 if [ "$run_on" = on ]; then
-                    ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR" &
+                    ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
                     err_process "$?"
                 fi
             fi
-    fi
-}
-
-cache_check() {
-    local cache_dir="../cache"
-    local cache_ddns="${cache_dir}/ddns_mail"
-    local cache_err="${cache_dir}/err_mail"
-    local cache_adr="${cache_dir}/ip_cache"
-
-    if [[ -n ${EMAIL_ADR:-} ]]; then
-        if [ "$EMAIL_CHK_DDNS" != on ]; then
-            rm -f "${cache_ddns}"
-        fi
-        if [ "$ERR_CHK_TIME" = 0 ]; then
-            rm -f "${cache_err}"
-        fi
-    else
-        rm -f "${cache_ddns}" "${cache_err}"
-    fi
-
-    if [ "$IP_CACHE_TIME" = 0 ]; then
-        rm -f "${cache_adr}"
-    fi
-
-     # キャッシュディレクトリ内が空の場合、ディレクトリを削除
-    if [ -d "${cache_dir}" ] && [ -z "$(ls -A ${cache_dir})" ]; then
-        rm -r "${cache_dir}"
-    fi
-}
-
-ip_cache_read() {
-    local date_namee=$1
-    local cache_file=$2
-
-    # キャッシュファイルからipアドレスを読み込んで出力
-    cachet_ime=$(grep "${date_namee}:" "$cache_file" | awk '{print $2}')
-    echo "$cachet_ime"
-}
-
-cache_reset() {
-    local cache_file=$1
-    # 現在のエポック秒を取得
-    current_time=$(date +%s)
-
-    echo "time: $current_time" > "$cache_file"
-    echo "Count: 0" >> "$cache_file"
-}
-
-cache_time_check() {
-    local cache_file=$1
-    local set_time=$2
-    local set_time_sec old_time now_time diff_time
-
-    if [ "$set_time" != 0 ] && [ -f "$cache_file" ]; then
-        set_time_sec=$(./time_check.sh "sec_time" "$set_time")
-
-        # キャッシュファイルのtimeを読み込む
-        old_time=$(ip_cache_read "time" "$cache_file")
-        # 現在のエポック秒を取得
-        now_time=$(date +%s)
-        diff_time=$((now_time - old_time))
-        # 経過時間が設定された時間より大きい場合、キャッシュを初期化
-        if ((diff_time > set_time_sec)); then
-            cache_reset "$cache_file"
-            echo "on"
-        else
-            echo "off"
-        fi
-    else
-        echo "on"
     fi
 }
 
 main() {
     local exit_code=""
 
-    cache_time_multi
-    cache_check
+    ./cache/time_initial.sh
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do
         sleep 10
