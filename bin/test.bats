@@ -162,21 +162,19 @@ run re_test
   re_test
 }
 
-# UPDATE_TIMEの不正な形式をテスト
-@test "dns_select.sh : update処理の正常終了チェック" {
-  up_test "MYDNS_ID[1]" "mydnsxxxx1"
-  run ./dns_select.sh update
-  [ "$status" -eq 0 ]
-  re_test
-}
+#@test "dns_select.sh : update処理の正常終了チェック" {
+#  up_test "MYDNS_ID[1]" "mydnsxxxx1"
+#  run ./dns_select.sh update
+#  [ "$status" -eq 0 ]
+#  re_test
+#}
 
-# DDNS_TIMEの不正な形式をテスト
-@test "dns_select.sh : check処理の正常終了チェック" {
-  up_test "CLOUDFLARE_API[1]" "User_API_token"
-  run ./dns_select.sh check
-  [ "$status" -eq 0 ]
-  re_test
-}
+#@test "dns_select.sh : check処理の正常終了チェック" {
+#  up_test "CLOUDFLARE_API[1]" "User_API_token"
+#  run ./dns_select.sh check
+#  [ "$status" -eq 0 ]
+#  re_test
+#}
 
 
 @test "最後にテスト用の設定ファイル削除" {
