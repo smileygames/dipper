@@ -1,5 +1,5 @@
 #!/usr/bin/env bats
-# batsu test.bats
+# bats test.bats
 
 Test_File="../config/test.conf"
 
@@ -145,13 +145,13 @@ run re_test
   re_test
 }
 
-#@test "dns_select.sh : main関数の引数無しチェック" {
-#  up_test "MYDNS_ID[1]" "mydnsxxxx1"
-#  run ./dns_select.sh
-#  [ "$status" -eq 0 ]
-#  [ "$output" = "[] <- 引数エラーです" ]
-#  re_test
-#}
+@test "dns_select.sh : main関数の引数無しチェック" {
+  up_test "MYDNS_ID[1]" "mydnsxxxx1"
+  run ./dns_select.sh
+  [ "$status" -eq 0 ]
+  [ "$output" = "[] <- 引数エラーです" ]
+  re_test
+}
 
 #@test "dns_select.sh : main関数の引数チェック - 不正な引数" {
 #  up_test "MYDNS_ID[1]" "mydnsxxxx1"
