@@ -68,38 +68,40 @@ timer_select() {
     local cache_update="${cache_dir}/update_cache"
     local cache_ddns="${cache_dir}/ddns_cache"
     local cache_err="${cache_dir}/err_mail"
-    local run_on
+    local cache_on=0
 
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
-            run_on=$(./cache/time_check.sh "$cache_update" "$UPDATE_TIME")
-            if [ "$run_on" = on ]; then
+        cache_on=$(./cache/time_check.sh "$cache_update" "$UPDATE_TIME")
+        if [ "$cache_on" = on ]; then
+            # shellcheck disable=SC1091
+            . ./dns_select.sh "update"      # DNSアップデートを開始
+            err_process "$?"
+        fi
+        if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
+            cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
+            if [ "$cache_on" = on ]; then
                 # shellcheck disable=SC1091
-                . ./dns_select.sh "update"      # DNSアップデートを開始
+                . ./dns_select.sh "check"   # DNSチェックを開始
                 err_process "$?"
             fi
-            if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-                run_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
-                if [ "$run_on" = on ]; then
-                    # shellcheck disable=SC1091
-                    . ./dns_select.sh "check"   # DNSチェックを開始
-                    err_process "$?"
-                fi
-            elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-                run_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
-                if [ "$run_on" = on ]; then
-                    # shellcheck disable=SC1091
-                    . ./dns_select.sh "check"   # DNSチェックを開始
-                    err_process "$?"
-                fi
+        elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
+            cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
+            if [ "$cache_on" = on ]; then
+                # shellcheck disable=SC1091
+                . ./dns_select.sh "check"   # DNSチェックを開始
+                err_process "$?"
             fi
+        fi
 
-            if [[ -n ${EMAIL_ADR:-} ]] && [ "$ERR_CHK_TIME" != 0 ]; then
-                run_on=$(./cache/time_check.sh "$cache_err" "$ERR_CHK_TIME")
-                if [ "$run_on" = on ]; then
-                    ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
-                    err_process "$?"
-                fi
+        if [[ -n ${EMAIL_ADR:-} ]] && [ "$ERR_CHK_TIME" != 0 ]; then
+            cache_on=$(./cache/time_check.sh "$cache_err" "$ERR_CHK_TIME")
+            if [ "$cache_on" = on ]; then
+                ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+                err_process "$?"
             fi
+        fi
+    else
+        exit 0
     fi
 }
 

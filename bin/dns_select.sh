@@ -18,24 +18,14 @@ multi_update() {
         # shellcheck disable=SC1091
         . ./dns_service/mydns.sh "update"
     fi
+}
+
+# 定期更新したらメール通知チェック
+ip_update() {
+    multi_update
 
     if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_UP_DDNS:-} ]]; then
         ./mail/sending.sh "update_cache" "IPアドレスを更新しました <$(hostname)>" "$EMAIL_ADR"
-    fi
-}
-
-ip_adr_read() {
-    local ip_adr
-
-    ip_adr=$(./ip_check.sh)
-    # 出力を空白で分割し、変数に割り当てる
-    read -r ipv4 <<< "${ip_adr%% *}"  # 最初の空白までを IPv4 アドレスとして読み込む
-    read -r ipv6 <<< "${ip_adr#* }"   # 最初の空白以降を IPv6 アドレスとして読み込む
-
-    multi_ddns "$ipv4" "$ipv6"
-
-    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
-        ./mail/sending.sh "ddns_cache" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
     fi
 }
 
@@ -56,20 +46,38 @@ multi_ddns() {
     fi
 }
 
+ip_adr_read() {
+    local ip_adr
+
+    ip_adr=$(./ip_check.sh)
+    # 出力を空白で分割し、変数に割り当てる
+    read -r ipv4 <<< "${ip_adr%% *}"  # 最初の空白までを IPv4 アドレスとして読み込む
+    read -r ipv6 <<< "${ip_adr#* }"   # 最初の空白以降を IPv6 アドレスとして読み込む
+
+    multi_ddns "$ipv4" "$ipv6"
+
+    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
+        ./mail/sending.sh "ddns_cache" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
+    fi
+}
+
 main() {
     # タイマー処理
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
-#                sleep 30    # 起動から30秒待つ
                 # IP更新用の処理を設定値に基づいて実行する
-                multi_update
+                ip_update
+            else
+                exit 0
             fi
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
                 # IPチェック用の処理を設定値に基づいて実行する
                 ip_adr_read
+            else
+                exit 1
             fi
             ;;
         * )
