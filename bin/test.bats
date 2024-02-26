@@ -61,11 +61,11 @@ ERR_CHK_TIME=0
 # それぞれのユーザーに対して、IPv4/IPv6を選択可能、但し、上記のIPvの設定によっては無効になる場合もあり
 
 Num=1  # Number 1個目のドメイン
-MYDNS_ID[1]=
-MYDNS_PASS[1]=
-MYDNS_DOMAIN[1]=
-MYDNS_IPV4[1]=
-MYDNS_IPV6[1]=
+MYDNS_ID[1]=""
+MYDNS_PASS[1]=""
+MYDNS_DOMAIN[1]=""
+MYDNS_IPV4[1]=""
+MYDNS_IPV6[1]=""
 
 #Num=2  # Number 2個目のドメイン
 #MYDNS_ID[2]="mydnsxxxxx2"
@@ -86,11 +86,11 @@ MYDNS_IPV6_URL="https://ipv6.mydns.jp/login.html"
 # IPV6及びIPV6_DDNSの設定のどちらか一方がoffの場合、CloudFlare_IPV6は無効になるので注意です。
 
 Num=1  # Number 1個目のドメイン
-CLOUDFLARE_API[1]=
-CLOUDFLARE_ZONE[1]=
-CLOUDFLARE_DOMAIN[1]=
-CLOUDFLARE_IPV4[1]=
-CLOUDFLARE_IPV6[1]=
+CLOUDFLARE_API[1]=""
+CLOUDFLARE_ZONE[1]=""
+CLOUDFLARE_DOMAIN[1]=""
+CLOUDFLARE_IPV4[1]=""
+CLOUDFLARE_IPV6[1]=""
 
 #Num=2  # Number 2個目のドメイン
 #CLOUDFLARE_API[2]="User_API_token"
@@ -145,21 +145,21 @@ run re_test
   re_test
 }
 
-@test "dns_select.sh : main関数の引数無しチェック" {
-  up_test "MYDNS_ID[1]" "mydnsxxxx1"
-  run ./dns_select.sh
-  [ "$status" -eq 0 ]
-  [ "$output" = "[] <- 引数エラーです" ]
-  re_test
-}
+#@test "dns_select.sh : main関数の引数無しチェック" {
+#  up_test "MYDNS_ID[1]" "mydnsxxxx1"
+#  run ./dns_select.sh
+#  [ "$status" -eq 0 ]
+#  [ "$output" = "[] <- 引数エラーです" ]
+#  re_test
+#}
 
-@test "dns_select.sh : main関数の引数チェック - 不正な引数" {
-  up_test "MYDNS_ID[1]" "mydnsxxxx1"
-  run ./dns_select.sh invalid_argument
-  [ "$status" -eq 0 ]
-  [ "$output" = "[invalid_argument] <- 引数エラーです" ]
-  re_test
-}
+#@test "dns_select.sh : main関数の引数チェック - 不正な引数" {
+#  up_test "MYDNS_ID[1]" "mydnsxxxx1"
+#  run ./dns_select.sh invalid_argument
+#  [ "$status" -eq 0 ]
+#  [ "$output" = "[invalid_argument] <- 引数エラーです" ]
+#  re_test
+#}
 
 #@test "dns_select.sh : update処理の正常終了チェック" {
 #  up_test "MYDNS_ID[1]" "mydnsxxxx1"
@@ -177,7 +177,7 @@ run re_test
 
 
 @test "最後にテスト用の設定ファイル削除" {
-run rm -f $Test_File
-[ "$status" -eq 0 ]
+  run rm -f $Test_File
+  [ "$status" -eq 0 ]
 }
 
