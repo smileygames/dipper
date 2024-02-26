@@ -146,42 +146,31 @@ run re_test
   re_test
 }
 
-@test "dipper.sh : IPV4_DDNSとIPV6_DDNSが無効の場合に終了される" {
-  up_test "IPV4_DDNS" "off"
-  up_test "IPV6_DDNS" "off"
-  up_test "UPDATE_TIME" "invalid_time"
-  run ./dipper.sh
-  [ "$status" -eq 1 ]
-  re_test
-}
-
-@test "ddns_service.sh : main関数の引数無しチェック" {
-run ./ddns_service.sh
+@test "dns_select.sh : main関数の引数無しチェック" {
+run ./dns_select.sh
 [ "$status" -eq 0 ]
 [ "$output" = "[] <- 引数エラーです" ]
 }
 
-@test "ddns_service.sh : main関数の引数チェック - 不正な引数" {
-run ./ddns_service.sh invalid_argument
+@test "dns_select.sh : main関数の引数チェック - 不正な引数" {
+run ./dns_select.sh invalid_argument
 [ "$status" -eq 0 ]
 [ "$output" = "[invalid_argument] <- 引数エラーです" ]
 }
 
 # UPDATE_TIMEの不正な形式をテスト
-@test "ddns_service.sh : UPDATE_TIMEの不正な形式をテスト" {
+@test "dns_select.sh : update処理の正常終了チェック" {
   up_test "MYDNS_ID[1]" "mydnsxxxx1"
-  up_test "UPDATE_TIME" "invalid_time"
-  run ./ddns_service.sh update
-  [ "$status" -eq 1 ]
+  run ./dns_select.sh update
+  [ "$status" -eq 0 ]
   re_test
 }
 
 # DDNS_TIMEの不正な形式をテスト
-@test "ddns_service.sh : DDNS_TIMEの不正な形式をテスト" {
+@test "dns_select.sh : check処理の正常終了チェック" {
   up_test "CLOUDFLARE_API[1]" "User_API_token"
-  up_test "DDNS_TIME" "invalid_time"
-  run ./ddns_service.sh check
-  [ "$status" -eq 1 ]
+  run ./dns_select.sh check
+  [ "$status" -eq 0 ]
   re_test
 }
 

@@ -42,15 +42,6 @@ cache_time_set() {
     fi
 }
 
-IP_CACHE_TIME=$(cache_time_set "ip_time" "IP_CACHE_TIME" "$IP_CACHE_TIME")
-UPDATE_TIME=$(cache_time_set "update" "UPDATE_TIME" "$UPDATE_TIME")
-DDNS_TIME=$(cache_time_set "check" "DDNS_TIME" "$DDNS_TIME")
-ERR_CHK_TIME=$(cache_time_set "error" "ERR_CHK_TIME" "$ERR_CHK_TIME")
-export IP_CACHE_TIME
-export UPDATE_TIME
-export DDNS_TIME
-export ERR_CHK_TIME
-
 err_process() {
     local exit_code=$1
     local process_name=$2
@@ -61,6 +52,19 @@ err_process() {
         exit 1
     fi
 }
+
+UPDATE_TIME=$(cache_time_set "update" "UPDATE_TIME" "$UPDATE_TIME")
+err_process "$?"
+DDNS_TIME=$(cache_time_set "check" "DDNS_TIME" "$DDNS_TIME")
+err_process "$?"
+IP_CACHE_TIME=$(cache_time_set "ip_time" "IP_CACHE_TIME" "$IP_CACHE_TIME")
+err_process "$?"
+ERR_CHK_TIME=$(cache_time_set "error" "ERR_CHK_TIME" "$ERR_CHK_TIME")
+err_process "$?"
+export UPDATE_TIME
+export DDNS_TIME
+export IP_CACHE_TIME
+export ERR_CHK_TIME
 
 # タイマーイベントを選択し、実行する
 timer_select() {

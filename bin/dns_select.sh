@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ./ddns_service.sh
+# ./ddns_select.sh
 #
 # DDNSタイマー起動処理
 
@@ -9,7 +9,10 @@ Mode=$1
 # 配列の要素数を変数に代入（DDNSのサービスごと）
 Mydns=${#MYDNS_ID[@]}
 CloudFlare=${#CLOUDFLARE_API[@]}
-
+# 全てのDNSサービスに値が何もない場合の処理
+if [[ -z "$Mydns" && -z "$CloudFlare" ]]; then
+    exit 1
+fi
 
 # IPv4とIPv6でアクセスする
 multi_update() {
@@ -56,7 +59,7 @@ ip_adr_read() {
 
     multi_ddns "$ipv4" "$ipv6"
 
-    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_CHK_DDNS:-} ]]; then
+    if [[ -n ${EMAIL_ADR:-} ]] && [ "$EMAIL_CHK_DDNS" = on ]; then
         ./mail/sending.sh "ddns_cache" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
     fi
 }
@@ -68,16 +71,12 @@ main() {
             if (( "$Mydns" )); then
                 # IP更新用の処理を設定値に基づいて実行する
                 ip_update
-            else
-                exit 0
             fi
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
                 # IPチェック用の処理を設定値に基づいて実行する
                 ip_adr_read
-            else
-                exit 1
             fi
             ;;
         * )
