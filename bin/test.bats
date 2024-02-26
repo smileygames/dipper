@@ -28,31 +28,30 @@ IPV6_DDNS=on
 #   d:	日(days)
 # UPDATE_TIME=1d (default) 
 # アドレスを定期的に通知する間隔　最低3分までとする。それ以下にした場合、強制的に3分となる。
-UPDATE_TIME=1d
+UPDATE_TIME=3m
 
 # DDNS_TIME=3m (default)
 # アドレスが変更されてないか定期的にチェックする間隔　最低1分までとする。それ以下にした場合、強制的に1分となる。
-DDNS_TIME=3m
+DDNS_TIME=1m
 
 # IP_CACHE_TIME=0 (defaultは無効) 推奨=1h
 # アドレスキャッシュをリフレッシュする間隔　最低15分までとする。それ以下にした場合、強制的に15分となる。
 # 上記 DDNS_TIME より少なくするとあまり意味がない
-IP_CACHE_TIME=1m
+IP_CACHE_TIME=0
 
 # エラーメッセージをEmailで通知する用。上記EMAIL_ADRが有効の場合に通知する。
 # ERR_CHK_TIME=0 (defaultは無効) 推奨=1h 最低値は1分、それ以下にした場合、強制的に1分となる。
-ERR_CHK_TIME=1m
+ERR_CHK_TIME=0
 #-----------------------------------------------
 
 ## Emailに通知するための設定
 #-----------------------------------------------
 # DDNSで定期更新があった場合に通知する
-EMAIL_UP_DDNS=off
+#EMAIL_UP_DDNS=off
 # DDNSでアドレス変更があった場合に通知する
-EMAIL_CHK_DDNS=off
+#EMAIL_CHK_DDNS=off
 
-EMAIL_ADR=""
-
+#EMAIL_ADR=""
 #-----------------------------------------------
 
 ## MyDNS
