@@ -37,11 +37,11 @@ DDNS_TIME=3m
 # IP_CACHE_TIME=0 (defaultは無効) 推奨=1h
 # アドレスキャッシュをリフレッシュする間隔　最低15分までとする。それ以下にした場合、強制的に15分となる。
 # 上記 DDNS_TIME より少なくするとあまり意味がない
-IP_CACHE_TIME=0
+IP_CACHE_TIME=1m
 
 # エラーメッセージをEmailで通知する用。上記EMAIL_ADRが有効の場合に通知する。
 # ERR_CHK_TIME=0 (defaultは無効) 推奨=1h 最低値は1分、それ以下にした場合、強制的に1分となる。
-ERR_CHK_TIME=0
+ERR_CHK_TIME=1m
 #-----------------------------------------------
 
 ## Emailに通知するための設定
@@ -147,15 +147,19 @@ run re_test
 }
 
 @test "dns_select.sh : main関数の引数無しチェック" {
-run ./dns_select.sh
-[ "$status" -eq 0 ]
-[ "$output" = "[] <- 引数エラーです" ]
+  up_test "MYDNS_ID[1]" "mydnsxxxx1"
+  run ./dns_select.sh
+  [ "$status" -eq 0 ]
+  [ "$output" = "[] <- 引数エラーです" ]
+  re_test
 }
 
 @test "dns_select.sh : main関数の引数チェック - 不正な引数" {
-run ./dns_select.sh invalid_argument
-[ "$status" -eq 0 ]
-[ "$output" = "[invalid_argument] <- 引数エラーです" ]
+  up_test "MYDNS_ID[1]" "mydnsxxxx1"
+  run ./dns_select.sh invalid_argument
+  [ "$status" -eq 0 ]
+  [ "$output" = "[invalid_argument] <- 引数エラーです" ]
+  re_test
 }
 
 # UPDATE_TIMEの不正な形式をテスト
