@@ -51,7 +51,7 @@ EMAIL_UP_DDNS=off
 # DDNSでアドレス変更があった場合に通知する
 EMAIL_CHK_DDNS=off
 
-EMAIL_ADR=""
+EMAIL_ADR=
 #-----------------------------------------------
 
 ## MyDNS
@@ -143,6 +143,7 @@ up_test() {
   run ./dipper.sh
   [ "$status" -eq 1 ]
   re_test
+  run ./cache/time_initial.sh
 }
 
 @test "dns_select.sh : main関数の値なし終了チェック" {
@@ -152,10 +153,8 @@ up_test() {
 
 #@test "dns_select.sh : main関数の引数無しチェック" {
 #  run MYDNS_ID[1]="mydnsxxxx1" ./dns_select.sh
-#  [ "$status" -eq 0 ]
 #  [ "$output" = "[] <- 引数エラーです" ]
-#}
-
+#"}
 
 #@test "dns_select.sh : main関数の引数チェック - 不正な引数" {
 #  up_test "MYDNS_ID[1]" "mydnsxxxx1"

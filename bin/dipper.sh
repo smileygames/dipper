@@ -9,14 +9,14 @@ File_dir="../config"
 # shellcheck disable=SC1091
 source "${File_dir}/default.conf"
 User_File="${File_dir}/user.conf"
-if [ -e ${User_File} ]; then
-    # shellcheck disable=SC1090
-    source "${User_File}"
-fi
 Test_File="${File_dir}/test.conf"
+
 if [ -e ${Test_File} ]; then
     # shellcheck disable=SC1090
     source "${Test_File}"
+elif [ -e ${User_File} ]; then
+    # shellcheck disable=SC1090
+    source "${User_File}"
 fi
 
 # 環境変数宣言
