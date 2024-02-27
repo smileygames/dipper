@@ -27,14 +27,15 @@ new_ip_cache_file() {
 
 # IPアドレスををキャッシュファイルに上書きする
 ip_update_cache() {
-    # キャッシュファイルが存在する場合、それを更新する
-    if [ -f "$Cache_File" ]; then
-        sed -i "s/^ipv4:.*$/ipv4: $New_Ipv4/" "$Cache_File"
-        sed -i "s/^ipv6:.*$/ipv6: $New_Ipv6/" "$Cache_File"
-
-    # キャッシュファイルが存在しない場合、新しいファイルを作成する
-    elif [ "$IP_CACHE_TIME" != 0 ]; then
-        new_ip_cache_file
+    if [[ "$IP_CACHE_TIME" != 0 ]]; then
+        # キャッシュファイルが存在する場合、それを更新する
+        if [ -f "$Cache_File" ]; then
+            sed -i "s/^ipv4:.*$/ipv4: $New_Ipv4/" "$Cache_File"
+            sed -i "s/^ipv6:.*$/ipv6: $New_Ipv6/" "$Cache_File"
+        # キャッシュファイルが存在しない場合、新しいファイルを作成する
+        else
+            new_ip_cache_file
+        fi
     fi
 }
 

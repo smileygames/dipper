@@ -34,13 +34,11 @@ cache_time_set() {
     local cache_time_name=$2
     local cache_time=$3
 
-    if [ "$cache_time" != 0 ]; then
-        if [[ "$cache_time" =~ ^[0-9]+[0-9]*[dhms]?$ ]]; then
-            ./time_check.sh "$mode" "$cache_time"
-        else
-            ./err_message.sh "sleep" "cache_time_set" "$cache_time_name=${cache_time}:無効な形式 例:1d,2h,13m,24s,35: dipper.shをエラー終了しました"
-            exit 1
-        fi
+    if [[ "$cache_time" =~ ^[0-9]+[0-9]*[dhms]?$ ]]; then
+        ./time_check.sh "$mode" "$cache_time"
+    else
+        ./err_message.sh "sleep" "cache_time_set" "$cache_time_name=${cache_time}:無効な形式 例:1d,2h,13m,24s,35: dipper.shをエラー終了しました"
+        exit 1
     fi
 }
 
@@ -48,9 +46,9 @@ err_process() {
     local exit_code=$1
     local process_name=$2
 
-    if [ "$exit_code" != 0 ]; then
+    if [[ "$exit_code" != 0 ]]; then
         ./err_message.sh "process" "dipper.sh" "endcode=${exit_code}  ${process_name}プロセスが異常終了した為、強制終了しました"
-        if [[ -n ${EMAIL_ADR:-} ]] && [ "$ERR_CHK_TIME" != 0 ]; then
+        if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
             ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
         fi
         exit 1
@@ -101,7 +99,7 @@ timer_select() {
             fi
         fi
 
-        if [[ -n ${EMAIL_ADR:-} ]] && [ "$ERR_CHK_TIME" != 0 ]; then
+        if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
             cache_on=$(./cache/time_check.sh "$cache_err" "$ERR_CHK_TIME")
             if [ "$cache_on" = on ]; then
                 ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
@@ -117,7 +115,7 @@ main() {
     local exit_code=""
 
     ./cache/initial.sh
-    # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
+
     while true;do
         sleep 10
         timer_select

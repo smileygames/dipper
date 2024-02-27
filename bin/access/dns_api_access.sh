@@ -62,7 +62,7 @@ api_access() {
                   -sS "$Url/${Zone_ID}/dns_records/${Domain_ID}")
 
     exit_code=$?
-    if [ "${exit_code}" != 0 ]; then
+    if [[ "${exit_code}" != 0 ]]; then
         ./err_message.sh "curl" "$func_name" "${Service}[$Array_Num]:: ${output}"
     else
         echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"

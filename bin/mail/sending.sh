@@ -21,7 +21,7 @@ send_mail_notification() {
     sendmail -t < "${Cache_File}"
     exit_code=$?
 
-    if [ "${exit_code}" != 0 ]; then
+    if [[ "${exit_code}" != 0 ]]; then
         ./err_message.sh "sendmail" "email_ddns_handle.sh" "sendmailコマンドエラー"
     else
         ./cache/reset.sh "$Cache_Name"

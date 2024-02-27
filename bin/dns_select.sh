@@ -2,7 +2,7 @@
 #
 # ./dns_select.sh
 #
-# DDNSタイマー起動処理
+# DDNS起動処理
 
 ## test用
 Test_File="../config/test.conf"

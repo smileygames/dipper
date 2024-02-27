@@ -19,7 +19,7 @@ ip_cache_read() {
 cache_time_check() {
     local set_time_sec old_time now_time diff_time
 
-    if [ "$Set_Time" != 0 ] && [ -f "$Cache_File" ]; then
+    if [[ "$Set_Time" != 0 ]] && [ -f "$Cache_File" ]; then
         set_time_sec=$(./time_check.sh "sec_time" "$Set_Time")
 
         # キャッシュファイルのtimeを読み込む

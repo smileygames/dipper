@@ -20,6 +20,10 @@ cache_check() {
     if [ "$IP_CACHE_TIME" = 0 ]; then
         rm -f "${cache_adr}"
     fi
+
+    if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
+        ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+    fi
 }
 
 cache_check

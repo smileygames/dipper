@@ -37,12 +37,12 @@ update_cache() {
     local new_count=0 old_count=0
 
     # Emailの通知がoffの場合は何もしない処理
-    if [ "$Cache_Name" = "update_cache" ] && [ "$EMAIL_UP_DDNS" != on ]; then
+    if [ "$Cache_Name" = "update_cache" ] && [[ "$EMAIL_UP_DDNS" != on ]]; then
         if [ ! -f "$Cache_File" ]; then
             new_time_file
         fi
         return
-    elif [ "$Cache_Name" = "ddns_cache" ] && [ "$EMAIL_CHK_DDNS" != on ]; then
+    elif [ "$Cache_Name" = "ddns_cache" ] && [[ "$EMAIL_CHK_DDNS" != on ]]; then
         if [ ! -f "$Cache_File" ]; then
             new_time_file
         fi
