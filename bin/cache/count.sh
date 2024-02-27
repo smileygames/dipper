@@ -12,12 +12,20 @@ Cache_Dir="../cache"
 Cache_File="${Cache_Dir}/${Cache_Name}"
 
 # キャッシュファイル作成
+new_time_file() {
+    mkdir -p "$Cache_Dir"
+    touch "$Cache_File"
+    # 現在のエポック秒を取得
+    current_time=$(date +%s)
+    echo "time: $current_time" > "$Cache_File"
+}
+
+# キャッシュファイル作成
 new_cache_file() {
     mkdir -p "$Cache_Dir"
     touch "$Cache_File"
     # 現在のエポック秒を取得
     current_time=$(date +%s)
-
     echo "time: $current_time" > "$Cache_File"
     echo "Count: 1" >> "$Cache_File"
     echo "$Message" >> "$Cache_File"
@@ -27,6 +35,18 @@ new_cache_file() {
 update_cache() {
     local new_count=0 old_count=0
 
+    # Emailの通知がoffの場合は何もしない処理
+    if [ "$Cache_Name" = "update_cache" ] && [ "$EMAIL_UP_DDNS" != on ]; then
+        if [ ! -f "$Cache_File" ]; then
+            new_time_file
+        fi
+        return
+    elif [ "$Cache_Name" = "ddns_cache" ] && [ "$EMAIL_CHK_DDNS" != on ]; then
+        if [ ! -f "$Cache_File" ]; then
+            new_time_file
+        fi
+        return
+    fi
     # キャッシュファイルが存在するか確認
     if [ -f "$Cache_File" ]; then
         # キャッシュファイルからカウントを読み込む

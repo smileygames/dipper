@@ -9,7 +9,7 @@ File_dir="../config"
 # shellcheck disable=SC1091
 source "${File_dir}/default.conf"
 User_File="${File_dir}/user.conf"
-Test_File="${File_dir}/test.conf"
+Test_File="test.conf"
 
 if [ -e ${Test_File} ]; then
     # shellcheck disable=SC1090
@@ -50,7 +50,9 @@ err_process() {
 
     if [ "$exit_code" != 0 ]; then
         ./err_message.sh "process" "dipper.sh" "endcode=${exit_code}  ${process_name}プロセスが異常終了した為、強制終了しました"
-        ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+        if [[ -n ${EMAIL_ADR:-} ]] && [ "$ERR_CHK_TIME" != 0 ]; then
+            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+        fi
         exit 1
     fi
 }
@@ -114,7 +116,7 @@ timer_select() {
 main() {
     local exit_code=""
 
-    ./cache/time_initial.sh
+    ./cache/initial.sh
     # バックグラウンドプロセスを監視して通常終了以外の時、異常終了させる
     while true;do
         sleep 10

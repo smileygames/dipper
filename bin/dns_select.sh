@@ -5,7 +5,7 @@
 # DDNSタイマー起動処理
 
 ## test用
-Test_File="../config/test.conf"
+Test_File="test.conf"
 if [ -e ${Test_File} ]; then
     # shellcheck disable=SC1090
     source "${Test_File}"
@@ -30,8 +30,10 @@ multi_update() {
 ip_update() {
     multi_update
 
-    if [[ -n ${EMAIL_ADR:-} ]] && [[ -n ${EMAIL_UP_DDNS:-} ]]; then
+    if [[ -n ${EMAIL_ADR:-} ]] && [ "$EMAIL_UP_DDNS" = on ]; then
         ./mail/sending.sh "update_cache" "IPアドレスを更新しました <$(hostname)>" "$EMAIL_ADR"
+    else
+        ./cache/reset.sh "update_cache"
     fi
 }
 
@@ -64,6 +66,8 @@ ip_adr_read() {
 
     if [[ -n ${EMAIL_ADR:-} ]] && [ "$EMAIL_CHK_DDNS" = on ]; then
         ./mail/sending.sh "ddns_cache" "IPアドレスの変更がありました <$(hostname)>" "$EMAIL_ADR"
+    else
+        ./cache/reset.sh "ddns_cache"
     fi
 }
 

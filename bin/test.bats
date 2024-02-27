@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 # bats test.bats
 
-Test_File="../config/test.conf"
+Test_File="test.conf"
 
 re_test() {
   # Test_Fileのパスと内容を定義
@@ -41,6 +41,15 @@ CLOUDFLARE_URL="https://api.cloudflare.com/client/v4/zones"
 EOF
 }
 
+# テスト環境をセットアップするためのヘルパー関数
+setup() {
+  re_test
+}
+
+teardown() {
+  run rm -f $Test_File
+}
+
 # IPアドレスををキャッシュファイルに上書きする
 up_test() {
   name=$1
@@ -53,17 +62,11 @@ up_test() {
 
 # ---------------- テスト開始 ---------------------
 
-@test "最初にテスト用の設定ファイル作成" {
-  run re_test
-  [ "$status" -eq 0 ]
-}
-
 @test "dipper.sh : 正常に終了される" {
   up_test "IPV4" "off"
   up_test "IPV6" "off"
   run ./dipper.sh
   [ "$status" -eq 0 ]
-  re_test
 }
 
 @test "dipper.sh : エラー終了される" {
@@ -71,14 +74,12 @@ up_test() {
   up_test "DDNS_TIME" "invalid_time"
   run ./dipper.sh
   [ "$status" -eq 1 ]
-  re_test
 }
 
 @test "dipper.sh : IP_CACHE_TIMEの不正な形式をテスト" {
   up_test "IP_CACHE_TIME" "invalid_time"
   run ./dipper.sh
   [ "$status" -eq 1 ]
-  re_test
   run ./cache/time_initial.sh
 }
 
@@ -91,7 +92,6 @@ up_test() {
   up_test "MYDNS_ID" "(mydnsxxxx1)"
   run ./dns_select.sh
   [ "$output" = "[] <- 引数エラーです" ]
-  re_test
 }
 
 @test "dns_select.sh : main関数の引数チェック - 不正な引数" {
@@ -99,26 +99,17 @@ up_test() {
   run ./dns_select.sh invalid_argument
   [ "$status" -eq 0 ]
   [ "$output" = "[invalid_argument] <- 引数エラーです" ]
-  re_test
 }
 
 @test "dns_select.sh : update処理の正常終了チェック" {
   up_test "MYDNS_ID" "(mydnsxxxx1)"
   run ./dns_select.sh update
   [ "$status" -eq 0 ]
-  re_test
 }
 
 @test "dns_select.sh : check処理の正常終了チェック" {
   up_test "CLOUDFLARE_API" "(User_API_token)"
   run ./dns_select.sh check
-  [ "$status" -eq 0 ]
-  re_test
-}
-
-
-@test "最後にテスト用の設定ファイル削除" {
-  run rm -f $Test_File
   [ "$status" -eq 0 ]
 }
 

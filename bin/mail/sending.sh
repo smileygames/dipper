@@ -24,12 +24,7 @@ send_mail_notification() {
     if [ "${exit_code}" != 0 ]; then
         ./err_message.sh "sendmail" "email_ddns_handle.sh" "sendmailコマンドエラー"
     else
-        # 中身の内容を削除してCOUNT=0を書き込む(reset処理)
-        # 現在のエポック秒を取得
-        current_time=$(date +%s)
-
-        echo "time: $current_time" > "$Cache_File"
-        echo "Count: 0" >> "$Cache_File"
+        ./cache/reset.sh "$Cache_Name"
     fi
 }
 
