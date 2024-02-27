@@ -80,7 +80,6 @@ up_test() {
   up_test "IP_CACHE_TIME" "invalid_time"
   run ./dipper.sh
   [ "$status" -eq 1 ]
-  run ./cache/time_initial.sh
 }
 
 @test "dns_select.sh : main関数の値なし終了チェック" {
