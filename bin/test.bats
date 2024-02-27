@@ -112,3 +112,110 @@ up_test() {
   [ "$status" -eq 0 ]
 }
 
+@test "time_check.sh : 引数 => update  180 -> 180" {
+  run ./time_check.sh update 180
+  [ "$status" -eq 0 ]
+  [ "$output" = "180" ]
+}
+
+@test "time_check.sh : 引数 => update  179 -> 3m" {
+  run ./time_check.sh update 179
+  [ "$status" -eq 0 ]
+  [ "$output" = "3m" ]
+}
+
+@test "time_check.sh : 引数 => update  0 -> 3m" {
+  run ./time_check.sh update 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "3m" ]
+}
+
+@test "time_check.sh : 引数 => check  60 -> 60" {
+  run ./time_check.sh check 60
+  [ "$status" -eq 0 ]
+  [ "$output" = "60" ]
+}
+
+@test "time_check.sh : 引数 => check  59 -> 1m" {
+  run ./time_check.sh check 59
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => check  0 -> 1m" {
+  run ./time_check.sh check 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => error  1m -> 1m" {
+  run ./time_check.sh error 1m
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => error  59s -> 1m" {
+  run ./time_check.sh error 59s
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => error  0 -> 0" {
+  run ./time_check.sh error 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "0" ]
+}
+
+@test "time_check.sh : 引数 => ip_time  1m -> 1m" {
+  run ./time_check.sh ip_time 1m
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => ip_time  59 -> 1m" {
+  run ./time_check.sh ip_time 59
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => ip_time  0 -> 0" {
+  run ./time_check.sh ip_time 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "0" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  0 -> 0" {
+  run ./time_check.sh sec_time 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "0" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  12s -> 12" {
+  run ./time_check.sh sec_time 12s
+  [ "$status" -eq 0 ]
+  [ "$output" = "12" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  3m -> 180" {
+  run ./time_check.sh sec_time 3m
+  [ "$status" -eq 0 ]
+  [ "$output" = "180" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  4h -> 14400" {
+  run ./time_check.sh sec_time 4h
+  [ "$status" -eq 0 ]
+  [ "$output" = "14400" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  5d -> 432000" {
+  run ./time_check.sh sec_time 5d
+  [ "$status" -eq 0 ]
+  [ "$output" = "432000" ]
+}
+
+@test "time_check.sh : 想定外処理 引数 => sec_time  5k -> 5k" {
+  run ./time_check.sh sec_time 5k
+  [ "$status" -eq 0 ]
+  [ "$output" = "5k" ]
+}
