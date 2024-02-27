@@ -166,16 +166,16 @@ up_test() {
   [ "$output" = "0" ]
 }
 
-@test "time_check.sh : 引数 => ip_time  1m -> 1m" {
+@test "time_check.sh : 引数 => ip_time  15m -> 15m" {
   run ./time_check.sh ip_time 1m
   [ "$status" -eq 0 ]
-  [ "$output" = "1m" ]
+  [ "$output" = "15m" ]
 }
 
-@test "time_check.sh : 引数 => ip_time  59 -> 1m" {
+@test "time_check.sh : 引数 => ip_time  899 -> 15m" {
   run ./time_check.sh ip_time 59
   [ "$status" -eq 0 ]
-  [ "$output" = "1m" ]
+  [ "$output" = "15m" ]
 }
 
 @test "time_check.sh : 引数 => ip_time  0 -> 0" {
