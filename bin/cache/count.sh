@@ -18,6 +18,7 @@ new_time_file() {
     # 現在のエポック秒を取得
     current_time=$(date +%s)
     echo "time: $current_time" > "$Cache_File"
+    echo "Count: 0" >> "$Cache_File"
 }
 
 # キャッシュファイル作成

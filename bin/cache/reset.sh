@@ -15,6 +15,7 @@ cache_reset() {
     current_time=$(date +%s)
     # 中身の内容を削除してCOUNT=0を書き込む(reset処理)
     echo "time: $current_time" > "$Reset_File"
+    echo "Count: 0" >> "$Reset_File"
 }
 
 cache_reset
