@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 # bats test.bats
 
-Test_File="test.conf"
+Test_File="../config/test.conf"
 
 re_test() {
   # Test_Fileのパスと内容を定義
