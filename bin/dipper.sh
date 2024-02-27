@@ -9,7 +9,7 @@ File_dir="../config"
 # shellcheck disable=SC1091
 source "${File_dir}/default.conf"
 User_File="${File_dir}/user.conf"
-Test_File="test.conf"
+Test_File="${File_dir}/test.conf"
 
 if [ -e ${Test_File} ]; then
     # shellcheck disable=SC1090
