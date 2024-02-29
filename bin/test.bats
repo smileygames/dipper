@@ -55,6 +55,7 @@ teardown() {
   if [ -e ${User_File_bak} ]; then
     mv $User_File_bak $User_File
   fi
+  rm -rf ../cache
 }
 
 # IPアドレスををキャッシュファイルに上書きする
