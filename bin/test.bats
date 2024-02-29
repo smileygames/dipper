@@ -67,10 +67,6 @@ up_test() {
   fi
 }
 
-if [ -e ${User_File} ]; then
-  mv $User_File $User_File_bak
-fi
-
 # ---------------- テスト開始 ---------------------
 
 @test "dipper.sh : 正常に終了される" {

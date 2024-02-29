@@ -39,6 +39,9 @@ update_cache() {
             echo "Count: 0" >> "$Cache_File"
         fi
         return
+    elif [ "$Cache_Name" = "err_mail" ] && [ "$ERR_CHK_TIME" = 0 ]; then
+        rm -f "$Cache_Name"
+        return
     fi
     # キャッシュファイルが存在するか確認
     if [ -f "$Cache_File" ]; then
