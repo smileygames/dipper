@@ -4,11 +4,14 @@
 #
 # DDNS起動処理
 
-## test用
-Test_File="../config/test.conf"
-if [ -e ${Test_File} ]; then
+## include file
+default_File="../config/default.conf"
+User_File="../config/user.conf"
+# shellcheck disable=SC1090
+source "${default_File}"
+if [ -e ${User_File} ]; then
     # shellcheck disable=SC1090
-    source "${Test_File}"
+    source "${User_File}"
 fi
 
 # 引数を変数に代入

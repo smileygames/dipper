@@ -1,11 +1,13 @@
 #!/usr/bin/env bats
 # bats test.bats
 
-Test_File="../config/test.conf"
+File_dir="../config"
+User_File="${File_dir}/user.conf"
+User_File_bak="${File_dir}/user.conf.bak"
 
 re_test() {
   # Test_Fileのパスと内容を定義
-  cat <<EOF > "$Test_File"
+  cat <<EOF > "$User_File"
 #!/bin/bash
 
 IPV4=on
@@ -43,11 +45,16 @@ EOF
 
 # テスト環境をセットアップするためのヘルパー関数
 setup() {
+  if [ -e ${User_File} ]; then
+    mv $User_File $User_File_bak
+  fi
   re_test
 }
 
 teardown() {
-  run rm -f $Test_File
+  if [ -e ${User_File_bak} ]; then
+    mv $User_File_bak $User_File
+  fi
 }
 
 # IPアドレスををキャッシュファイルに上書きする
@@ -55,10 +62,14 @@ up_test() {
   name=$1
   new_set=$2
   # キャッシュファイルが存在する場合、それを更新する
-  if [ -f "$Test_File" ]; then
-    sed -i "s/^$name=.*$/$name=$new_set/" "$Test_File"
+  if [ -f "$User_File" ]; then
+    sed -i "s/^$name=.*$/$name=$new_set/" "$User_File"
   fi
 }
+
+if [ -e ${User_File} ]; then
+  mv $User_File $User_File_bak
+fi
 
 # ---------------- テスト開始 ---------------------
 
@@ -219,3 +230,4 @@ up_test() {
   [ "$status" -eq 0 ]
   [ "$output" = "5k" ]
 }
+

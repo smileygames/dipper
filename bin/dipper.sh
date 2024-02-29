@@ -5,16 +5,11 @@
 # main処理。それぞれのタイマー処理をコールして監視する
 
 ## include file
-File_dir="../config"
-# shellcheck disable=SC1091
-source "${File_dir}/default.conf"
-User_File="${File_dir}/user.conf"
-Test_File="${File_dir}/test.conf"
-
-if [ -e ${Test_File} ]; then
-    # shellcheck disable=SC1090
-    source "${Test_File}"
-elif [ -e ${User_File} ]; then
+default_File="../config/default.conf"
+User_File="../config/user.conf"
+# shellcheck disable=SC1090
+source "${default_File}"
+if [ -e ${User_File} ]; then
     # shellcheck disable=SC1090
     source "${User_File}"
 fi
@@ -80,21 +75,14 @@ timer_select() {
         cache_on=$(./cache/time_check.sh "$cache_update" "$UPDATE_TIME")
         if [ "$cache_on" = on ]; then
             # shellcheck disable=SC1091
-            . ./dns_select.sh "update"      # DNSアップデートを開始
+            ./dns_select.sh "update"      # DNSアップデートを開始
             err_process "$?"
         fi
-        if [  "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
+        if { [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; } || { [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; }; then
             cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
             if [ "$cache_on" = on ]; then
                 # shellcheck disable=SC1091
-                . ./dns_select.sh "check"   # DNSチェックを開始
-                err_process "$?"
-            fi
-        elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-            cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
-            if [ "$cache_on" = on ]; then
-                # shellcheck disable=SC1091
-                . ./dns_select.sh "check"   # DNSチェックを開始
+                ./dns_select.sh "check"   # DNSチェックを開始
                 err_process "$?"
             fi
         fi
