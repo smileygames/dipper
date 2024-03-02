@@ -78,7 +78,14 @@ timer_select() {
             ./dns_select.sh "update"      # DNSアップデートを開始
             err_process "$?"
         fi
-        if { [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; } || { [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; }; then
+        if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
+            cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
+            if [ "$cache_on" = on ]; then
+                # shellcheck disable=SC1091
+                ./dns_select.sh "check"   # DNSチェックを開始
+                err_process "$?"
+            fi
+        elif [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
             cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
             if [ "$cache_on" = on ]; then
                 # shellcheck disable=SC1091
