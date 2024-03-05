@@ -16,15 +16,20 @@ ip_cache_read() {
 }
 
 cache_reset() {
-    echo "time: $now_time" > "$Cache_File"
+    # 現在のエポック秒を取得
+    current_time=$(date +%s)
+
+    echo "time: $current_time" > "$Cache_File"
     echo "ipv4:" >> "$Cache_File"
     echo "ipv6:" >> "$Cache_File"
 }
 
 cache_time_check() {
-    local old_time now_time diff_time
+    local set_time_sec old_time now_time diff_time
 
-    if [ "$IP_CACHE_TIME" != 0 ] && [ -f "$Cache_File" ]; then
+    if [[ "$IP_CACHE_TIME" != 0 ]] && [ -f "$Cache_File" ]; then
+        set_time_sec=$(./time_check.sh "sec_time" "$IP_CACHE_TIME")
+
         # キャッシュファイルのtimeを読み込む
         old_time=$(ip_cache_read "time")
         # 現在のエポック秒を取得
@@ -32,7 +37,7 @@ cache_time_check() {
         diff_time=$((now_time - old_time))
 
         # 経過時間が設定された時間より大きい場合、キャッシュを初期化
-        if ((diff_time > IP_CACHE_TIME_SEC)); then
+        if ((diff_time > set_time_sec)); then
             cache_reset
         fi
     fi
@@ -63,18 +68,18 @@ myip_check() {
     local exit_code
 
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        my_ipv4=$(dig -4 @resolver1.opendns.com myip.opendns.com A +short)  # 自分のアドレスを読み込む
+        my_ipv4=$(dig -4 @one.one.one.one whoami.cloudflare TXT CH +short | sed 's/"//g')  # 自分のアドレスを読み込む
         exit_code=$?
-        if [ "${exit_code}" != 0 ]; then
+        if [[ "${exit_code}" != 0 ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
             my_ipv4=""
         fi
     fi
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        my_ipv6=$(dig -6 @resolver1.opendns.com myip.opendns.com AAAA +short)  # 自分のアドレスを読み込む
+        my_ipv6=$(dig -6 @one.one.one.one whoami.cloudflare TXT CH +short | sed 's/"//g')  # 自分のアドレスを読み込む
 #        my_ipv6=$(ip -o a show scope global up | grep -oP '(?<=inet6 ).+(?=/64 )')  # DNSに負担をかけない方法
         exit_code=$?
-        if [ "${exit_code}" != 0 ]; then
+        if [[ "${exit_code}" != 0 ]]; then
             ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
             my_ipv6=""
         fi

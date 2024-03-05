@@ -19,11 +19,11 @@ IPv6_url=${12}
 
 # IPv4,IPv6を判断して、それぞれのURLでDDNSへアクセス
 ipv_update() {
-    if [ "$My_ipv4" = on ] && [ "$IPv4_Select" = on ]; then
+    if [ "$IPv4_Select" = on ]; then
         access "${FUNCNAME[0]}" "${IPv4_url}" "A" "update!"
     fi
 
-    if [ "$My_ipv6" = on ] && [ "$IPv6_Select" = on ]; then
+    if [ "$IPv6_Select" = on ]; then
         access "${FUNCNAME[0]}" "${IPv6_url}" "AAAA" "update!"
     fi
 }
@@ -62,12 +62,14 @@ access() {
     output=$(curl --max-time ${max_time} -sSfu "${Id}:${Pass}" "${access_url}" 2>&1)
 
     exit_code=$?
-    if [ "${exit_code}" != 0 ]; then
+    if [[ "${exit_code}" != 0 ]]; then
         ./err_message.sh "curl" "${func_name}" "${Service}[$Array_Num]: ${output}"
     else
         echo "Access successful ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
-        if [[ "${ip_adr}" != "update!" ]]; then
-            ./cache/count.sh "ddns_mail" "$(date "+%Y-%m-%d %H:%M:%S")  ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
+        if [[ "${ip_adr}" = "update!" ]]; then
+            ./cache/count.sh "update_cache" "$(date "+%Y-%m-%d %H:%M:%S")  ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
+        else
+            ./cache/count.sh "ddns_cache" "$(date "+%Y-%m-%d %H:%M:%S")  ${Service} : domain=${Domain} type=${record} IP=${ip_adr}"
         fi
     fi
 }

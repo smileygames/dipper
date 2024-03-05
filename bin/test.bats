@@ -1,109 +1,61 @@
 #!/usr/bin/env bats
-# batsu test.bats
+# bats test.bats
 
-Test_File="../config/test.conf"
+File_dir="../config"
+User_File="${File_dir}/user.conf"
+User_File_bak="${File_dir}/user.conf.bak"
 
 re_test() {
   # Test_Fileのパスと内容を定義
-  cat <<EOF > "$Test_File"
+  cat <<EOF > "$User_File"
 #!/bin/bash
-#
-# DDNS User Config file
 
-## 初期設定
-#-----------------------------------------------
-# IPV4 アドレス default = on
-# IPV4_DDNS 固定IPアドレスの場合はoffにする。但し、IPv4=offの場合は無効になる default = on
 IPV4=on
 IPV4_DDNS=on
-
-# IPV6 アドレス default = off
-# IPV6_DDNS 動的IPアドレスの場合はonにする。但し、IPv6=offの場合は無効になる default = on
 IPV6=on
 IPV6_DDNS=on
 
-#   s:	秒(seconds)
-#   m:	分(minutes)
-#   h:	時間(hours)
-#   d:	日(days)
-# UPDATE_TIME=1d (default) 
-# アドレスを定期的に通知する間隔　最低3分までとする。それ以下にした場合、強制的に3分となる。
-UPDATE_TIME=1d
+UPDATE_TIME=3m
+DDNS_TIME=1m
+IP_CACHE_TIME=0
+ERR_CHK_TIME=0
 
-# DDNS_TIME=3m (default)
-# アドレスが変更されてないか定期的にチェックする間隔　最低1分までとする。それ以下にした場合、強制的に1分となる。
-DDNS_TIME=3m
-
-# IP_CACHE_TIME=0 (defaultは無効) 推奨=1h
-# アドレスキャッシュをリフレッシュする間隔　最低15分までとする。それ以下にした場合、強制的に15分となる。
-# 上記 DDNS_TIME より少なくするとあまり意味がない
-IP_CACHE_TIME=15m
-#-----------------------------------------------
-
-## Emailに通知するための設定
-#-----------------------------------------------
-# DDNSで変更があった場合に通知する
+EMAIL_UP_DDNS=off
 EMAIL_CHK_DDNS=off
-EMAIL_ADR=""
+EMAIL_ADR=
 
-#   s:	秒(seconds)
-#   m:	分(minutes)
-#   h:	時間(hours)
-#   d:	日(days)
-# エラーメッセージをEmailで通知する用。上記EMAIL_ADRが有効の場合に通知する。
-# ERR_CHK_TIME=0 (defaultは無効) 推奨=1h 最低値は1分、それ以下にした場合、強制的に1分となる。
-ERR_CHK_TIME=1m
-#-----------------------------------------------
+MYDNS_ID=()
+MYDNS_PASS=()
+MYDNS_DOMAIN=()
+MYDNS_IPV4=()
+MYDNS_IPV6=()
 
-## MyDNS
-#-----------------------------------------------
-# マルチドメインの場合、例のように Num= の数字をそろえて変更して登録してください
-# 例はコメントアウトされているので、先頭の # を外してID等を変更して使用してください
-# それぞれのユーザーに対して、IPv4/IPv6を選択可能、但し、上記のIPvの設定によっては無効になる場合もあり
-
-Num=1  # Number 1個目のドメイン
-MYDNS_ID[1]=
-MYDNS_PASS[1]=
-MYDNS_DOMAIN[1]=
-MYDNS_IPV4[1]=
-MYDNS_IPV6[1]=
-
-#Num=2  # Number 2個目のドメイン
-#MYDNS_ID[2]="mydnsxxxxx2"
-#MYDNS_PASS[2]="Password2"
-#MYDNS_DOMAIN[2]="example2.com"
-#MYDNS_IPV4[2]=on
-#MYDNS_IPV6[2]=off
-
-# MyDNS Login URL
 MYDNS_IPV4_URL="https://ipv4.mydns.jp/login.html"
 MYDNS_IPV6_URL="https://ipv6.mydns.jp/login.html"
-#-----------------------------------------------
 
-## CloudFlare Domains
-#-----------------------------------------------
-# CloudFlare_IPV6[ ] default = off [on/off]
-# CloudFlareのDDNSはIPv4とIPv6に対応
-# IPV6及びIPV6_DDNSの設定のどちらか一方がoffの場合、CloudFlare_IPV6は無効になるので注意です。
+CLOUDFLARE_API=()
+CLOUDFLARE_ZONE=()
+CLOUDFLARE_DOMAIN=()
+CLOUDFLARE_IPV4=()
+CLOUDFLARE_IPV6=()
 
-Num=1  # Number 1個目のドメイン
-CLOUDFLARE_API[1]=
-CLOUDFLARE_ZONE[1]=
-CLOUDFLARE_DOMAIN[1]=
-CLOUDFLARE_IPV4[1]=
-CLOUDFLARE_IPV6[1]=
-
-#Num=2  # Number 2個目のドメイン
-#CLOUDFLARE_API[2]="User_API_token"
-#CLOUDFLARE_ZONE[2]="example2.com"
-#CLOUDFLARE_DOMAIN[2]="example2.com"
-#CLOUDFLARE_IPV4[2]=on
-#CLOUDFLARE_IPV6[2]=off
-
-# CloudFlare Login URL
 CLOUDFLARE_URL="https://api.cloudflare.com/client/v4/zones"
-#-----------------------------------------------
 EOF
+}
+
+# テスト環境をセットアップするためのヘルパー関数
+setup() {
+  if [ -e ${User_File} ]; then
+    mv $User_File $User_File_bak
+  fi
+  re_test
+}
+
+teardown() {
+  if [ -e ${User_File_bak} ]; then
+    mv $User_File_bak $User_File
+  fi
+  rm -rf ../cache
 }
 
 # IPアドレスををキャッシュファイルに上書きする
@@ -111,24 +63,18 @@ up_test() {
   name=$1
   new_set=$2
   # キャッシュファイルが存在する場合、それを更新する
-  if [ -f "$Test_File" ]; then
-    sed -i "s/^$name=.*$/$name=$new_set/" "$Test_File"
+  if [ -f "$User_File" ]; then
+    sed -i "s/^$name=.*$/$name=$new_set/" "$User_File"
   fi
 }
 
 # ---------------- テスト開始 ---------------------
-
-@test "最初にテスト用の設定ファイル作成" {
-run re_test
-[ "$status" -eq 0 ]
-}
 
 @test "dipper.sh : 正常に終了される" {
   up_test "IPV4" "off"
   up_test "IPV6" "off"
   run ./dipper.sh
   [ "$status" -eq 0 ]
-  re_test
 }
 
 @test "dipper.sh : エラー終了される" {
@@ -136,58 +82,149 @@ run re_test
   up_test "DDNS_TIME" "invalid_time"
   run ./dipper.sh
   [ "$status" -eq 1 ]
-  re_test
 }
 
 @test "dipper.sh : IP_CACHE_TIMEの不正な形式をテスト" {
   up_test "IP_CACHE_TIME" "invalid_time"
-  run  ./dipper.sh
-  [ "$status" -eq 1 ]
-  re_test
-}
-
-@test "dipper.sh : IPV4_DDNSとIPV6_DDNSが無効の場合に終了される" {
-  up_test "IPV4_DDNS" "off"
-  up_test "IPV6_DDNS" "off"
-  up_test "UPDATE_TIME" "invalid_time"
   run ./dipper.sh
   [ "$status" -eq 1 ]
-  re_test
 }
 
-@test "ddns_service.sh : main関数の引数無しチェック" {
-run ./ddns_service.sh
-[ "$status" -eq 0 ]
-[ "$output" = "[] <- 引数エラーです" ]
-}
-
-@test "ddns_service.sh : main関数の引数チェック - 不正な引数" {
-run ./ddns_service.sh invalid_argument
-[ "$status" -eq 0 ]
-[ "$output" = "[invalid_argument] <- 引数エラーです" ]
-}
-
-# UPDATE_TIMEの不正な形式をテスト
-@test "ddns_service.sh : UPDATE_TIMEの不正な形式をテスト" {
-  up_test "MYDNS_ID[1]" "mydnsxxxx1"
-  up_test "UPDATE_TIME" "invalid_time"
-  run ./ddns_service.sh update
+@test "dns_select.sh : main関数の値なし終了チェック" {
+  run ./dns_select.sh
   [ "$status" -eq 1 ]
-  re_test
 }
 
-# DDNS_TIMEの不正な形式をテスト
-@test "ddns_service.sh : DDNS_TIMEの不正な形式をテスト" {
-  up_test "CLOUDFLARE_API[1]" "User_API_token"
-  up_test "DDNS_TIME" "invalid_time"
-  run ./ddns_service.sh check
-  [ "$status" -eq 1 ]
-  re_test
+@test "dns_select.sh : main関数の引数無しチェック" {
+  up_test "MYDNS_ID" "(mydnsxxxx1)"
+  run ./dns_select.sh
+  [ "$output" = "[] <- 引数エラーです" ]
 }
 
+@test "dns_select.sh : main関数の引数チェック - 不正な引数" {
+  up_test "MYDNS_ID" "(mydnsxxxx1)"
+  run ./dns_select.sh invalid_argument
+  [ "$status" -eq 0 ]
+  [ "$output" = "[invalid_argument] <- 引数エラーです" ]
+}
 
-@test "最後にテスト用の設定ファイル削除" {
-run rm -f $Test_File
-[ "$status" -eq 0 ]
+@test "dns_select.sh : update処理の正常終了チェック" {
+  up_test "MYDNS_ID" "(mydnsxxxx1)"
+  run ./dns_select.sh update
+  [ "$status" -eq 0 ]
+}
+
+@test "dns_select.sh : check処理の正常終了チェック" {
+  up_test "CLOUDFLARE_API" "(User_API_token)"
+  run ./dns_select.sh check
+  [ "$status" -eq 0 ]
+}
+
+@test "time_check.sh : 引数 => update  180 -> 180" {
+  run ./time_check.sh update 180
+  [ "$status" -eq 0 ]
+  [ "$output" = "180" ]
+}
+
+@test "time_check.sh : 引数 => update  179 -> 3m" {
+  run ./time_check.sh update 179
+  [ "$status" -eq 0 ]
+  [ "$output" = "3m" ]
+}
+
+@test "time_check.sh : 引数 => update  0 -> 3m" {
+  run ./time_check.sh update 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "3m" ]
+}
+
+@test "time_check.sh : 引数 => check  60 -> 60" {
+  run ./time_check.sh check 60
+  [ "$status" -eq 0 ]
+  [ "$output" = "60" ]
+}
+
+@test "time_check.sh : 引数 => check  59 -> 1m" {
+  run ./time_check.sh check 59
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => check  0 -> 1m" {
+  run ./time_check.sh check 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => error  1m -> 1m" {
+  run ./time_check.sh error 1m
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => error  59s -> 1m" {
+  run ./time_check.sh error 59s
+  [ "$status" -eq 0 ]
+  [ "$output" = "1m" ]
+}
+
+@test "time_check.sh : 引数 => error  0 -> 0" {
+  run ./time_check.sh error 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "0" ]
+}
+
+@test "time_check.sh : 引数 => ip_time  15m -> 15m" {
+  run ./time_check.sh ip_time 1m
+  [ "$status" -eq 0 ]
+  [ "$output" = "15m" ]
+}
+
+@test "time_check.sh : 引数 => ip_time  899 -> 15m" {
+  run ./time_check.sh ip_time 59
+  [ "$status" -eq 0 ]
+  [ "$output" = "15m" ]
+}
+
+@test "time_check.sh : 引数 => ip_time  0 -> 0" {
+  run ./time_check.sh ip_time 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "0" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  0 -> 0" {
+  run ./time_check.sh sec_time 0
+  [ "$status" -eq 0 ]
+  [ "$output" = "0" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  12s -> 12" {
+  run ./time_check.sh sec_time 12s
+  [ "$status" -eq 0 ]
+  [ "$output" = "12" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  3m -> 180" {
+  run ./time_check.sh sec_time 3m
+  [ "$status" -eq 0 ]
+  [ "$output" = "180" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  4h -> 14400" {
+  run ./time_check.sh sec_time 4h
+  [ "$status" -eq 0 ]
+  [ "$output" = "14400" ]
+}
+
+@test "time_check.sh : 引数 => sec_time  5d -> 432000" {
+  run ./time_check.sh sec_time 5d
+  [ "$status" -eq 0 ]
+  [ "$output" = "432000" ]
+}
+
+@test "time_check.sh : 想定外処理 引数 => sec_time  5k -> 5k" {
+  run ./time_check.sh sec_time 5k
+  [ "$status" -eq 0 ]
+  [ "$output" = "5k" ]
 }
 
