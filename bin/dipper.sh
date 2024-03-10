@@ -103,10 +103,11 @@ main() {
     local exit_code=""
 
     ./cache/initial.sh
+    sleep 10
 
     while true;do
-        sleep 10
         timer_select
+        sleep 30
     done
 }
 
