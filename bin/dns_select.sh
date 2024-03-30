@@ -94,6 +94,8 @@ pid_cache() {
         else
             exit 0
         fi
+    else
+        exit 0
     fi
 }
 
