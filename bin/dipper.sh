@@ -63,6 +63,18 @@ export DDNS_TIME
 export IP_CACHE_TIME
 export ERR_CHK_TIME
 
+# サブプロセスの終了を監視し、異常終了した場合に処理を行う関数
+monitor_child_process() {
+    local child_pid=$1
+    if ! kill -0 "$child_pid" 2>/dev/null; then
+        ./err_message.sh "process" "dipper.sh" "endcode=1  ${process_name}プロセスが異常終了した為、強制終了しました"
+        if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
+            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+        fi
+        exit 1
+    fi
+}
+
 # タイマーイベントを選択し、実行する
 timer_select() {
     local cache_dir="../cache"
@@ -75,15 +87,15 @@ timer_select() {
         cache_on=$(./cache/time_check.sh "$cache_update" "$UPDATE_TIME")
         if [ "$cache_on" = on ]; then
             # shellcheck disable=SC1091
-            ./dns_select.sh "update"      # DNSアップデートを開始
-            err_process "$?"
+            ./dns_select.sh "update" &      # DNSアップデートを開始
+            monitor_child_process "$!"
         fi
         if { [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; } || { [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; }; then
             cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
             if [ "$cache_on" = on ]; then
                 # shellcheck disable=SC1091
-                ./dns_select.sh "check"   # DNSチェックを開始
-                err_process "$?"
+                ./dns_select.sh "check" &   # DNSチェックを開始
+                monitor_child_process "$!"
             fi
         fi
 

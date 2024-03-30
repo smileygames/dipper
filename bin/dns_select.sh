@@ -74,6 +74,24 @@ ip_adr_read() {
     fi
 }
 
+pid_cache() {
+    local cache_name=$1
+    # キャッシュファイルのパス
+    local cache_file="../cache/${cache_name}"
+    local old_pid new_pid
+
+    # チェックするプロセスID
+    old_pid=$(grep "pid:" "$cache_file" | awk '{print $2}')
+    new_pid=$$
+
+    if kill -0 "$old_pid"; then
+        # pidをファイル全体を書き換える形で更新
+        sed -i "s/pid: $old_pid/pid: $new_pid/" "$cache_file"
+    else
+        exit 0
+    fi
+}
+
 main() {
     # 全てのDNSサービスに値が何もない場合の処理
     if (( !"$Mydns" && !"$CloudFlare" )); then
@@ -84,12 +102,14 @@ main() {
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
+                pid_cache "update_cache"
                 # IP更新用の処理を設定値に基づいて実行する
                 ip_update
             fi
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
+                pid_cache "ddns_cache"
                 # IPチェック用の処理を設定値に基づいて実行する
                 ip_adr_read
             fi
