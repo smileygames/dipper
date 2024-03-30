@@ -26,7 +26,9 @@ cache_reset() {
     old_pid=$(ip_cache_read "pid")
     # 中身の内容を削除してCOUNT=0を書き込む(reset処理)
     echo "time: $old_time" > "$Reset_File"
-    echo "pid: $old_pid" >> "$Reset_File"
+    if [ "$Reset_Cache_Name" != "err_mail" ]; then
+        echo "pid: $old_pid" >> "$Reset_File"
+    fi
     echo "Count: 0" >> "$Reset_File"
 }
 

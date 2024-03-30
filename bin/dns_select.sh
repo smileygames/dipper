@@ -80,21 +80,31 @@ pid_cache() {
     local cache_file="../cache/${cache_name}"
     local old_pid new_pid
 
-    # チェックするプロセスID
-    old_pid=$(grep "pid:" "$cache_file" | awk '{print $2}')
-    new_pid=$$
-
-    if kill -0 "$old_pid"; then
-        # pidをファイル全体を書き換える形で更新
-        sed -i "s/pid: $old_pid/pid: $new_pid/" "$cache_file"
-    else
-        exit 0
+    # キャッシュファイルが存在するか確認
+    if [ -f "$cache_file" ]; then
+        # チェックするプロセスID
+        old_pid=$(grep "pid:" "$cache_file" | awk '{print $2}')
+        new_pid=$$
+        if [ "$old_pid" = "empty" ]; then
+            sed -i "s/pid: empty/pid: $new_pid/" "$cache_file"
+        elif [ -z "$old_pid" ]; then
+            echo "pid: $new_pid" >> "$cache_file"
+        elif ! kill -0 "$old_pid" 2>/dev/null; then
+            # pidをファイル全体を書き換える形で更新
+            sed -i "s/pid: $old_pid/pid: $new_pid/" "$cache_file"
+        else
+            exit 0
+        fi
     fi
 }
 
 main() {
     # 全てのDNSサービスに値が何もない場合の処理
     if (( !"$Mydns" && !"$CloudFlare" )); then
+        ./err_message.sh "process" "dipper.sh" "endcode=1  ${Mode}プロセスが異常終了しました"
+        if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
+            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+        fi
         exit 1
     fi
 
@@ -112,6 +122,7 @@ main() {
                 pid_cache "ddns_cache"
                 # IPチェック用の処理を設定値に基づいて実行する
                 ip_adr_read
+                sleep 3m
             fi
             ;;
         * )

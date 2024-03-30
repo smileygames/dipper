@@ -20,7 +20,9 @@ new_cache_file() {
     # 現在のエポック秒を取得
     current_time=$(date +%s)
     echo "time: $current_time" > "$Cache_File"
-    echo "pid: " >> "$Cache_File"
+    if [ "$Cache_Name" != "err_mail" ]; then
+        echo "pid: empty" >> "$Cache_File"
+    fi
 }
 
 # エラーメッセージ処理が実行されたときのカウントを増やし、メッセージ内容をキャッシュファイルに追加する
