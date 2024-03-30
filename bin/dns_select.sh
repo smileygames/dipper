@@ -125,7 +125,6 @@ main() {
                 pid_cache "ddns_cache"
                 # IPチェック用の処理を設定値に基づいて実行する
                 ip_adr_read
-                sleep 3m
             fi
             ;;
         * )
