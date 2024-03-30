@@ -9,12 +9,22 @@ Reset_Cache_Name=$1
 Cache_Dir="../cache"
 Reset_File="${Cache_Dir}/${Reset_Cache_Name}"
 
+ip_cache_read() {
+    local date_name=$1
+    local cachet_time
+
+    # キャッシュファイルからデータを読み込んで出力
+    cachet_time=$(grep "${date_name}:" "$Reset_File" | awk '{print $2}')
+    echo "$cachet_time"
+}
+
 cache_reset() {
-    local current_time
-    # 現在のエポック秒を取得
-    current_time=$(date +%s)
+    local old_time
+
+    # キャッシュファイルのtimeを読み込む
+    old_time=$(ip_cache_read "time")
     # 中身の内容を削除してCOUNT=0を書き込む(reset処理)
-    echo "time: $current_time" > "$Reset_File"
+    echo "time: $old_time" > "$Reset_File"
     echo "Count: 0" >> "$Reset_File"
 }
 

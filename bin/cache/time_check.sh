@@ -8,11 +8,11 @@ Cache_File=$1
 Set_Time=$2
 
 ip_cache_read() {
-    local date_namee=$1
+    local date_name=$1
     local cachet_time
 
-    # キャッシュファイルからipアドレスを読み込んで出力
-    cachet_time=$(grep "${date_namee}:" "$Cache_File" | awk '{print $2}')
+    # キャッシュファイルからデータを読み込んで出力
+    cachet_time=$(grep "${date_name}:" "$Cache_File" | awk '{print $2}')
     echo "$cachet_time"
 }
 
@@ -28,8 +28,10 @@ cache_time_check() {
         now_time=$(date +%s)
         diff_time=$((now_time - old_time))
         # 経過時間が設定された時間より大きい場合、キャッシュを初期化
-        if ((diff_time > set_time_sec)); then
+        if ((diff_time >= set_time_sec)); then
             echo "on"
+            # timeをファイル全体を書き換える形で更新
+            sed -i "s/time: $old_time/time: $now_time/" "$Cache_File"
         else
             echo "off"
         fi
