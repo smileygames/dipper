@@ -87,8 +87,7 @@ timer_select() {
         if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
             cache_on=$(./cache/time_check.sh "$cache_err" "$ERR_CHK_TIME")
             if [ "$cache_on" = on ]; then
-                ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
-                err_process "$?"
+                ./dns_select.sh "err_mail" &
             fi
         fi
     else

@@ -78,18 +78,14 @@ pid_cache() {
     local cache_name=$1
     # キャッシュファイルのパス
     local cache_file="../cache/${cache_name}"
-    local old_pid new_pid
+    local new_pid=$$
+    local old_pid
 
     # キャッシュファイルが存在するか確認
     if [ -f "$cache_file" ]; then
         # チェックするプロセスID
         old_pid=$(grep "pid:" "$cache_file" | awk '{print $2}')
-        new_pid=$$
-
-        if [ "$old_pid" = "empty" ]; then
-            sed -i "s/pid: empty/pid: $new_pid/" "$cache_file"
-
-        elif [ -z "$old_pid" ]; then
+        if [ -z "$old_pid" ]; then
             echo "pid: $new_pid" >> "$cache_file"
 
         elif ! kill -0 "$old_pid" 2>/dev/null; then
@@ -127,6 +123,11 @@ main() {
                 ip_adr_read
             fi
             ;;
+    "err_mail")
+            pid_cache "err_mail"
+            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+            ;;
+
         * )
             echo "[${Mode}] <- 引数エラーです"
             ;; 
