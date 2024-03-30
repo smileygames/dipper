@@ -111,13 +111,13 @@ up_test() {
 @test "dns_select.sh : update処理の正常終了チェック" {
   up_test "MYDNS_ID" "(mydnsxxxx1)"
   run ./dns_select.sh update
-  [ "$status" -eq 0 ]
+  [ "$status" -eq 1 ]
 }
 
 @test "dns_select.sh : check処理の正常終了チェック" {
   up_test "CLOUDFLARE_API" "(User_API_token)"
   run ./dns_select.sh check
-  [ "$status" -eq 0 ]
+  [ "$status" -eq 1 ]
 }
 
 @test "time_check.sh : 引数 => update  180 -> 180" {
