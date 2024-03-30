@@ -85,10 +85,13 @@ pid_cache() {
         # チェックするプロセスID
         old_pid=$(grep "pid:" "$cache_file" | awk '{print $2}')
         new_pid=$$
+
         if [ "$old_pid" = "empty" ]; then
             sed -i "s/pid: empty/pid: $new_pid/" "$cache_file"
+
         elif [ -z "$old_pid" ]; then
             echo "pid: $new_pid" >> "$cache_file"
+
         elif ! kill -0 "$old_pid" 2>/dev/null; then
             # pidをファイル全体を書き換える形で更新
             sed -i "s/pid: $old_pid/pid: $new_pid/" "$cache_file"
