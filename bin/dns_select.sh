@@ -119,6 +119,7 @@ main() {
             pid_cache "err_mail"
             ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             ;;
+
         * )
             echo "[${Mode}] <- 引数エラーです"
             ;; 
