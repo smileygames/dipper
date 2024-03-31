@@ -100,16 +100,6 @@ pid_cache() {
 }
 
 main() {
-    # 全てのDNSサービスに値が何もない場合の処理
-    if (( !"$Mydns" && !"$CloudFlare" )); then
-        ./err_message.sh "process" "dipper.sh" "endcode=1  ${Mode}プロセスが異常終了しました"
-        if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
-            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
-        fi
-        exit 1
-    fi
-
-    # タイマー処理
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
@@ -129,7 +119,6 @@ main() {
             pid_cache "err_mail"
             ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             ;;
-
         * )
             echo "[${Mode}] <- 引数エラーです"
             ;; 

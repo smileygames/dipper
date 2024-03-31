@@ -80,14 +80,14 @@ timer_select() {
         if { [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; } || { [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; }; then
             cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
             if [ "$cache_on" = on ]; then
-                ./dns_select.sh "check" &   # DNSチェックを開始
+                ./dns_select.sh "check" &      # DNSアップデートを開始
             fi
         fi
 
         if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
             cache_on=$(./cache/time_check.sh "$cache_err" "$ERR_CHK_TIME")
             if [ "$cache_on" = on ]; then
-                ./dns_select.sh "err_mail" &
+                ./dns_select.sh "err_mail" &      # DNSアップデートを開始
             fi
         fi
     else
@@ -95,12 +95,24 @@ timer_select() {
     fi
 }
 
+dns_service_check() {
+    local total_count=0
+
+    # 配列の要素数を変数に代入（DDNSのサービスごと）
+    (( total_count += ${#MYDNS_ID[@]} ))
+    (( total_count += ${#CLOUDFLARE_API[@]} ))
+
+    # 全てのDNSサービスに値が何もない場合の処理
+    if [ $total_count = 0 ]; then
+        err_process 1 "dns_service"
+    fi
+}
+
 main() {
-    local exit_code=""
-
     ./cache/initial.sh
-    sleep 10
+    dns_service_check
 
+    sleep 10
     while true;do
         timer_select
         sleep 30
