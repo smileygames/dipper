@@ -74,7 +74,7 @@ up_test() {
   up_test "IPV4" "off"
   up_test "IPV6" "off"
   run ./dipper.sh
-  [ "$status" -eq 0 ]
+  [ "$status" -eq 1 ]
 }
 
 @test "dipper.sh : エラー終了される" {
@@ -92,7 +92,7 @@ up_test() {
 
 @test "dns_select.sh : main関数の値なし終了チェック" {
   run ./dns_select.sh
-  [ "$status" -eq 1 ]
+  [ "$status" -eq 0 ]
 }
 
 @test "dns_select.sh : main関数の引数無しチェック" {

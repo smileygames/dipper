@@ -24,8 +24,8 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - ドメインのアドレスはDNSサーバーから取得し、自分のIPアドレスと違いがあれば更新。
 - ログはsyslogに記載し、システムで一元管理させている。（dipper.sh の名前でログに書きこまれます）
 - 管理はsystemdで行っている。（デーモン化）
-- メール通知機能の追加。（[オプション](https://github.com/smileygames/dipper/wiki/%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%81%E4%BF%A1%E3%81%AE%E4%BB%95%E6%96%B9)）コンフィグファイルに追加されているコメントアウトを外して使用。
-- 🆙アドレスキャッシュ機能の追加（オプション）初期時無効。コンフィグファイルIP_CACHE_TIMEの値を変えることで機能する。
+- メール通知機能。（[オプション](https://github.com/smileygames/dipper/wiki/%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%81%E4%BF%A1%E3%81%AE%E4%BB%95%E6%96%B9)）コンフィグファイルに追加されているコメントアウトを外して使用。
+- アドレスキャッシュ機能の追加（オプション）初期時無効。コンフィグファイルIP_CACHE_TIMEの値を変えることで機能する。
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
@@ -40,7 +40,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.21/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.22/install.sh )
 ```
 
 <br>
