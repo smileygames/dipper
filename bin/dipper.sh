@@ -63,6 +63,19 @@ export DDNS_TIME
 export IP_CACHE_TIME
 export ERR_CHK_TIME
 
+dns_service_check() {
+    local total_count=0
+
+    # 配列の要素数を変数に代入（DDNSのサービスごと）
+    (( total_count += ${#MYDNS_ID[@]} ))
+    (( total_count += ${#CLOUDFLARE_API[@]} ))
+
+    # 全てのDNSサービスに値が何もない場合の処理
+    if [ $total_count = 0 ]; then
+        err_process 1 "dns_service"
+    fi
+}
+
 # タイマーイベントを選択し、実行する
 timer_select() {
     local cache_dir="../cache"
@@ -92,19 +105,6 @@ timer_select() {
         fi
     else
         exit 0
-    fi
-}
-
-dns_service_check() {
-    local total_count=0
-
-    # 配列の要素数を変数に代入（DDNSのサービスごと）
-    (( total_count += ${#MYDNS_ID[@]} ))
-    (( total_count += ${#CLOUDFLARE_API[@]} ))
-
-    # 全てのDNSサービスに値が何もない場合の処理
-    if [ $total_count = 0 ]; then
-        err_process 1 "dns_service"
     fi
 }
 
