@@ -19,13 +19,15 @@ ip_cache_read() {
 }
 
 cache_reset() {
-    local old_time
+    local old_time old_pid
 
-    # キャッシュファイルのtimeを読み込む
+    # キャッシュファイルのデータを読み込む
     old_time=$(ip_cache_read "time")
+    old_pid=$(ip_cache_read "pid")
     # 中身の内容を削除してCOUNT=0を書き込む(reset処理)
     echo "time: $old_time" > "$Reset_File"
     echo "Count: 0" >> "$Reset_File"
+    echo "pid: $old_pid" >> "$Reset_File"
 }
 
 cache_reset

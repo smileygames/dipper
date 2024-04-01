@@ -74,26 +74,52 @@ ip_adr_read() {
     fi
 }
 
-main() {
-    # 全てのDNSサービスに値が何もない場合の処理
-    if (( !"$Mydns" && !"$CloudFlare" )); then
-        exit 1
-    fi
+pid_cache() {
+    local cache_name=$1
+    # キャッシュファイルのパス
+    local cache_file="../cache/${cache_name}"
+    local new_pid=$$
+    local old_pid
 
-    # タイマー処理
+    # キャッシュファイルが存在するか確認
+    if [ -f "$cache_file" ]; then
+        # チェックするプロセスID
+        old_pid=$(grep "pid:" "$cache_file" | awk '{print $2}')
+        if [ -z "$old_pid" ]; then
+            echo "pid: $new_pid" >> "$cache_file"
+
+        elif ! kill -0 "$old_pid" 2>/dev/null; then
+            # pidをファイル全体を書き換える形で更新
+            sed -i "s/pid: $old_pid/pid: $new_pid/" "$cache_file"
+        else
+            exit 0
+        fi
+    else
+        exit 0
+    fi
+}
+
+main() {
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
+                pid_cache "update_cache"
                 # IP更新用の処理を設定値に基づいて実行する
                 ip_update
             fi
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
+                pid_cache "ddns_cache"
                 # IPチェック用の処理を設定値に基づいて実行する
                 ip_adr_read
             fi
             ;;
+    "err_mail")
+            pid_cache "err_mail"
+            ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
+            ;;
+
         * )
             echo "[${Mode}] <- 引数エラーです"
             ;; 
