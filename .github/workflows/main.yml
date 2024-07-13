@@ -9,7 +9,7 @@ jobs:
     steps:
     - name: Checkout Repository  # リポジトリのチェックアウト
       uses: actions/checkout@v4
-    - run: npm install -g bats
+    - run: sudo apt install bats
 
 #    - name: Run Bash Script  # Bashスクリプトを実行します
 #      working-directory: ./bin  # 実行ディレクトリを/binに変更します
