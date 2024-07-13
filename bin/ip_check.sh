@@ -5,7 +5,7 @@
 # 動的アドレスモードの場合、チェック用にIPvバージョン情報とレコード情報も追加
 
 Cache_Dir="../cache"
-Cache_File="${Cache_Dir}/ip_cache"
+Cache_File="${Cache_Dir}/ddns_cache"
 
 ip_cache_read() {
     local ip_date=$1
