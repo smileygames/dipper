@@ -14,6 +14,8 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 事前に必要なもの(インストールスクリプト実行時にインストールも可能)
 - [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
 - [jqコマンド](https://github.com/smileygames/dipper/wiki/jq-command-install)
+- wgetコマンド
+- tarコマンド
 
 ## 概要
 - このスクリプトは、DDNSへの自動通知を目的としています。
