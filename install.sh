@@ -34,45 +34,6 @@ fi
 sudo rm -rf /usr/local/dipper/bin
 sudo rm -rf /usr/local/dipper/cache
 
-# jqコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
-if ! command -v jq &> /dev/null; then
-    read -r -p "jqコマンドが見つかりません。インストールしますか？ (y/n): " answer
-    case $answer in
-        [Yy]* )
-            echo "インストールプロセスを開始します..."
-            # ディストリビューションの判定
-            if [ -x "$(command -v apt)" ]; then
-                sudo apt update
-                sudo apt install -y jq
-            elif [ -x "$(command -v dnf)" ]; then
-                sudo dnf install -y jq
-            elif [ -x "$(command -v yum)" ]; then
-                sudo yum install -y epel-release   # epelリポジトリを追加（必要な場合）
-                sudo yum install -y jq
-            elif [ -x "$(command -v pacman)" ]; then
-                sudo pacman -S --noconfirm jq
-            elif [ -x "$(command -v apk)" ]; then
-                sudo apk update
-                sudo apk add --no-cache jq
-            elif [ -x "$(command -v zypper)" ]; then
-                sudo zypper install -y jq
-            elif [ -x "$(command -v pkg)" ]; then
-                sudo pkg install -y jq
-            elif [ -x "$(command -v pkgin)" ]; then
-                sudo pkgin install -y jq
-            else
-                echo "このディストリビューションではjqコマンドインストールプロセスがサポートされていません。"
-            fi
-            ;;
-        [Nn]* )
-            echo "インストールをキャンセルしました。"
-            ;;
-        * )
-            echo "有効な入力を選択してください。"
-            ;;
-    esac
-fi
-
 # tarコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
 if ! command -v tar &> /dev/null; then
     read -r -p "tarコマンドが見つかりません。インストールしますか？ (y/n): " answer
@@ -137,6 +98,45 @@ if ! command -v dig &> /dev/null; then
                 sudo pkgin install -y bind-tools
             else
                 echo "このディストリビューションではdigコマンドのインストールプロセスがサポートされていません。"
+            fi
+            ;;
+        [Nn]* )
+            echo "インストールをキャンセルしました。"
+            ;;
+        * )
+            echo "有効な入力を選択してください。"
+            ;;
+    esac
+fi
+
+# jqコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
+if ! command -v jq &> /dev/null; then
+    read -r -p "jqコマンドが見つかりません。インストールしますか？ (y/n): " answer
+    case $answer in
+        [Yy]* )
+            echo "インストールプロセスを開始します..."
+            # ディストリビューションの判定
+            if [ -x "$(command -v apt)" ]; then
+                sudo apt update
+                sudo apt install -y jq
+            elif [ -x "$(command -v dnf)" ]; then
+                sudo dnf install -y jq
+            elif [ -x "$(command -v yum)" ]; then
+                sudo yum install -y epel-release   # epelリポジトリを追加（必要な場合）
+                sudo yum install -y jq
+            elif [ -x "$(command -v pacman)" ]; then
+                sudo pacman -S --noconfirm jq
+            elif [ -x "$(command -v apk)" ]; then
+                sudo apk update
+                sudo apk add --no-cache jq
+            elif [ -x "$(command -v zypper)" ]; then
+                sudo zypper install -y jq
+            elif [ -x "$(command -v pkg)" ]; then
+                sudo pkg install -y jq
+            elif [ -x "$(command -v pkgin)" ]; then
+                sudo pkgin install -y jq
+            else
+                echo "このディストリビューションではjqコマンドインストールプロセスがサポートされていません。"
             fi
             ;;
         [Nn]* )
