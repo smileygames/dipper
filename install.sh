@@ -4,7 +4,7 @@
 #
 # dipper
 
-Ver="1.22"
+Ver="1.23"
 SERVICE_NAME="dipper.service"
 User_servce="/etc/systemd/system/$SERVICE_NAME"
 
@@ -37,7 +37,7 @@ sudo rm -rf /usr/local/dipper/cache
 # v1.01以降のインストール用
 
 # スクリプトファイルダウンロード＆ファイル属性変更
-wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
+curl -L https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
 sudo rm -rf dipper
@@ -114,6 +114,43 @@ if ! command -v jq &> /dev/null; then
                 sudo pkgin install -y jq
             else
                 echo "このディストリビューションではjqコマンドインストールプロセスがサポートされていません。"
+            fi
+            ;;
+        [Nn]* )
+            echo "インストールをキャンセルしました。"
+            ;;
+        * )
+            echo "有効な入力を選択してください。"
+            ;;
+    esac
+fi
+
+# tarコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
+if ! command -v tar &> /dev/null; then
+    read -r -p "tarコマンドが見つかりません。インストールしますか？ (y/n): " answer
+    case $answer in
+        [Yy]* )
+            echo "インストールプロセスを開始します..."
+            if [ -x "$(command -v apt)" ]; then
+                sudo apt update
+                sudo apt install -y tar
+            elif [ -x "$(command -v dnf)" ]; then
+                sudo dnf install -y tar
+            elif [ -x "$(command -v yum)" ]; then
+                sudo yum install -y tar
+            elif [ -x "$(command -v pacman)" ]; then
+                sudo pacman -S --noconfirm tar
+            elif [ -x "$(command -v apk)" ]; then
+                sudo apk update
+                sudo apk add --no-cache tar
+            elif [ -x "$(command -v zypper)" ]; then
+                sudo zypper install -y tar
+            elif [ -x "$(command -v pkg)" ]; then
+                sudo pkg install -y tar
+            elif [ -x "$(command -v pkgin)" ]; then
+                sudo pkgin install -y tar
+            else
+                echo "このディストリビューションではtarコマンドのインストールプロセスがサポートされていません。"
             fi
             ;;
         [Nn]* )

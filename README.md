@@ -14,7 +14,6 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 事前に必要なもの(インストールスクリプト実行時にインストールも可能)
 - [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
 - [jqコマンド](https://github.com/smileygames/dipper/wiki/jq-command-install)
-- wgetコマンド
 - tarコマンド
 
 ## 概要
@@ -42,7 +41,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.22/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.23/install.sh )
 ```
 
 <br>
