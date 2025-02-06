@@ -37,7 +37,7 @@ sudo rm -rf /usr/local/dipper/cache
 # v1.01以降のインストール用
 
 # スクリプトファイルダウンロード＆ファイル属性変更
-wget https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz -O - | sudo tar zxvf - -C ./
+curl -L https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz | sudo tar zxvf - -C ./
 sudo mv -fv dipper-${Ver} dipper
 sudo cp -rv dipper /usr/local/
 sudo rm -rf dipper
