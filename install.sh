@@ -125,6 +125,43 @@ if ! command -v jq &> /dev/null; then
     esac
 fi
 
+# tarコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
+if ! command -v tar &> /dev/null; then
+    read -r -p "tarコマンドが見つかりません。インストールしますか？ (y/n): " answer
+    case $answer in
+        [Yy]* )
+            echo "インストールプロセスを開始します..."
+            if [ -x "$(command -v apt)" ]; then
+                sudo apt update
+                sudo apt install -y tar
+            elif [ -x "$(command -v dnf)" ]; then
+                sudo dnf install -y tar
+            elif [ -x "$(command -v yum)" ]; then
+                sudo yum install -y tar
+            elif [ -x "$(command -v pacman)" ]; then
+                sudo pacman -S --noconfirm tar
+            elif [ -x "$(command -v apk)" ]; then
+                sudo apk update
+                sudo apk add --no-cache tar
+            elif [ -x "$(command -v zypper)" ]; then
+                sudo zypper install -y tar
+            elif [ -x "$(command -v pkg)" ]; then
+                sudo pkg install -y tar
+            elif [ -x "$(command -v pkgin)" ]; then
+                sudo pkgin install -y tar
+            else
+                echo "このディストリビューションではtarコマンドのインストールプロセスがサポートされていません。"
+            fi
+            ;;
+        [Nn]* )
+            echo "インストールをキャンセルしました。"
+            ;;
+        * )
+            echo "有効な入力を選択してください。"
+            ;;
+    esac
+fi
+
 sudo systemctl enable /usr/local/dipper/systemd/dipper.service
 # デーモンリロードをして追加したサービスを読み込ませる
 sudo systemctl daemon-reload
