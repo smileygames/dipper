@@ -34,6 +34,43 @@ fi
 sudo rm -rf /usr/local/dipper/bin
 sudo rm -rf /usr/local/dipper/cache
 
+# curlコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
+if ! command -v curl &> /dev/null; then
+    read -r -p "curlコマンドが見つかりません。インストールしますか？ (y/n): " answer
+    case $answer in
+        [Yy]* )
+            echo "インストールプロセスを開始します..."
+            if [ -x "$(command -v apt)" ]; then
+                sudo apt update
+                sudo apt install -y curl
+            elif [ -x "$(command -v dnf)" ]; then
+                sudo dnf install -y curl
+            elif [ -x "$(command -v yum)" ]; then
+                sudo yum install -y curl
+            elif [ -x "$(command -v pacman)" ]; then
+                sudo pacman -S --noconfirm curl
+            elif [ -x "$(command -v apk)" ]; then
+                sudo apk update
+                sudo apk add --no-cache curl
+            elif [ -x "$(command -v zypper)" ]; then
+                sudo zypper install -y curl
+            elif [ -x "$(command -v pkg)" ]; then
+                sudo pkg install -y curl
+            elif [ -x "$(command -v pkgin)" ]; then
+                sudo pkgin install -y curl
+            else
+                echo "このディストリビューションではcurlコマンドのインストールプロセスがサポートされていません。"
+            fi
+            ;;
+        [Nn]* )
+            echo "インストールをキャンセルしました。"
+            ;;
+        * )
+            echo "有効な入力を選択してください。"
+            ;;
+    esac
+fi
+
 # tarコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
 if ! command -v tar &> /dev/null; then
     read -r -p "tarコマンドが見つかりません。インストールしますか？ (y/n): " answer
