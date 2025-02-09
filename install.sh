@@ -4,9 +4,72 @@
 #
 # dipper
 
-Ver="1.23"
+Ver="1.24"
 SERVICE_NAME="dipper.service"
 User_servce="/etc/systemd/system/$SERVICE_NAME"
+
+## 必要なコマンドをインストールする処理
+# 各コマンドに対応するパッケージ名を定義
+declare -A packages=(
+    ["curl"]="curl curl curl curl curl curl curl curl"
+    ["tar"]="tar tar tar tar tar tar tar tar"
+    ["dig"]="dnsutils bind-utils bind-utils bind-tools bind-tools bind-utils bind-tools bind-tools"
+    ["jq"]="jq jq jq jq jq jq jq jq"
+)
+
+# インストールが必要なコマンドを格納するリスト
+missing_cmds=()
+
+# すべてのコマンドをチェックし、ないものをリストアップ
+for cmd in "${!packages[@]}"; do
+    command -v "$cmd" &>/dev/null || missing_cmds+=("$cmd")
+done
+
+# インストールが必要なコマンドがある場合
+if [ ${#missing_cmds[@]} -gt 0 ]; then
+    echo "以下のコマンドが見つかりません。"
+    echo " ${missing_cmds[*]}"
+    read -r -p "これらをインストールしますか？ (y/n): " answer
+
+    case "$answer" in
+        [Yy]* )
+            echo "インストールを開始します..."
+
+            # パッケージマネージャーごとのリスト
+            declare -A install_list
+            for cmd in "${missing_cmds[@]}"; do
+                IFS=' ' read -r -a package_alternatives <<< "${packages[$cmd]}" || continue
+
+                # 利用可能なパッケージマネージャーを判定してリストに追加
+                for pm in apt dnf yum pacman apk zypper pkg pkgin; do
+                    if command -v "$pm" &>/dev/null; then
+                        install_list[$pm]+="${package_alternatives[0]} "
+                        break
+                    fi
+                done
+            done
+
+            # パッケージマネージャーごとに一括インストール
+            for pm in "${!install_list[@]}"; do
+                echo ">> $pm で ${install_list[$pm]} をインストールします..."
+                # shellcheck disable=SC2086
+                case "$pm" in
+                    apt)    sudo apt update && sudo apt install -y ${install_list[$pm]} ;;
+                    dnf)    sudo dnf install -y ${install_list[$pm]} ;;
+                    yum)    sudo yum install -y ${install_list[$pm]} ;;
+                    pacman) sudo pacman -S --noconfirm ${install_list[$pm]} ;;
+                    apk)    sudo apk update && sudo apk add --no-cache ${install_list[$pm]} ;;
+                    zypper) sudo zypper install -y ${install_list[$pm]} ;;
+                    pkg)    sudo pkg install -y ${install_list[$pm]} ;;
+                    pkgin)  sudo pkgin install -y ${install_list[$pm]} ;;
+                esac
+            done
+            echo "インストールが完了しました！"
+            ;;
+        [Nn]* ) echo "インストールをキャンセルしました。"; exit 0 ;;
+        * )     echo "有効な入力を選択してください。" ;;
+    esac
+fi
 
 if [ -e ${User_servce} ]; then
     # サービスの状態を確認
@@ -34,158 +97,7 @@ fi
 sudo rm -rf /usr/local/dipper/bin
 sudo rm -rf /usr/local/dipper/cache
 
-# curlコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
-if ! command -v curl &> /dev/null; then
-    read -r -p "curlコマンドが見つかりません。インストールしますか？ (y/n): " answer
-    case $answer in
-        [Yy]* )
-            echo "インストールプロセスを開始します..."
-            if [ -x "$(command -v apt)" ]; then
-                sudo apt update
-                sudo apt install -y curl
-            elif [ -x "$(command -v dnf)" ]; then
-                sudo dnf install -y curl
-            elif [ -x "$(command -v yum)" ]; then
-                sudo yum install -y curl
-            elif [ -x "$(command -v pacman)" ]; then
-                sudo pacman -S --noconfirm curl
-            elif [ -x "$(command -v apk)" ]; then
-                sudo apk update
-                sudo apk add --no-cache curl
-            elif [ -x "$(command -v zypper)" ]; then
-                sudo zypper install -y curl
-            elif [ -x "$(command -v pkg)" ]; then
-                sudo pkg install -y curl
-            elif [ -x "$(command -v pkgin)" ]; then
-                sudo pkgin install -y curl
-            else
-                echo "このディストリビューションではcurlコマンドのインストールプロセスがサポートされていません。"
-            fi
-            ;;
-        [Nn]* )
-            echo "インストールをキャンセルしました。"
-            ;;
-        * )
-            echo "有効な入力を選択してください。"
-            ;;
-    esac
-fi
-
-# tarコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
-if ! command -v tar &> /dev/null; then
-    read -r -p "tarコマンドが見つかりません。インストールしますか？ (y/n): " answer
-    case $answer in
-        [Yy]* )
-            echo "インストールプロセスを開始します..."
-            if [ -x "$(command -v apt)" ]; then
-                sudo apt update
-                sudo apt install -y tar
-            elif [ -x "$(command -v dnf)" ]; then
-                sudo dnf install -y tar
-            elif [ -x "$(command -v yum)" ]; then
-                sudo yum install -y tar
-            elif [ -x "$(command -v pacman)" ]; then
-                sudo pacman -S --noconfirm tar
-            elif [ -x "$(command -v apk)" ]; then
-                sudo apk update
-                sudo apk add --no-cache tar
-            elif [ -x "$(command -v zypper)" ]; then
-                sudo zypper install -y tar
-            elif [ -x "$(command -v pkg)" ]; then
-                sudo pkg install -y tar
-            elif [ -x "$(command -v pkgin)" ]; then
-                sudo pkgin install -y tar
-            else
-                echo "このディストリビューションではtarコマンドのインストールプロセスがサポートされていません。"
-            fi
-            ;;
-        [Nn]* )
-            echo "インストールをキャンセルしました。"
-            ;;
-        * )
-            echo "有効な入力を選択してください。"
-            ;;
-    esac
-fi
-
-# digコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
-if ! command -v dig &> /dev/null; then
-    read -r -p "digコマンドが見つかりません。インストールしますか？ (y/n): " answer
-    case $answer in
-        [Yy]* )
-            echo "インストールプロセスを開始します..."
-            # ディストリビューションの判定
-            if [ -x "$(command -v apt)" ]; then
-                sudo apt update
-                sudo apt install -y dnsutils
-            elif [ -x "$(command -v dnf)" ]; then
-                sudo dnf install -y bind-utils
-            elif [ -x "$(command -v yum)" ]; then
-                sudo yum install -y bind-utils
-            elif [ -x "$(command -v pacman)" ]; then
-                sudo pacman -S --noconfirm bind-tools
-            elif [ -x "$(command -v apk)" ]; then
-                sudo apk update
-                sudo apk add --no-cache bind-tools
-            elif [ -x "$(command -v zypper)" ]; then
-                sudo zypper install -y bind-utils
-            elif [ -x "$(command -v pkg)" ]; then
-                sudo pkg install -y bind-tools
-            elif [ -x "$(command -v pkgin)" ]; then
-                sudo pkgin install -y bind-tools
-            else
-                echo "このディストリビューションではdigコマンドのインストールプロセスがサポートされていません。"
-            fi
-            ;;
-        [Nn]* )
-            echo "インストールをキャンセルしました。"
-            ;;
-        * )
-            echo "有効な入力を選択してください。"
-            ;;
-    esac
-fi
-
-# jqコマンドの存在を確認し、インストールされていない場合はインストールするかどうかを尋ねる
-if ! command -v jq &> /dev/null; then
-    read -r -p "jqコマンドが見つかりません。インストールしますか？ (y/n): " answer
-    case $answer in
-        [Yy]* )
-            echo "インストールプロセスを開始します..."
-            # ディストリビューションの判定
-            if [ -x "$(command -v apt)" ]; then
-                sudo apt update
-                sudo apt install -y jq
-            elif [ -x "$(command -v dnf)" ]; then
-                sudo dnf install -y jq
-            elif [ -x "$(command -v yum)" ]; then
-                sudo yum install -y epel-release   # epelリポジトリを追加（必要な場合）
-                sudo yum install -y jq
-            elif [ -x "$(command -v pacman)" ]; then
-                sudo pacman -S --noconfirm jq
-            elif [ -x "$(command -v apk)" ]; then
-                sudo apk update
-                sudo apk add --no-cache jq
-            elif [ -x "$(command -v zypper)" ]; then
-                sudo zypper install -y jq
-            elif [ -x "$(command -v pkg)" ]; then
-                sudo pkg install -y jq
-            elif [ -x "$(command -v pkgin)" ]; then
-                sudo pkgin install -y jq
-            else
-                echo "このディストリビューションではjqコマンドインストールプロセスがサポートされていません。"
-            fi
-            ;;
-        [Nn]* )
-            echo "インストールをキャンセルしました。"
-            ;;
-        * )
-            echo "有効な入力を選択してください。"
-            ;;
-    esac
-fi
-
-# v1.01以降のインストール用
+## v1.01以降のインストール用
 
 # スクリプトファイルダウンロード＆ファイル属性変更
 curl -L https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz | sudo tar zxvf - -C ./
