@@ -42,7 +42,7 @@ MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及
 ## ワンクリックインストールスクリプト
 ### インストールコマンド
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.23/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.24/install.sh )
 ```
 
 <br>
