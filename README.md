@@ -1,8 +1,10 @@
 # dipper -DDNS IP Upper-
 
-### CloudFlare対応
-### multi DDNS & IPv6 & multi domain対応
-#### GoogleDomainsのDDNSサービス終了に伴い処理を削除、まだ使いたい場合はv1.09以前のバージョンをお使いください。
+### 現在下記DDNSサービスに対応しています。
+- [MyDNS.JP](https://www.mydns.jp/)
+- [CloudFlare](https://www.cloudflare.com/)  【 [簡単な説明(v1.16用だが基本は同じ)](https://smgjp.com/cloudflaredipper_ddns_dipper/) 】
+
+### IPv6 & multi domain対応
 
 mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
 
@@ -28,10 +30,6 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - 管理はsystemdで行っている。（デーモン化）
 - メール通知機能。（[オプション](https://github.com/smileygames/dipper/wiki/%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%81%E4%BF%A1%E3%81%AE%E4%BB%95%E6%96%B9)）コンフィグファイルに追加されているコメントアウトを外して使用。
 - アドレスキャッシュ機能の追加（オプション）初期時無効。コンフィグファイルIP_CACHE_TIMEの値を変えることで機能する。
-
-### 現在下記DDNSサービスに対応しています。
-- [MyDNS.JP](https://www.mydns.jp/)
-- [CloudFlare](https://www.cloudflare.com/)  【 [簡単な説明(v1.16用だが基本は同じ)](https://smgjp.com/cloudflaredipper_ddns_dipper/) 】
 
 <br>
 
