@@ -15,14 +15,7 @@ if [ -e ${User_File} ]; then
 fi
 
 # 環境変数宣言
-export IPV4
-export IPV4_DDNS
-export IPV6
-export IPV6_DDNS
-export EMAIL_UP_DDNS
-export EMAIL_CHK_DDNS
-export EMAIL_ADR
-export ERR_CHK_TIME
+export IPV4 IPV4_DDNS IPV6 IPV6_DDNS EMAIL_UP_DDNS EMAIL_CHK_DDNS EMAIL_ADR ERR_CHK_TIME
 
 cache_time_set() {
     local mode=$1
@@ -58,10 +51,8 @@ IP_CACHE_TIME=$(cache_time_set "ip_time" "IP_CACHE_TIME" "$IP_CACHE_TIME")
 err_process "$?"
 ERR_CHK_TIME=$(cache_time_set "error" "ERR_CHK_TIME" "$ERR_CHK_TIME")
 err_process "$?"
-export UPDATE_TIME
-export DDNS_TIME
-export IP_CACHE_TIME
-export ERR_CHK_TIME
+
+export UPDATE_TIME DDNS_TIME IP_CACHE_TIME ERR_CHK_TIME
 
 dns_service_check() {
     local total_count=0
