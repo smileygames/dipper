@@ -103,7 +103,6 @@ main() {
     ./cache/initial.sh
     dns_service_check
 
-    sleep 10
     while true;do
         timer_select
         sleep 30
