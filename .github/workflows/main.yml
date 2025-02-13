@@ -11,13 +11,13 @@ jobs:
       uses: actions/checkout@v4
     - run: sudo apt install bats
 
-#    - name: Run Bash Script  # Bashスクリプトを実行します
-#      working-directory: ./bin  # 実行ディレクトリを/binに変更します
-#      run: |  # 実行したいBashスクリプトへのパスを指定します
-#        bash dipper.sh
-
     - name: Run Bats  # Batsスクリプトを実行します
       working-directory: ./bin  # 実行ディレクトリを/binに変更します
       run: |  # 実行したいBashスクリプトへのパスを指定します
-        bats test_dipper.bats
+        bats test_dipper.bats |
+        
+    - name: Run Bats Old  # Batsスクリプトを実行します
+      working-directory: ./bin  # 実行ディレクトリを/binに変更します
+      run: |  # 実行したいBashスクリプトへのパスを指定します
+        bats test.bats
          
