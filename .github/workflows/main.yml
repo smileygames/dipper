@@ -14,10 +14,6 @@ jobs:
     - name: Run Bats  # Batsスクリプトを実行します
       working-directory: ./bin  # 実行ディレクトリを/binに変更します
       run: |  # 実行したいBashスクリプトへのパスを指定します
-        bats test_dipper.bats |
-        
-    - name: Run Bats Old  # Batsスクリプトを実行します
-      working-directory: ./bin  # 実行ディレクトリを/binに変更します
-      run: |  # 実行したいBashスクリプトへのパスを指定します
+        bats test_dipper.bats
         bats test.bats
          
