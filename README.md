@@ -31,9 +31,12 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 - メール通知機能。（[オプション](https://github.com/smileygames/dipper/wiki/%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%81%E4%BF%A1%E3%81%AE%E4%BB%95%E6%96%B9)）コンフィグファイルに追加されているコメントアウトを外して使用。
 - アドレスキャッシュ機能の追加（オプション）初期時無効。コンフィグファイルIP_CACHE_TIMEの値を変えることで機能する。
 
-<br>
+### systemd について
+本スクリプトは systemd サービスとしての利用を想定しています。
+cron 等での実行も可能かもしれませんが、本プロジェクトでは動作検証およびサポートは行っていません。
 
-MyDNSを使用していて固定IPの場合は、confファイルでIPV4_DDNS及びIPV6_DDNSを「off」にしておいてください。（余計な処理をしなくなる）
+### MyDNSを使用していて固定IPの場合
+confファイルでIPV4_DDNS及びIPV6_DDNSを「off」にしておいてください。（余計な処理をしなくなる）
 
 <br>
 
