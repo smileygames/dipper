@@ -1,4 +1,5 @@
 # dipper -DDNS IP Upper-
+安定運用中のため、メンテナンス頻度は低めです。
 
 ### 現在下記DDNSサービスに対応しています。
 - [MyDNS.JP](https://www.mydns.jp/)
