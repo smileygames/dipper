@@ -78,20 +78,20 @@ timer_select() {
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
         cache_on=$(./cache/time_check.sh "$cache_update" "$UPDATE_TIME")
         if [ "$cache_on" = on ]; then
-            ./dns_select.sh "update" &      # DNSアップデートを開始
+            timeout 60 ./dns_select.sh "update" &      # DNSアップデートを開始
         fi
 
         if { [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; } || { [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; }; then
             cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
             if [ "$cache_on" = on ]; then
-                ./dns_select.sh "check" &      # DNSアップデートを開始
+                timeout 60 ./dns_select.sh "check" &      # DNSチェック処理を開始
             fi
         fi
 
         if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
             cache_on=$(./cache/time_check.sh "$cache_err" "$ERR_CHK_TIME")
             if [ "$cache_on" = on ]; then
-                ./dns_select.sh "err_mail" &      # DNSアップデートを開始
+                timeout 60 ./dns_select.sh "err_mail" &      # メール処理を開始
             fi
         fi
     else
