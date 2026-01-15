@@ -78,9 +78,7 @@ timer_run() {
     cache_on=$(./cache/time_check.sh "$cache_file" "$time")
 
     if [ "$cache_on" = on ]; then
-        if ./cache/event_can_start.sh "$cache_file"; then
-            timeout 60 ./dns_select.sh "$mode" &
-        fi
+        timeout 60 ./dns_select.sh "$mode" &
     fi
 }
 
