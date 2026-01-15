@@ -76,7 +76,8 @@ ip_adr_read() {
     fi
 }
 
-pid_cache() {
+# 同一Modeの多重起動を防ぐ（pid + ps args で照合）
+event_lock() {
     local cache_name=$1
     local cache_file="../cache/${cache_name}"
     local new_pid=$$
@@ -110,7 +111,6 @@ pid_cache() {
             esac
         fi
     else
-        #echo "[pid_cache] BLOCK mode=$Mode cache=$cache_name old_pid=$old_pid args=$args" >&2
         exit 0
     fi
 }
@@ -119,20 +119,20 @@ main() {
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
-                pid_cache "update_cache"
+                event_lock "update_cache"
                 # IP更新用の処理を設定値に基づいて実行する
                 ip_update
             fi
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
-                pid_cache "ddns_cache"
+                event_lock "ddns_cache"
                 # IPチェック用の処理を設定値に基づいて実行する
                 ip_adr_read
             fi
             ;;
     "err_mail")
-            pid_cache "err_mail"
+            event_lock "err_mail"
             ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             ;;
 
