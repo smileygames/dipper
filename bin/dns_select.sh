@@ -59,6 +59,8 @@ multi_ddns() {
 
 ip_adr_read() {
     local ip_adr
+    local ipv4
+    local ipv6
 
     ip_adr=$(./ip_check.sh)
     # 出力を空白で分割し、変数に割り当てる
@@ -74,25 +76,39 @@ ip_adr_read() {
     fi
 }
 
-pid_cache() {
+# 同一Modeの多重起動を防ぐ（pid + ps args で照合）
+event_lock() {
     local cache_name=$1
-    # キャッシュファイルのパス
     local cache_file="../cache/${cache_name}"
     local new_pid=$$
     local old_pid
+    local args
 
-    # キャッシュファイルが存在するか確認
     if [ -f "$cache_file" ]; then
-        # チェックするプロセスID
-        old_pid=$(grep "pid:" "$cache_file" | awk '{print $2}')
+        old_pid=$(grep "^pid:" "$cache_file" | awk '{print $2}')
+
+        # pid 未登録 → 登録して続行
         if [ -z "$old_pid" ]; then
             echo "pid: $new_pid" >> "$cache_file"
 
+        # pid が死んでいる → 更新して続行
         elif ! kill -0 "$old_pid" 2>/dev/null; then
-            # pidをファイル全体を書き換える形で更新
-            sed -i "s/pid: $old_pid/pid: $new_pid/" "$cache_file"
+            sed -i "s/^pid:.*/pid: $new_pid/" "$cache_file"
+
         else
-            exit 0
+            # pid は生きている → 本当に同一イベントか確認
+            args=$(ps -p "$old_pid" -o args= 2>/dev/null)
+
+            case "$args" in
+                *dns_select.sh*"$Mode"*)
+                    # 同一イベント実行中 → 起動しない
+                    exit 0
+                    ;;
+                *)
+                    # PID再利用など → 上書きして続行
+                    sed -i "s/^pid:.*/pid: $new_pid/" "$cache_file"
+                    ;;
+            esac
         fi
     else
         exit 0
@@ -103,20 +119,20 @@ main() {
     case ${Mode} in
     "update")  # アドレス定期通知（一般的なDDNSだと定期的に通知されない場合データが破棄されてしまう）
             if (( "$Mydns" )); then
-                pid_cache "update_cache"
+                event_lock "update_cache"
                 # IP更新用の処理を設定値に基づいて実行する
                 ip_update
             fi
             ;;
     "check")   # アドレス変更時のみ通知する
             if (( "$Mydns" || "$CloudFlare" )); then
-                pid_cache "ddns_cache"
+                event_lock "ddns_cache"
                 # IPチェック用の処理を設定値に基づいて実行する
                 ip_adr_read
             fi
             ;;
     "err_mail")
-            pid_cache "err_mail"
+            event_lock "err_mail"
             ./mail/sending.sh "err_mail" "dipperでエラーを検出しました <$(hostname)>" "$EMAIL_ADR"
             ;;
 

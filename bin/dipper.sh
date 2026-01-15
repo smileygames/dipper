@@ -67,32 +67,39 @@ dns_service_check() {
     fi
 }
 
-# タイマーイベントを選択し、実行する
+# タイマーイベントを実行する
+# cacheがonのときだけ、指定modeのワーカーをtimeout付きで非同期起動する
+timer_run() {
+    local mode=$1
+    local cache_file=$2
+    local time=$3
+    local cache_on=0
+
+    cache_on=$(./cache/time_check.sh "$cache_file" "$time")
+
+    if [ "$cache_on" = on ]; then
+        timeout 60 ./dns_select.sh "$mode" &
+    fi
+}
+
+
+# タイマーイベントを選択する
+# 設定値と状態(cache)に基づいて、実行すべきタイマーイベントを選択する
 timer_select() {
     local cache_dir="../cache"
     local cache_update="${cache_dir}/update_cache"
     local cache_ddns="${cache_dir}/ddns_cache"
     local cache_err="${cache_dir}/err_mail"
-    local cache_on=0
 
     if [ "$IPV4" = on ] || [ "$IPV6" = on ]; then
-        cache_on=$(./cache/time_check.sh "$cache_update" "$UPDATE_TIME")
-        if [ "$cache_on" = on ]; then
-            ./dns_select.sh "update" &      # DNSアップデートを開始
-        fi
+        timer_run "update" "$cache_update" "$UPDATE_TIME"
 
         if { [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; } || { [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; }; then
-            cache_on=$(./cache/time_check.sh "$cache_ddns" "$DDNS_TIME")
-            if [ "$cache_on" = on ]; then
-                ./dns_select.sh "check" &      # DNSアップデートを開始
-            fi
+            timer_run "check" "$cache_ddns" "$DDNS_TIME"
         fi
 
         if [[ -n ${EMAIL_ADR:-} ]] && [[ "$ERR_CHK_TIME" != 0 ]]; then
-            cache_on=$(./cache/time_check.sh "$cache_err" "$ERR_CHK_TIME")
-            if [ "$cache_on" = on ]; then
-                ./dns_select.sh "err_mail" &      # DNSアップデートを開始
-            fi
+            timer_run "err_mail" "$cache_err" "$ERR_CHK_TIME"
         fi
     else
         exit 0
