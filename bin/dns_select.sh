@@ -97,7 +97,12 @@ event_lock() {
 
         else
             # pid は生きている → 本当に同一イベントか確認
-            args=$(ps -p "$old_pid" -o args= 2>/dev/null)
+            args=$(ps -p "$old_pid" -o args= 2>/dev/null || true)
+
+            # ps がダメ/空なら /proc にフォールバック（Linux想定）
+            if [ -z "$args" ] && [ -r "/proc/$old_pid/cmdline" ]; then
+                args=$(tr '\0' ' ' < "/proc/$old_pid/cmdline" 2>/dev/null || true)
+            fi
 
             case "$args" in
                 *dns_select.sh*"$Mode"*)
