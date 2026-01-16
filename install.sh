@@ -9,6 +9,11 @@
 # これらを満たさない場合はインストールを行いません
 
 Ver="1.24"
+
+# 任意：インストール元 ref（ブランチ名 / タグ名 / コミットSHA）
+# 指定がなければ従来通り v${Ver} を使う
+DIPPER_REF="${DIPPER_REF:-}"
+
 SERVICE_NAME="dipper.service"
 User_servce="/etc/systemd/system/$SERVICE_NAME"
 
@@ -36,7 +41,9 @@ if ! command -v systemctl >/dev/null 2>&1; then
     exit 0
 fi
 
-## 必要なコマンドをインストールする処理
+# -----------------------------
+# 必要コマンドのチェック＆インストール
+# -----------------------------
 # 各コマンドに対応するパッケージ名を定義（Linux向けのみ想定）
 declare -A packages=(
     ["curl"]="curl curl curl curl curl"
@@ -45,15 +52,11 @@ declare -A packages=(
     ["jq"]="jq jq jq jq jq"
 )
 
-# インストールが必要なコマンドを格納するリスト
 missing_cmds=()
-
-# すべてのコマンドをチェックし、ないものをリストアップ
 for cmd in "${!packages[@]}"; do
     command -v "$cmd" &>/dev/null || missing_cmds+=("$cmd")
 done
 
-# インストールが必要なコマンドがある場合
 if [ ${#missing_cmds[@]} -gt 0 ]; then
     echo "以下のコマンドが見つかりません。"
     echo " ${missing_cmds[*]}"
@@ -63,7 +66,6 @@ if [ ${#missing_cmds[@]} -gt 0 ]; then
         [Yy]* )
             echo "インストールを開始します..."
 
-            # パッケージマネージャーごとのリスト
             declare -A install_list
             for cmd in "${missing_cmds[@]}"; do
                 IFS=' ' read -r -a package_alternatives <<< "${packages[$cmd]}" || continue
@@ -78,7 +80,6 @@ if [ ${#missing_cmds[@]} -gt 0 ]; then
                 done
             done
 
-            # パッケージマネージャーごとに一括インストール
             for pm in "${!install_list[@]}"; do
                 echo ">> $pm で ${install_list[$pm]} をインストールします..."
                 # shellcheck disable=SC2086
@@ -90,54 +91,116 @@ if [ ${#missing_cmds[@]} -gt 0 ]; then
                     zypper) sudo zypper install -y ${install_list[$pm]} ;;
                 esac
             done
+
             echo "インストールが完了しました！"
             ;;
-        [Nn]* ) echo "インストールをキャンセルしました。"; exit 0 ;;
-        * )     echo "有効な入力を選択してください。"; exit 1 ;;
+        [Nn]* )
+            echo "インストールをキャンセルしました。"
+            exit 0
+            ;;
+        * )
+            echo "有効な入力を選択してください。"
+            exit 1
+            ;;
     esac
 fi
 
-if [ -e ${User_servce} ]; then
-    # サービスの状態を確認
-    status=$(systemctl is-active "$SERVICE_NAME")
-    # 状態に応じて処理を分岐
+# -----------------------------
+# 既存サービスの停止/無効化（存在する場合）
+# -----------------------------
+if [ -e "${User_servce}" ]; then
+    status=$(systemctl is-active "$SERVICE_NAME" 2>/dev/null || true)
     if [ "$status" = "active" ]; then
         sudo systemctl stop "$SERVICE_NAME"
     fi
 
-    # サービスの有効化状態を確認
-    enabled=$(systemctl is-enabled "$SERVICE_NAME")
-    # 有効化状態に応じて処理を分岐
+    enabled=$(systemctl is-enabled "$SERVICE_NAME" 2>/dev/null || true)
     if [ "$enabled" = "enabled" ]; then
         sudo systemctl disable "$SERVICE_NAME"
     fi
 
-    if [ -e ${User_servce} ]; then
-        sudo rm -f /etc/systemd/system/dipper.service
-    fi
+    # サービスファイル削除
+    sudo rm -f "${User_servce}"
 
-    # デーモンリロードをして追加したサービスを読み込ませる
     sudo systemctl daemon-reload
 fi
 
-# 以前のバージョンのアンインストール処理
-sudo rm -rf /usr/local/dipper/bin
-sudo rm -rf /usr/local/dipper/cache
+# -----------------------------
+# tmp 作業ディレクトリ準備（必ず掃除）
+# -----------------------------
+backup_dir="$(mktemp -d)"
+workdir="$(mktemp -d)"
+trap 'rm -rf "$backup_dir" "$workdir"' EXIT
 
-## v1.01以降のインストール用
+echo "backup_dir: $backup_dir"
+echo "workdir: $workdir"
 
-# スクリプトファイルダウンロード＆ファイル属性変更
-curl -L https://github.com/smileygames/dipper/archive/refs/tags/v${Ver}.tar.gz | sudo tar zxvf - -C ./
-sudo mv -fv dipper-${Ver} dipper
-sudo cp -rv dipper /usr/local/
-sudo rm -rf dipper
-sudo rm -rf /usr/local/dipper/.github
-sudo rm -rf /usr/local/dipper/.vscode
-sudo rm -f /usr/local/dipper/.gitignore
-sudo rm -f /usr/local/dipper/bin/test.bats
+# -----------------------------
+# ユーザー設定＆キャッシュ退避
+# -----------------------------
+# user.conf 退避（存在する場合のみ）
+if [ -f /usr/local/dipper/config/user.conf ]; then
+    mkdir -p "$backup_dir/config"
+    sudo cp -a /usr/local/dipper/config/user.conf "$backup_dir/config/"
+fi
+
+# cache 退避（存在する場合のみ）
+if [ -d /usr/local/dipper/cache ]; then
+    sudo cp -a /usr/local/dipper/cache "$backup_dir/"
+fi
+
+# -----------------------------
+# インストール元 ref 決定
+# -----------------------------
+if [ -n "$DIPPER_REF" ]; then
+    ref="$DIPPER_REF"
+else
+    ref="v${Ver}"
+fi
+
+# -----------------------------
+# ダウンロード＆展開（tmp）
+# -----------------------------
+curl -fsSL "https://github.com/smileygames/dipper/archive/${ref}.tar.gz" \
+    | tar zxvf - -C "$workdir"
+
+src_dir="$(find "$workdir" -maxdepth 1 -type d -name 'dipper-*' | head -n 1)"
+if [ -z "$src_dir" ]; then
+    echo "展開ディレクトリが見つかりません"
+    exit 1
+fi
+mv -fv "$src_dir" "$workdir/dipper"
+
+# -----------------------------
+# 不要ファイル除去（確実に入れない）
+# -----------------------------
+sudo rm -rf "$workdir/dipper/.github" "$workdir/dipper/.vscode"
+sudo rm -f  "$workdir/dipper/.gitignore" "$workdir/dipper/bin/test.bats"
+
+# -----------------------------
+# インストール（入れ替え）
+#   ※ user.conf / cache は後で復元する
+# -----------------------------
+sudo rm -rf /usr/local/dipper
+sudo cp -a "$workdir/dipper" /usr/local/dipper
 
 sudo chmod -R 755 /usr/local/dipper/bin
 
-sudo systemctl enable /usr/local/dipper/systemd/dipper.service
-# デーモンリロードをして追加したサービスを読み込ませる
+# -----------------------------
+# 退避物の復元（user.conf / cache）
+# -----------------------------
+if [ -f "$backup_dir/config/user.conf" ]; then
+    sudo mkdir -p /usr/local/dipper/config
+    sudo cp -a "$backup_dir/config/user.conf" /usr/local/dipper/config/user.conf
+fi
+
+if [ -d "$backup_dir/cache" ]; then
+    sudo rm -rf /usr/local/dipper/cache
+    sudo cp -a "$backup_dir/cache" /usr/local/dipper/
+fi
+
+# -----------------------------
+# systemd 登録
+# -----------------------------
 sudo systemctl daemon-reload
+sudo systemctl enable /usr/local/dipper/systemd/dipper.service
