@@ -23,9 +23,8 @@ mydns-ip-updateをお使いの場合は、いったんuninstallしてからdippe
 
 ## 概要
 - このスクリプトは、DDNSへの自動通知を目的としています。
-- 使用する環境はAlmaLinuxで、言語はBashです。
+- 使用する環境はLinuxで、言語はBashです。
 - 以下の環境を前提としています:
-  - Linux
   - systemd (systemctl)
   - /proc が利用可能
 - `config`ディレクトリ内の設定ファイルに基づいて動作します。
