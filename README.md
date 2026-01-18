@@ -50,7 +50,7 @@ dipper は **Bash で実装された DDNS クライアント**です。
 以下のワンライナーでインストールできます。
 
 ```bash
-bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.24/install.sh )
+bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v2.0/install.sh )
 ```
 補足
 - systemd サービスとして登録されます
