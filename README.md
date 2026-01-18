@@ -80,7 +80,7 @@ sudo vim /usr/local/dipper/config/user.conf
 sudo chmod 600 /usr/local/dipper/config/user.conf
 ```
 
-### サービス起動
+サービス起動
 ```bash
 sudo systemctl start dipper.service
 ```
