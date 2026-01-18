@@ -1,23 +1,40 @@
-name: Bash Workflow
+name: CI
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest  # Ubuntu環境で実行します
+  bats:
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository  # リポジトリのチェックアウト
-      uses: actions/checkout@v4
-    - run: sudo apt install bats
+      - name: Checkout
+        uses: actions/checkout@v4
 
-#    - name: Run Bash Script  # Bashスクリプトを実行します
-#      working-directory: ./bin  # 実行ディレクトリを/binに変更します
-#      run: |  # 実行したいBashスクリプトへのパスを指定します
-#        bash dipper.sh
+      - name: Install bats
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats
 
-    - name: Run Bats  # Batsスクリプトを実行します
-      working-directory: ./bin  # 実行ディレクトリを/binに変更します
-      run: |  # 実行したいBashスクリプトへのパスを指定します
-        bats test.bats
-         
+      - name: Basic bash syntax check
+        run: |
+          # “実行して落ちる前に” まず構文で落とす
+          bash -n bin/*.sh
+          bash -n bin/cache/*.sh
+          bash -n bin/dns_service/*.sh
+          bash -n bin/mail/*.sh
+          bash -n bin/access/*.sh
+
+      - name: Make scripts executable (just in case)
+        run: |
+          chmod -R +x bin || true
+
+      - name: Run tests (bats)
+        run: |
+          set -euo pipefail
+          if [ -d bin/tests ]; then
+            bats bin/tests
+          else
+            bats bin/test.bats
+          fi
