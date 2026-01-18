@@ -118,11 +118,6 @@ sudo bash /usr/local/dipper/uninstall.sh
 ```
 ※ uninstall を実行すると設定ファイルも削除されます。
 
-### マニュアルインストール
-手動でインストールしたい場合はこちら。
-
-https://github.com/smileygames/dipper/wiki/マニュアルインストール方法
-
 ### 設計思想
 dipper の設計背景・思想については Wiki にまとめています。
 
