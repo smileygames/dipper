@@ -106,6 +106,11 @@ if [ ${#missing_cmds[@]} -gt 0 ]; then
 fi
 
 # -----------------------------
+# 以降 sudo を多用するため、先に認証を確保
+# -----------------------------
+sudo -v || exit 1
+
+# -----------------------------
 # 既存サービスの停止/無効化（存在する場合）
 # -----------------------------
 if [ -e "${User_servce}" ]; then
@@ -130,7 +135,7 @@ fi
 # -----------------------------
 backup_dir="$(mktemp -d)"
 workdir="$(mktemp -d)"
-trap 'rm -rf "$backup_dir" "$workdir"' EXIT
+trap 'sudo rm -rf "$backup_dir" "$workdir"' EXIT
 
 echo "backup_dir: $backup_dir"
 echo "workdir: $workdir"
@@ -182,7 +187,7 @@ sudo rm -f  "$workdir/dipper/.gitignore" "$workdir/dipper/bin/test.bats"
 #   ※ user.conf / cache は後で復元する
 # -----------------------------
 sudo rm -rf /usr/local/dipper
-sudo cp -a "$workdir/dipper" /usr/local/dipper
+sudo cp -r "$workdir/dipper" /usr/local/dipper
 
 sudo chmod -R 755 /usr/local/dipper/bin
 
@@ -202,5 +207,17 @@ fi
 # -----------------------------
 # systemd 登録
 # -----------------------------
+sudo cp -f /usr/local/dipper/systemd/dipper.service /etc/systemd/system/dipper.service
+sudo rm -rf /usr/local/dipper/systemd
+
+# SELinux: コンテキストを正規化（ある環境だけ）
+if command -v restorecon >/dev/null 2>&1; then
+    sudo restorecon -v /etc/systemd/system/dipper.service >/dev/null 2>&1 || true
+    sudo restorecon -Rv /usr/local/dipper >/dev/null 2>&1 || true
+fi
+
 sudo systemctl daemon-reload
-sudo systemctl enable /usr/local/dipper/systemd/dipper.service
+sudo systemctl enable dipper.service
+
+echo "install done."
+echo "ref: $ref"

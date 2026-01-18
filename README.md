@@ -1,70 +1,70 @@
-# dipper -DDNS IP Upper-
-安定運用中のため、メンテナンス頻度は低めです。
+# dipper - DDNS IP Updater
 
-### 現在下記DDNSサービスに対応しています。
+dipper は **Bash で実装された DDNS クライアント**です。  
+単に IP を更新するだけでなく、  
+**DDNS サーバーに不要な負荷をかけないこと**を最重要視して設計されています。
+
+長期間動かしても壊れにくく、  
+あとから「なぜこう設計したのか」を思い出せることを目的としたツールです。
+
+※ 現在は安定運用中のため、メンテナンス頻度は低めです。
+
+---
+
+## 特徴
+
+- DDNS サーバーへの **不要なアクセスを極力避ける設計**
+- cron / systemd timer を使わない **疑似スケジューラ方式**
+- 状態をメモリではなく **ファイル（cache）で管理**
+- IPv4 / IPv6 対応
+- マルチドメイン対応
+- メール通知機能有り（オプション）
+- systemd サービスとして常駐動作
+- 実機デバッグを前提とした運用設計
+
+---
+
+## 対応 DDNS サービス
+
 - [MyDNS.JP](https://www.mydns.jp/)
-- [CloudFlare](https://www.cloudflare.com/)  【 [簡単な説明(v1.16用だが基本は同じ)](https://smgjp.com/cloudflaredipper_ddns_dipper/) 】
+- [Cloudflare](https://www.cloudflare.com/)　※参考記事（v1.16 向けだが基本は同じ）https://smgjp.com/cloudflaredipper_ddns_dipper/
+---
 
-### IPv6 & multi domain対応
+## 動作環境・前提条件
 
-mydns-ip-updateをお使いの場合は、いったんuninstallしてからdipperをインストールすることお勧めします。
+- Linux
+- systemd（systemctl）
+- /proc が利用可能
+- Bash 4.3 以降
 
-[uninstall方法](https://github.com/smileygames/mydns-ip-update)
+### install.sh 実行時に自動インストールされるコマンド
+- curl
+- tar
+- dig
+- jq
 
-事前に必要なもの
-- [bash version4.3以降](https://github.com/smileygames/dipper/wiki/Bash-Install)
+---
 
-事前に必要なもの(インストールスクリプト実行時にインストールも可能)
-- [curlコマンド](https://github.com/smileygames/dipper/wiki/curl-command-install)
-- tarコマンド
-- [digコマンド](https://github.com/smileygames/dipper/wiki/dig-command-install)
-- [jqコマンド](https://github.com/smileygames/dipper/wiki/jq-command-install)
+## クイックスタート（インストール）
 
-## 概要
-- このスクリプトは、DDNSへの自動通知を目的としています。
-- 使用する環境はLinuxで、言語はBashです。
-- 以下の環境を前提としています:
-  - systemd (systemctl)
-  - /proc が利用可能
-- `config`ディレクトリ内の設定ファイルに基づいて動作します。
-- MyDNSの時のみ、IPアドレスを定期的に更新、既定値は1日に1回、設定で変更可能。（初回のみ起動から30秒後）
-- IPアドレスを定期的にチェック。（既定値は3分に1回チェック、設定で変更可能）
-- ドメインのアドレスはDNSサーバーから取得し、自分のIPアドレスと違いがあれば更新。
-- ログはsyslogに記載し、システムで一元管理させている。（dipper.sh の名前でログに書きこまれます）
-- 管理はsystemdで行っている。（デーモン化）
-- メール通知機能。（[オプション](https://github.com/smileygames/dipper/wiki/%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%81%E4%BF%A1%E3%81%AE%E4%BB%95%E6%96%B9)）コンフィグファイルに追加されているコメントアウトを外して使用。
-- アドレスキャッシュ機能の追加（オプション）初期時無効。コンフィグファイルIP_CACHE_TIMEの値を変えることで機能する。
+以下のワンライナーでインストールできます。
 
-### systemd について
-本スクリプトは systemd サービスとしての利用を想定しています。
-cron 等での実行も可能かもしれませんが、本プロジェクトでは動作検証およびサポートは行っていません。
-
-### MyDNSを使用していて固定IPの場合
-confファイルでIPV4_DDNS及びIPV6_DDNSを「off」にしておいてください。（余計な処理をしなくなる）
-
-<br>
-
-## ワンクリックインストールスクリプト
-### インストールコマンド
 ```bash
 bash <( curl -fsSL https://github.com/smileygames/dipper/releases/download/v1.24/install.sh )
 ```
+補足
+- systemd サービスとして登録されます
+- SELinux 有効環境では restorecon を考慮したインストールを行います
+- /usr/local/dipper にインストールされます
 
-<br>
+### 初期設定
+インストール後、最初に設定ファイルを作成してください。
 
-▼最初に初期設定を行ってください。
-
-(v1.21より設定項目が変更されたので古いユーザーコンフィグはそのまま使わないでください)
-
-installのたびにコンフィグファイルが初期値に戻ってしまうのも面倒なので
-ユーザー側でコンフィグファイルを作成してもらい、上書きインストールでも変更しないようにしました。
-但し、uninstallコマンドを実行すると消えます。
 ```bash
 sudo cp -v /usr/local/dipper/config/default.conf /usr/local/dipper/config/user.conf
-```
-```bash
 sudo vim /usr/local/dipper/config/user.conf
 ```
+設定例（MyDNS）
 ```bash
 #Num=1  # Number 1個目のドメイン
 #MYDNS_ID[$Num]="mydnsxxxx1"
@@ -73,51 +73,61 @@ sudo vim /usr/local/dipper/config/user.conf
 #MYDNS_IPV4[$Num]=on
 #MYDNS_IPV6[$Num]=off
 ```
-をご自分のMyDNSの情報に書き換えて、先頭の#を削除してください。
+自分の MyDNS 情報に書き換え、先頭の # を外してください。
 
-編集が終わったら権限を変更しておきます。（IDとPASSを管理したファイルの為）
+設定ファイルの権限変更（重要）
 ```bash
 sudo chmod 600 /usr/local/dipper/config/user.conf
 ```
 
-<br>
-
-▼次にサービスの起動です。
-
+### サービス起動
 ```bash
 sudo systemctl start dipper.service
 ```
-<br>
-
-### アンインストールスクリプト
-▼アンインストールコマンド
-```bash
-sudo bash /usr/local/dipper/uninstall.sh
-```
-
-<br>
 
 ### 設定変更時
-コンフィグファイルの内容を変更した際は、
-サービスを再起動しないと反映されないので注意です。
+設定ファイルを変更した場合は、サービス再起動が必要です。
+
 ```bash
 sudo systemctl restart dipper.service
 ```
-<br>
 
-### サービスがもし消えてしまった場合の対処法
-サービスをdisabledにした場合リンクが消えてしまうので下記で張りなおします。
-"--now"をつけることでついでに起動させます。
+### systemd について
+- dipper は systemd サービスとしての利用を前提としています。
+- cron 等での実行も理論上は可能ですが、
+本プロジェクトでは 動作検証およびサポートは行っていません。
+
+### 固定 IP を使用している場合（MyDNS）
+固定 IP の場合は、不要な更新を避けるため
+以下を off にしてください。
+
 ```bash
-sudo systemctl enable /usr/local/dipper/systemd/dipper.service --now
+IPV4_DDNS=off
+IPV6_DDNS=off
 ```
-<br>
 
-### [メール送信の仕方](https://github.com/smileygames/dipper/wiki/%E3%83%A1%E3%83%BC%E3%83%AB%E9%80%81%E4%BF%A1%E3%81%AE%E4%BB%95%E6%96%B9)
-<br>
+### メール通知（オプション）
+エラー時のメール通知機能があります。
+設定方法は以下を参照してください。
 
-### [マニュアルインストール方法](https://github.com/smileygames/dipper/wiki/%E3%83%9E%E3%83%8B%E3%83%A5%E3%82%A2%E3%83%AB%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E6%96%B9%E6%B3%95)
-<br>
+https://github.com/smileygames/dipper/wiki/メール送信の仕方
 
-### [設計思想](https://github.com/smileygames/dipper/wiki/%E8%A8%AD%E8%A8%88%E6%80%9D%E6%83%B3)
-<br>
+### アンインストール
+```bash
+sudo bash /usr/local/dipper/uninstall.sh
+```
+※ uninstall を実行すると設定ファイルも削除されます。
+
+### マニュアルインストール
+手動でインストールしたい場合はこちら。
+
+https://github.com/smileygames/dipper/wiki/マニュアルインストール方法
+
+### 設計思想
+dipper の設計背景・思想については Wiki にまとめています。
+
+設計思想（全文）
+https://github.com/smileygames/dipper/wiki/設計思想
+
+この設計思想は、自分なりの理想を詰め込んだものです。
+dipper は、作者自身が納得して長く使い続けるための選択の集合です。
