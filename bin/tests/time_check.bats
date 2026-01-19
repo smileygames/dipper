@@ -1,4 +1,6 @@
 #!/usr/bin/env bats
+# shellcheck shell=bash
+# shellcheck disable=SC2030,SC2031
 #
 # 目的:
 # - bin/ 配下での実行前提（cd bin / source）を再現して time_check.sh の関数を単体テストする
