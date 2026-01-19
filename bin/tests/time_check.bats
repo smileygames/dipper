@@ -1,46 +1,38 @@
 #!/usr/bin/env bats
+#
+# 目的:
+# - bin/ 配下での実行前提（cd bin / source）を再現して time_check.sh の関数を単体テストする
+#
+# スタブ方針:
+# - dipper は ./err_message.sh を相対パスで直接実行する箇所があるため、
+#   PATH では差し替えできない。よって実ファイル差し替え方式を使う。
+# - テストは「善悪を裁かず、今の挙動」を保存する（スナップショット）
 
-# -------------------------------------------------
-# 共通セットアップ
-# -------------------------------------------------
+load "helpers/common.bash"
+
 setup() {
-  REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"
-
-  # err_message.sh をスタブ化
-  STUB_DIR="$(mktemp -d)"
-  mkdir -p "$STUB_DIR/bin"
-
-  cat > "$STUB_DIR/bin/err_message.sh" <<'EOF'
-#!/bin/sh
-# stub: do nothing
-exit 0
-EOF
-  chmod +x "$STUB_DIR/bin/err_message.sh"
-
-  # 実ファイルを退避して差し替え
-  if [ -f "$REPO_ROOT/bin/err_message.sh" ]; then
-    cp -f "$REPO_ROOT/bin/err_message.sh" "$STUB_DIR/bin/err_message.sh.orig"
-  fi
-  cp -f "$STUB_DIR/bin/err_message.sh" "$REPO_ROOT/bin/err_message.sh"
+  setup_common
+  # ./err_message.sh が呼ばれても副作用を出さないように、実ファイルを一時的に差し替える
+  stub_replace_err_message
 }
 
 teardown() {
-  # err_message.sh を元に戻す
-  if [ -f "$STUB_DIR/bin/err_message.sh.orig" ]; then
-    cp -f "$STUB_DIR/bin/err_message.sh.orig" "$REPO_ROOT/bin/err_message.sh"
-  fi
-  rm -rf "$STUB_DIR"
+  # setup() で差し替えた err_message.sh を必ず元に戻す
+  restore_err_message_if_needed
+  teardown_common
 }
 
 # -------------------------------------------------
 # ヘルパー（bin 実行前提を再現）
 # -------------------------------------------------
 run_time_sec() {
-  run bash -c "cd '$REPO_ROOT/bin'; source './time_check.sh'; time_sec '$1'"
+  # time_sec "10s" のような関数呼び出しを、cd bin + source 前提で実行する
+  run_in_bin_source "./time_check.sh" "time_sec '$1'"
 }
 
 run_sec_time_cnv() {
-  run bash -c "cd '$REPO_ROOT/bin'; source './time_check.sh'; Time='$1'; sec_time_cnv; echo \"\$Time\""
+  # sec_time_cnv は Time 変数を入力として書き換えるため、echoで結果を取り出す
+  run_in_bin_source "./time_check.sh" "Time='$1'; sec_time_cnv; echo \"\$Time\""
 }
 
 # -------------------------------------------------
