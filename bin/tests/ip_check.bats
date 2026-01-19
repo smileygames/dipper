@@ -73,7 +73,7 @@ EOF
   assert_line_count_is "$CALLS_DIR/dig.log" 1
 }
 
-@test "IP_CACHE_TIME=15m: cache期限切れなら cache_reset が走る（dig失敗でもerr_messageには入らない：パイプライン終了コードの現状挙動）" {
+@test "IP_CACHE_TIME=15m: cache期限切れで cache_reset（dig失敗は黙殺）" {
   export IPV4=on IPV4_DDNS=on IPV6=off IPV6_DDNS=on
   export IP_CACHE_TIME=15m
 
