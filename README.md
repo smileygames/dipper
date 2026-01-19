@@ -28,7 +28,8 @@ dipper は **Bash で実装された DDNS クライアント**です。
 ・作者も現在使用中
 - [MyDNS.JP](https://www.mydns.jp/)
 - [Cloudflare](https://www.cloudflare.com/)　※参考記事（v1.16 向けだが基本は同じ）https://smgjp.com/cloudflaredipper_ddns_dipper/
-  それ以外（今後対応することがあるかも？）
+
+・それ以外（今後対応することがあるかも？）
 ---
 
 ## 動作環境・前提条件
