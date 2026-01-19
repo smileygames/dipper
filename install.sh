@@ -180,7 +180,7 @@ mv -fv "$src_dir" "$workdir/dipper"
 # 不要ファイル除去（確実に入れない）
 # -----------------------------
 sudo rm -rf "$workdir/dipper/.github" "$workdir/dipper/.vscode"
-sudo rm -f  "$workdir/dipper/.gitignore" "$workdir/dipper/bin/test.bats"
+sudo rm -f  "$workdir/dipper/.gitignore" "$workdir/dipper/bin/test.bats" "$workdir/dipper/README_AI.txt"
 
 # -----------------------------
 # インストール（入れ替え）
