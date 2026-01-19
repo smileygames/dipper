@@ -24,7 +24,7 @@ dipper は **Bash で実装された DDNS クライアント**です。
 
 ---
 
-## 対応 DDNS サービス
+## 対応 DDNS サービス（作者が現在使用中）
 
 - [MyDNS.JP](https://www.mydns.jp/)
 - [Cloudflare](https://www.cloudflare.com/)　※参考記事（v1.16 向けだが基本は同じ）https://smgjp.com/cloudflaredipper_ddns_dipper/
