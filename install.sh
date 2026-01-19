@@ -177,10 +177,24 @@ fi
 mv -fv "$src_dir" "$workdir/dipper"
 
 # -----------------------------
+# 安全確認（想定外を起こさない）
+# -----------------------------
+# workdir が空/ルートなどの場合は即停止（rm事故防止）
+if [ -z "${workdir:-}" ] || [ "$workdir" = "/" ]; then
+    echo "workdir が不正です: workdir=[$workdir]"
+    exit 1
+fi
+# dipper 配置に失敗していたら即停止（mv失敗/展開失敗の検知）
+if [ ! -d "$workdir/dipper/bin" ]; then
+    echo "配置に失敗しました: $workdir/dipper/bin が見つかりません"
+    exit 1
+fi
+
+# -----------------------------
 # 不要ファイル除去（確実に入れない）
 # -----------------------------
-sudo rm -rf "$workdir/dipper/.github" "$workdir/dipper/.vscode"
-sudo rm -f  "$workdir/dipper/.gitignore" "$workdir/dipper/bin/test.bats"
+sudo rm -rf "$workdir/dipper/.github" "$workdir/dipper/.vscode" "$workdir/dipper/bin/tests"
+sudo rm -f  "$workdir/dipper/.gitignore" "$workdir/dipper/bin/test.bats" "$workdir/dipper/README_AI.txt"
 
 # -----------------------------
 # インストール（入れ替え）
