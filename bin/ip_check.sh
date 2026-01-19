@@ -65,27 +65,33 @@ ip_cache_check() {
 
 myip_check() {
     local my_ipv4="" my_ipv6=""
-    local exit_code
+    local dig_timeout=10
 
     if [ "$IPV4" = on ] && [ "$IPV4_DDNS" = on ]; then
-        my_ipv4=$(dig -4 @one.one.one.one whoami.cloudflare TXT CH +short | sed 's/"//g')  # 自分のアドレスを読み込む
-        exit_code=$?
-        if [[ "${exit_code}" != 0 ]]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv4アドレスを取得できなかった"
+        my_ipv4=$(
+            timeout "$dig_timeout" \
+                dig -4 @one.one.one.one whoami.cloudflare TXT CH +short 2>/dev/null \
+            | sed 's/"//g'
+        )
+        # 取得できなければ黙殺（ログは出さない）
+        if [[ -z "$my_ipv4" ]]; then
             my_ipv4=""
         fi
     fi
+
     if [ "$IPV6" = on ] && [ "$IPV6_DDNS" = on ]; then
-        my_ipv6=$(dig -6 @one.one.one.one whoami.cloudflare TXT CH +short | sed 's/"//g')  # 自分のアドレスを読み込む
-#        my_ipv6=$(ip -o a show scope global up | grep -oP '(?<=inet6 ).+(?=/64 )')  # DNSに負担をかけない方法
-        exit_code=$?
-        if [[ "${exit_code}" != 0 ]]; then
-            ./err_message.sh "no_value" "${FUNCNAME[0]}" "自分のIPv6アドレスを取得できなかった"
+        my_ipv6=$(
+            timeout "$dig_timeout" \
+                dig -6 @one.one.one.one whoami.cloudflare TXT CH +short 2>/dev/null \
+            | sed 's/"//g'
+        )
+        # 取得できなければ黙殺（ログは出さない）
+        if [[ -z "$my_ipv6" ]]; then
             my_ipv6=""
         fi
     fi
 
-    if [[ $my_ipv4 != "" ]] || [[ $my_ipv6 != "" ]]; then
+    if [[ -n "$my_ipv4" ]] || [[ -n "$my_ipv6" ]]; then
         if [ "$IP_CACHE_TIME" != 0 ]; then
             ip_cache_check "$my_ipv4" "$my_ipv6"
         else
